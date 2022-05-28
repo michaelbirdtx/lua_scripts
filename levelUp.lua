@@ -8,6 +8,13 @@ by Shermer
 
 print("[Eluna levelUp]: Loaded")
 
+local Gold = {
+    [20] = 100000,
+    [40] = 1000000,
+    [60] = 10000000,
+    [80] = 100000000,
+}
+
 local Pets = {
     [1]  = 13582, -- Zergling
     [2]  = 13584, -- Mini Diablo
@@ -30,13 +37,31 @@ local Pets = {
     [19] = 39973, -- Ghostly Skull
     [20] = 35504, -- Phoenix Hatchling
 }
+print("[Eluna levelUp]: # of Pets: "..#Pets)
 
-local Gold = {
-    [20] = 100000,
-    [40] = 1000000,
-    [60] = 10000000,
-    [80] = 100000000,
+local Titles = {
+    [1]  = 143,   -- Jenkins
+    [2]  = 155,   -- the Noble
+    [3]  = 134,   -- the Merrymaker
+    [4]  =  22,   -- Legionnaire
+    [5]  = 125,   -- Loremaster
+    [6]  = 172,   -- the Patient
+    [7]  =  27,   -- Warlord
+    [8]  =  43,   -- Duelist
+    [9]  =  76,   -- Flame Keeper
+    [10] =  11,   -- Commander
+    [11] = 174,   -- Bane of the Fallen King
+    [12] =  47,   -- Conqueror
+    [13] = 127,   -- of the Horde
+    [14] = 145,   -- the Insane
+    [15] =   9,   -- Knight-Champion
+    [16] =  77,   -- the Exalted
+    [17] = 158,   -- Death's Demise
+    [18] = 124,   -- the Hallowed
+    [19] =  83,   -- Salty
+    [20] = 154,   -- of the Undercity
 }
+print("[Eluna levelUp]: # of Titles: "..#Titles)
 
 local Gear = {
     -- Druid
@@ -136,7 +161,9 @@ function levelCheck(event, player, oldLevel)
     if (level==20 or level==40) and class ~= 32 then
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
-        randomPet = math.random(1,20)
+        randomPet = math.random(1,#Pets)
+        randomTitle = math.random(1,#Titles)
+        player:SetKnownTitle(Titles[randomTitle])
         SendMail(
             "Congrats!", "Congratulations on reaching level "..level..", "..player:GetName().."! Here are some tokens of our appreciation!",
             player:GetGUIDLow(),
