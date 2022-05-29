@@ -77,6 +77,14 @@ local Gear = {
     {class = 1024, level = 40, item = 6, entry = 20101},
     {class = 1024, level = 40, item = 7, entry = 19590},
 
+    {class = 1024, level = 60, item = 1, entry = 16834},
+    {class = 1024, level = 60, item = 2, entry = 21409},
+    {class = 1024, level = 60, item = 3, entry = 16835},
+    {class = 1024, level = 60, item = 4, entry = 16828},
+    {class = 1024, level = 60, item = 5, entry = 16831},
+    {class = 1024, level = 60, item = 6, entry = 16829},
+    {class = 1024, level = 60, item = 7, entry = 16830},
+
     -- Hunter
     {class = 4, level = 20, item = 1, entry = 30419},
     {class = 4, level = 20, item = 2, entry = 5193},
@@ -93,6 +101,14 @@ local Gear = {
     {class = 4, level = 40, item = 5, entry = 8347},
     {class = 4, level = 40, item = 6, entry = 20092},
     {class = 4, level = 40, item = 7, entry = 19584},
+
+    {class = 4, level = 60, item = 1, entry = 16846},
+    {class = 4, level = 60, item = 2, entry = 21403},
+    {class = 4, level = 60, item = 3, entry = 16847},
+    {class = 4, level = 60, item = 4, entry = 16851},
+    {class = 4, level = 60, item = 5, entry = 16852},
+    {class = 4, level = 60, item = 6, entry = 16849},
+    {class = 4, level = 60, item = 7, entry = 16850},
 
     -- Mage
     {class = 128, level = 20, item = 1, entry = 30419},
@@ -111,6 +127,14 @@ local Gear = {
     {class = 128, level = 40, item = 6, entry = 20095},
     {class = 128, level = 40, item = 7, entry = 19597},
 
+    {class = 128, level = 60, item = 1, entry = 16795},
+    {class = 128, level = 60, item = 2, entry = 21415},
+    {class = 128, level = 60, item = 3, entry = 16796},
+    {class = 128, level = 60, item = 4, entry = 16802},
+    {class = 128, level = 60, item = 5, entry = 16801},
+    {class = 128, level = 60, item = 6, entry = 16800},
+    {class = 128, level = 60, item = 7, entry = 16799},
+
     -- Paladin
     {class = 2, level = 20, item = 1, entry = 30419},
     {class = 2, level = 20, item = 2, entry = 20428},
@@ -127,6 +151,14 @@ local Gear = {
     {class = 2, level = 40, item = 5, entry = 7938},
     {class = 2, level = 40, item = 6, entry = 20110},
     {class = 2, level = 40, item = 7, entry = 19581},
+
+    {class = 2, level = 60, item = 1, entry = 16854},
+    {class = 2, level = 60, item = 2, entry = 21397},
+    {class = 2, level = 60, item = 3, entry = 16855},
+    {class = 2, level = 60, item = 4, entry = 16858},
+    {class = 2, level = 60, item = 5, entry = 16860},
+    {class = 2, level = 60, item = 6, entry = 16859},
+    {class = 2, level = 60, item = 7, entry = 16857},
 
     -- Priest
     {class = 16, level = 20, item = 1, entry = 30419},
@@ -145,6 +177,14 @@ local Gear = {
     {class = 16, level = 40, item = 6, entry = 20095},
     {class = 16, level = 40, item = 7, entry = 19597},
 
+    {class = 16, level = 60, item = 1, entry = 16813},
+    {class = 16, level = 60, item = 2, entry = 21412},
+    {class = 16, level = 60, item = 3, entry = 16814},
+    {class = 16, level = 60, item = 4, entry = 16817},
+    {class = 16, level = 60, item = 5, entry = 16812},
+    {class = 16, level = 60, item = 6, entry = 16811},
+    {class = 16, level = 60, item = 7, entry = 16819},
+
     -- Rogue
     {class = 8, level = 20, item = 1, entry = 30419},
     {class = 8, level = 20, item = 2, entry = 5193},
@@ -161,6 +201,14 @@ local Gear = {
     {class = 8, level = 40, item = 5, entry = 34417},
     {class = 8, level = 40, item = 6, entry = 20113},
     {class = 8, level = 40, item = 7, entry = 19590},
+
+    {class = 8, level = 60, item = 1, entry = 16821},
+    {class = 8, level = 60, item = 2, entry = 21406},
+    {class = 8, level = 60, item = 3, entry = 16822},
+    {class = 8, level = 60, item = 4, entry = 16827},
+    {class = 8, level = 60, item = 5, entry = 16826},
+    {class = 8, level = 60, item = 6, entry = 16824},
+    {class = 8, level = 60, item = 7, entry = 16825},
 
     -- Shaman
     {class = 64, level = 20, item = 1, entry = 30419},
@@ -179,6 +227,14 @@ local Gear = {
     {class = 64, level = 40, item = 6, entry = 20122},
     {class = 64, level = 40, item = 7, entry = 19584},
 
+    {class = 64, level = 60, item = 1, entry = 16842},
+    {class = 64, level = 60, item = 2, entry = 21400},
+    {class = 64, level = 60, item = 3, entry = 16843},
+    {class = 64, level = 60, item = 4, entry = 16838},
+    {class = 64, level = 60, item = 5, entry = 16839},
+    {class = 64, level = 60, item = 6, entry = 16837},
+    {class = 64, level = 60, item = 7, entry = 16840},
+
     -- Warlock
     {class = 256, level = 20, item = 1, entry = 30419},
     {class = 256, level = 20, item = 2, entry = 12979},
@@ -196,6 +252,14 @@ local Gear = {
     {class = 256, level = 40, item = 6, entry = 20095},
     {class = 256, level = 40, item = 7, entry = 19597},
 
+    {class = 256, level = 60, item = 1, entry = 16808},
+    {class = 256, level = 60, item = 2, entry = 21418},
+    {class = 256, level = 60, item = 3, entry = 16810},
+    {class = 256, level = 60, item = 4, entry = 16806},
+    {class = 256, level = 60, item = 5, entry = 16805},
+    {class = 256, level = 60, item = 6, entry = 16803},
+    {class = 256, level = 60, item = 7, entry = 16804},
+
     -- Warrior
     {class = 1, level = 20, item = 1, entry = 30419},
     {class = 1, level = 20, item = 2, entry = 5193},
@@ -212,6 +276,14 @@ local Gear = {
     {class = 1, level = 40, item = 5, entry = 7938},
     {class = 1, level = 40, item = 6, entry = 20128},
     {class = 1, level = 40, item = 7, entry = 19581},
+
+    {class = 1, level = 60, item = 1, entry = 16866},
+    {class = 1, level = 60, item = 2, entry = 21394},
+    {class = 1, level = 60, item = 3, entry = 16867},
+    {class = 1, level = 60, item = 4, entry = 16864},
+    {class = 1, level = 60, item = 5, entry = 16863},
+    {class = 1, level = 60, item = 6, entry = 16862},
+    {class = 1, level = 60, item = 7, entry = 16861},
 }
 
 function findGear(class, level, item)
