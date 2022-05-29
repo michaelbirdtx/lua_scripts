@@ -33,7 +33,6 @@ local Pets = {
     [19] = 39973, -- Ghostly Skull
     [20] = 35504, -- Phoenix Hatchling
 }
-print("["..MODULE_NAME.."]: # of Pets: "..#Pets)
 
 local Titles = {
     [1]  = 143,   -- Jenkins
@@ -57,7 +56,6 @@ local Titles = {
     [19] =  83,   -- Salty
     [20] = 154,   -- of the Undercity
 }
-print("["..MODULE_NAME.."]: # of Titles: "..#Titles)
 
 local Gear = {
     -- Druid
@@ -297,8 +295,8 @@ end
 function levelCheck(event, player, oldLevel)
     class = player:GetClassMask()
     level = player:GetLevel()
-    print("["..MODULE_NAME.."]: Level: "..level.." Class: "..class)
     if (level==20 or level==40 or level==60) and class ~= 32 then
+        print("["..MODULE_NAME.."]: Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
         randomPet = math.random(1,#Pets)
