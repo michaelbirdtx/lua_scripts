@@ -298,7 +298,7 @@ function levelCheck(event, player, oldLevel)
     class = player:GetClassMask()
     level = player:GetLevel()
     print("["..MODULE_NAME.."]: Level: "..level.." Class: "..class)
-    if (level==20 or level==40) and class ~= 32 then
+    if (level==20 or level==40 or level==60) and class ~= 32 then
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
         randomPet = math.random(1,#Pets)
