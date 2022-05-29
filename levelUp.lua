@@ -1,12 +1,8 @@
---[[
+local MODULE_NAME = "Eluna levelUp"
+local MODULE_VERSION = '1.2'
+local MODULE_AUTHOR = "Mpromptu Gaming"
 
-1.0
-levelUp for WotLK
-by Shermer
-
-]]
-
-print("[Eluna levelUp]: Loaded")
+print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local Gold = {
     [20] = 100000,
@@ -37,7 +33,7 @@ local Pets = {
     [19] = 39973, -- Ghostly Skull
     [20] = 35504, -- Phoenix Hatchling
 }
-print("[Eluna levelUp]: # of Pets: "..#Pets)
+print("["..MODULE_NAME.."]: # of Pets: "..#Pets)
 
 local Titles = {
     [1]  = 143,   -- Jenkins
@@ -61,7 +57,7 @@ local Titles = {
     [19] =  83,   -- Salty
     [20] = 154,   -- of the Undercity
 }
-print("[Eluna levelUp]: # of Titles: "..#Titles)
+print("["..MODULE_NAME.."]: # of Titles: "..#Titles)
 
 local Gear = {
     -- Druid
@@ -73,6 +69,14 @@ local Gear = {
     {class = 1024, level = 20, item = 6, entry = 10411},
     {class = 1024, level = 20, item = 7, entry = 12999},
 
+    {class = 1024, level = 40, item = 1, entry = 8345},
+    {class = 1024, level = 40, item = 2, entry = 10776},
+    {class = 1024, level = 40, item = 3, entry = 1718},
+    {class = 1024, level = 40, item = 4, entry = 20104},
+    {class = 1024, level = 40, item = 5, entry = 10765},
+    {class = 1024, level = 40, item = 6, entry = 20101},
+    {class = 1024, level = 40, item = 7, entry = 19590},
+
     -- Hunter
     {class = 4, level = 20, item = 1, entry = 30419},
     {class = 4, level = 20, item = 2, entry = 5193},
@@ -81,6 +85,14 @@ local Gear = {
     {class = 4, level = 20, item = 5, entry = 7348},
     {class = 4, level = 20, item = 6, entry = 1121},
     {class = 4, level = 20, item = 7, entry = 4794},
+
+    {class = 4, level = 40, item = 1, entry = 1624},
+    {class = 4, level = 40, item = 2, entry = 13121},
+    {class = 4, level = 40, item = 3, entry = 9396},
+    {class = 4, level = 40, item = 4, entry = 20089},
+    {class = 4, level = 40, item = 5, entry = 8347},
+    {class = 4, level = 40, item = 6, entry = 20092},
+    {class = 4, level = 40, item = 7, entry = 19584},
 
     -- Mage
     {class = 128, level = 20, item = 1, entry = 30419},
@@ -91,6 +103,14 @@ local Gear = {
     {class = 128, level = 20, item = 6, entry = 4320},
     {class = 128, level = 20, item = 7, entry = 14375},
 
+    {class = 128, level = 40, item = 1, entry = 7720},
+    {class = 128, level = 40, item = 2, entry = 23178},
+    {class = 128, level = 40, item = 3, entry = 9407},
+    {class = 128, level = 40, item = 4, entry = 20098},
+    {class = 128, level = 40, item = 5, entry = 10019},
+    {class = 128, level = 40, item = 6, entry = 20095},
+    {class = 128, level = 40, item = 7, entry = 19597},
+
     -- Paladin
     {class = 2, level = 20, item = 1, entry = 30419},
     {class = 2, level = 20, item = 2, entry = 20428},
@@ -99,6 +119,14 @@ local Gear = {
     {class = 2, level = 20, item = 5, entry = 12994},
     {class = 2, level = 20, item = 6, entry = 12982},
     {class = 2, level = 20, item = 7, entry = 2868},
+
+    {class = 2, level = 40, item = 1, entry = 10763},
+    {class = 2, level = 40, item = 2, entry = 10776},
+    {class = 2, level = 40, item = 3, entry = 33258},
+    {class = 2, level = 40, item = 4, entry = 20107},
+    {class = 2, level = 40, item = 5, entry = 7938},
+    {class = 2, level = 40, item = 6, entry = 20110},
+    {class = 2, level = 40, item = 7, entry = 19581},
 
     -- Priest
     {class = 16, level = 20, item = 1, entry = 30419},
@@ -109,6 +137,14 @@ local Gear = {
     {class = 16, level = 20, item = 6, entry = 4320},
     {class = 16, level = 20, item = 7, entry = 14375},
 
+    {class = 16, level = 40, item = 1, entry = 20969},
+    {class = 16, level = 40, item = 2, entry = 19532},
+    {class = 16, level = 40, item = 3, entry = 7709},
+    {class = 16, level = 40, item = 4, entry = 20098},
+    {class = 16, level = 40, item = 5, entry = 10019},
+    {class = 16, level = 40, item = 6, entry = 20095},
+    {class = 16, level = 40, item = 7, entry = 19597},
+
     -- Rogue
     {class = 8, level = 20, item = 1, entry = 30419},
     {class = 8, level = 20, item = 2, entry = 5193},
@@ -117,6 +153,14 @@ local Gear = {
     {class = 8, level = 20, item = 5, entry = 14572},
     {class = 8, level = 20, item = 6, entry = 1121},
     {class = 8, level = 20, item = 7, entry = 4794},
+
+    {class = 8, level = 40, item = 1, entry = 8176},
+    {class = 8, level = 40, item = 2, entry = 13121},
+    {class = 8, level = 40, item = 3, entry = 9414},
+    {class = 8, level = 40, item = 4, entry = 20116},
+    {class = 8, level = 40, item = 5, entry = 34417},
+    {class = 8, level = 40, item = 6, entry = 20113},
+    {class = 8, level = 40, item = 7, entry = 19590},
 
     -- Shaman
     {class = 64, level = 20, item = 1, entry = 30419},
@@ -127,6 +171,14 @@ local Gear = {
     {class = 64, level = 20, item = 6, entry = 10411},
     {class = 64, level = 20, item = 7, entry = 12999},
 
+    {class = 64, level = 40, item = 1, entry = 4080},
+    {class = 64, level = 40, item = 2, entry = 10776},
+    {class = 64, level = 40, item = 3, entry = 9396},
+    {class = 64, level = 40, item = 4, entry = 20119},
+    {class = 64, level = 40, item = 5, entry = 8347},
+    {class = 64, level = 40, item = 6, entry = 20122},
+    {class = 64, level = 40, item = 7, entry = 19584},
+
     -- Warlock
     {class = 256, level = 20, item = 1, entry = 30419},
     {class = 256, level = 20, item = 2, entry = 12979},
@@ -136,6 +188,14 @@ local Gear = {
     {class = 256, level = 20, item = 6, entry = 4320},
     {class = 256, level = 20, item = 7, entry = 14375},
 
+    {class = 256, level = 40, item = 1, entry = 9429},
+    {class = 256, level = 40, item = 2, entry = 10776},
+    {class = 256, level = 40, item = 3, entry = 2277},
+    {class = 256, level = 40, item = 4, entry = 20098},
+    {class = 256, level = 40, item = 5, entry = 10019},
+    {class = 256, level = 40, item = 6, entry = 20095},
+    {class = 256, level = 40, item = 7, entry = 19597},
+
     -- Warrior
     {class = 1, level = 20, item = 1, entry = 30419},
     {class = 1, level = 20, item = 2, entry = 5193},
@@ -144,6 +204,14 @@ local Gear = {
     {class = 1, level = 20, item = 5, entry = 12994},
     {class = 1, level = 20, item = 6, entry = 12982},
     {class = 1, level = 20, item = 7, entry = 2868},
+
+    {class = 1, level = 40, item = 1, entry = 10763},
+    {class = 1, level = 40, item = 2, entry = 13121},
+    {class = 1, level = 40, item = 3, entry = 7921},
+    {class = 1, level = 40, item = 4, entry = 20125},
+    {class = 1, level = 40, item = 5, entry = 7938},
+    {class = 1, level = 40, item = 6, entry = 20128},
+    {class = 1, level = 40, item = 7, entry = 19581},
 }
 
 function findGear(class, level, item)
@@ -157,7 +225,7 @@ end
 function levelCheck(event, player, oldLevel)
     class = player:GetClassMask()
     level = player:GetLevel()
-    print("[Eluna levelUp]: Level: "..level.." Class: "..class)
+    print("["..MODULE_NAME.."]: Level: "..level.." Class: "..class)
     if (level==20 or level==40) and class ~= 32 then
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
