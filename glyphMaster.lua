@@ -1,12 +1,9 @@
---[[
+--Adapted from Eluna SQL Teleporter
+local MODULE_NAME = "Eluna glyphMaster"
+local MODULE_VERSION = '1.1'
+local MODULE_AUTHOR = "Mpromptu Gaming"
 
-1.1
-GlyphMaster for WotLK
-by Shermer
-
-Adapted from Eluna SQL Teleporter
-
-]]
+print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local GlyphMaster = {
     entry = 667100 -- Unit entry
@@ -68,9 +65,9 @@ function GlyphMaster.LoadCache()
                 glyph_id = Query:GetUInt32(5),
             };
         until not Query:NextRow()
-        print("[E-SQL GlyphMaster]: Cache initialized. Loaded "..Query:GetRowCount().." results.")
+        print("["..MODULE_NAME.."]: Cache initialized. Loaded "..Query:GetRowCount().." results")
     else
-        print("[E-SQL GlyphMaster]: Cache initialized. No results found.")
+        print("["..MODULE_NAME.."]: Cache initialized. No results found")
     end
 end
 
