@@ -320,7 +320,7 @@ local Gear = {
     {class = 64, level = 80, item =  7, entry = 43451},
     {class = 64, level = 80, item =  8, entry = 43452},
     {class = 64, level = 80, item =  9, entry = 45810},
-    {class = 64, level = 80, item = 10, entry = 41188},
+    {class = 64, level = 80, item = 10, entry = 36962},
     {class = 64, level = 80, item = 11, entry = 42443},
     {class = 64, level = 80, item = 12, entry = 41117},
 
