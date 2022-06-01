@@ -59,346 +59,346 @@ local Titles = {
 
 local Gear = {
     -- Druid
-    {class = 1024, level = 20, item = 1, entry = 30419},
-    {class = 1024, level = 20, item = 2, entry = 20428},
-    {class = 1024, level = 20, item = 3, entry = 10410},
-    {class = 1024, level = 20, item = 4, entry = 10412},
-    {class = 1024, level = 20, item = 5, entry = 10413},
-    {class = 1024, level = 20, item = 6, entry = 10411},
-    {class = 1024, level = 20, item = 7, entry = 12999},
+    {class = 1024, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 1024, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
+    {class = 1024, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
+    {class = 1024, level = 20, item = 4, entry = 10412}, -- Belt of the Fang
+    {class = 1024, level = 20, item = 5, entry = 10413}, -- Gloves of the Fang
+    {class = 1024, level = 20, item = 6, entry = 10411}, -- Footpads of the Fang
+    {class = 1024, level = 20, item = 7, entry = 12999}, -- Drakewing Bands
 
-    {class = 1024, level = 40, item = 1, entry = 8345},
-    {class = 1024, level = 40, item = 2, entry = 10776},
-    {class = 1024, level = 40, item = 3, entry = 1718},
-    {class = 1024, level = 40, item = 4, entry = 20104},
-    {class = 1024, level = 40, item = 5, entry = 10765},
-    {class = 1024, level = 40, item = 6, entry = 20101},
-    {class = 1024, level = 40, item = 7, entry = 19590},
+    {class = 1024, level = 40, item = 1, entry = 8345},  -- Wolfshead Helm
+    {class = 1024, level = 40, item = 2, entry = 10776}, -- Silky Spider Cape
+    {class = 1024, level = 40, item = 3, entry = 1718},  -- Basilisk Hide Pants
+    {class = 1024, level = 40, item = 4, entry = 20104}, -- Highlander's Lizardhide Girdle
+    {class = 1024, level = 40, item = 5, entry = 10765}, -- Bonefingers
+    {class = 1024, level = 40, item = 6, entry = 20101}, -- Highlander's Lizardhide Boots
+    {class = 1024, level = 40, item = 7, entry = 19590}, -- Forest Stalker's Bracers
 
-    {class = 1024, level = 60, item = 1, entry = 16834},
-    {class = 1024, level = 60, item = 2, entry = 21409},
-    {class = 1024, level = 60, item = 3, entry = 16835},
-    {class = 1024, level = 60, item = 4, entry = 16828},
-    {class = 1024, level = 60, item = 5, entry = 16831},
-    {class = 1024, level = 60, item = 6, entry = 16829},
-    {class = 1024, level = 60, item = 7, entry = 16830},
+    {class = 1024, level = 60, item = 1, entry = 16834}, -- Cenarion Helm
+    {class = 1024, level = 60, item = 2, entry = 21409}, -- Cloak of Unending Life
+    {class = 1024, level = 60, item = 3, entry = 16835}, -- Cenarion Leggings
+    {class = 1024, level = 60, item = 4, entry = 16828}, -- Cenarion Belt
+    {class = 1024, level = 60, item = 5, entry = 16831}, -- Cenarion Gloves
+    {class = 1024, level = 60, item = 6, entry = 16829}, -- Cenarion Boots
+    {class = 1024, level = 60, item = 7, entry = 16830}, -- Cenarion Bracers
 
-    {class = 1024, level = 80, item =  1, entry = 43261},
-    {class = 1024, level = 80, item =  2, entry = 43262},
-    {class = 1024, level = 80, item =  3, entry = 43263},
-    {class = 1024, level = 80, item =  4, entry = 43271},
-    {class = 1024, level = 80, item =  5, entry = 43266},
-    {class = 1024, level = 80, item =  6, entry = 43265},
-    {class = 1024, level = 80, item =  7, entry = 43273},
-    {class = 1024, level = 80, item =  8, entry = 43264},
-    {class = 1024, level = 80, item =  9, entry = 45810},
-    {class = 1024, level = 80, item = 10, entry = 37384},
-    {class = 1024, level = 80, item = 11, entry = 37190},
-    {class = 1024, level = 80, item = 12, entry = 32387},
+    {class = 1024, level = 80, item =  1, entry = 43261}, -- Overcast Headguard
+    {class = 1024, level = 80, item =  2, entry = 43262}, -- Overcast Spaulders
+    {class = 1024, level = 80, item =  3, entry = 43263}, -- Overcast Chestguard
+    {class = 1024, level = 80, item =  4, entry = 43271}, -- Overcast Leggings
+    {class = 1024, level = 80, item =  5, entry = 43266}, -- Overcast Belt
+    {class = 1024, level = 80, item =  6, entry = 43265}, -- Overcast Handwraps
+    {class = 1024, level = 80, item =  7, entry = 43273}, -- Overcast Boots
+    {class = 1024, level = 80, item =  8, entry = 43264}, -- Overcast Bracers
+    {class = 1024, level = 80, item =  9, entry = 45810}, -- Cloak of Crimson Snow
+    {class = 1024, level = 80, item = 10, entry = 37384}, -- Staff of Wayward Principles
+    {class = 1024, level = 80, item = 11, entry = 37190}, -- Enraged Feral Staff
+    {class = 1024, level = 80, item = 12, entry = 32387}, -- Idol of the Raven Goddesss
 
     -- Hunter
-    {class = 4, level = 20, item = 1, entry = 30419},
-    {class = 4, level = 20, item = 2, entry = 5193},
-    {class = 4, level = 20, item = 3, entry = 10410},
-    {class = 4, level = 20, item = 4, entry = 6468},
-    {class = 4, level = 20, item = 5, entry = 7348},
-    {class = 4, level = 20, item = 6, entry = 1121},
-    {class = 4, level = 20, item = 7, entry = 4794},
+    {class = 4, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 4, level = 20, item = 2, entry = 5193},  -- Cape of the Brotherhood
+    {class = 4, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
+    {class = 4, level = 20, item = 4, entry = 6468},  -- Deviate Scale Belt
+    {class = 4, level = 20, item = 5, entry = 7348},  -- Fletcher's Gloves
+    {class = 4, level = 20, item = 6, entry = 1121},  -- Feet of the Lynx
+    {class = 4, level = 20, item = 7, entry = 4794},  -- Wolf Bracers
 
-    {class = 4, level = 40, item = 1, entry = 1624},
-    {class = 4, level = 40, item = 2, entry = 13121},
-    {class = 4, level = 40, item = 3, entry = 9396},
-    {class = 4, level = 40, item = 4, entry = 20089},
-    {class = 4, level = 40, item = 5, entry = 8347},
-    {class = 4, level = 40, item = 6, entry = 20092},
-    {class = 4, level = 40, item = 7, entry = 19584},
+    {class = 4, level = 40, item = 1, entry = 1624},  -- Skullsplitter Helm
+    {class = 4, level = 40, item = 2, entry = 13121}, -- Wing of the Whelpling
+    {class = 4, level = 40, item = 3, entry = 9396},  -- Legguards of the Vault
+    {class = 4, level = 40, item = 4, entry = 20089}, -- Highlander's Chain Girdle
+    {class = 4, level = 40, item = 5, entry = 8347},  -- Dragonscale Gauntlets
+    {class = 4, level = 40, item = 6, entry = 20092}, -- Highlander's Chain Greaves
+    {class = 4, level = 40, item = 7, entry = 19584}, -- Windtalker's Wristguards
 
-    {class = 4, level = 60, item = 1, entry = 16846},
-    {class = 4, level = 60, item = 2, entry = 21403},
-    {class = 4, level = 60, item = 3, entry = 16847},
-    {class = 4, level = 60, item = 4, entry = 16851},
-    {class = 4, level = 60, item = 5, entry = 16852},
-    {class = 4, level = 60, item = 6, entry = 16849},
-    {class = 4, level = 60, item = 7, entry = 16850},
+    {class = 4, level = 60, item = 1, entry = 16846}, -- Giantstalker's Helmet
+    {class = 4, level = 60, item = 2, entry = 21403}, -- Cloak of the Unseen Path
+    {class = 4, level = 60, item = 3, entry = 16847}, -- Giantstalker's Leggings
+    {class = 4, level = 60, item = 4, entry = 16851}, -- Giantstalker's Belt
+    {class = 4, level = 60, item = 5, entry = 16852}, -- Giantstalker's Gloves
+    {class = 4, level = 60, item = 6, entry = 16849}, -- Giantstalker's Boots
+    {class = 4, level = 60, item = 7, entry = 16850}, -- Giantstalker's Bracers
 
-    {class = 4, level = 80, item =  1, entry = 43447},
-    {class = 4, level = 80, item =  2, entry = 43449},
-    {class = 4, level = 80, item =  3, entry = 43445},
-    {class = 4, level = 80, item =  4, entry = 43448},
-    {class = 4, level = 80, item =  5, entry = 43442},
-    {class = 4, level = 80, item =  6, entry = 43446},
-    {class = 4, level = 80, item =  7, entry = 43443},
-    {class = 4, level = 80, item =  8, entry = 43444},
-    {class = 4, level = 80, item =  9, entry = 38441},
-    {class = 4, level = 80, item = 10, entry = 37615},
-    {class = 4, level = 80, item = 11, entry = 36962},
-    {class = 4, level = 80, item = 12, entry = 41167},
+    {class = 4, level = 80, item =  1, entry = 43447}, -- Swiftarrow Helm
+    {class = 4, level = 80, item =  2, entry = 43449}, -- Swiftarrow Shoulderguards
+    {class = 4, level = 80, item =  3, entry = 43445}, -- Swiftarrow Hauberk
+    {class = 4, level = 80, item =  4, entry = 43448}, -- Swiftarrow Leggins
+    {class = 4, level = 80, item =  5, entry = 43442}, -- Swiftarrow Belt
+    {class = 4, level = 80, item =  6, entry = 43446}, -- Swiftarrow Gauntlets
+    {class = 4, level = 80, item =  7, entry = 43443}, -- Swiftarrow Boots
+    {class = 4, level = 80, item =  8, entry = 43444}, -- Swiftarrow Bracers
+    {class = 4, level = 80, item =  9, entry = 38441}, -- Cloak of Harsh Winds
+    {class = 4, level = 80, item = 10, entry = 37615}, -- Titanium Compound Bow
+    {class = 4, level = 80, item = 11, entry = 36962}, -- Wyrmclaw Battleaxe
+    {class = 4, level = 80, item = 12, entry = 41167}, -- Heartseeker Scope
 
     -- Mage
-    {class = 128, level = 20, item = 1, entry = 30419},
-    {class = 128, level = 20, item = 2, entry = 12979},
-    {class = 128, level = 20, item = 3, entry = 12987},
-    {class = 128, level = 20, item = 4, entry = 2911},
-    {class = 128, level = 20, item = 5, entry = 12977},
-    {class = 128, level = 20, item = 6, entry = 4320},
-    {class = 128, level = 20, item = 7, entry = 14375},
+    {class = 128, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 128, level = 20, item = 2, entry = 12979}, -- Firebane Cloak
+    {class = 128, level = 20, item = 3, entry = 12987}, -- Darkweave Breeches
+    {class = 128, level = 20, item = 4, entry = 2911},  -- Keller's Girdle
+    {class = 128, level = 20, item = 5, entry = 12977}, -- Magefist Gloves
+    {class = 128, level = 20, item = 6, entry = 4320},  -- Spidersilk Boots
+    {class = 128, level = 20, item = 7, entry = 14375}, -- Sanguine Cuffs
 
-    {class = 128, level = 40, item = 1, entry = 7720},
-    {class = 128, level = 40, item = 2, entry = 23178},
-    {class = 128, level = 40, item = 3, entry = 9407},
-    {class = 128, level = 40, item = 4, entry = 20098},
-    {class = 128, level = 40, item = 5, entry = 10019},
-    {class = 128, level = 40, item = 6, entry = 20095},
-    {class = 128, level = 40, item = 7, entry = 19597},
+    {class = 128, level = 40, item = 1, entry = 7720},  -- Whitemane's Chapeau
+    {class = 128, level = 40, item = 2, entry = 23178}, -- Mantle of Lady Falther'ess
+    {class = 128, level = 40, item = 3, entry = 9407},  -- Stoneweaver Leggings
+    {class = 128, level = 40, item = 4, entry = 20098}, -- Highlander's Cloth Girdle
+    {class = 128, level = 40, item = 5, entry = 10019}, -- Dreamweave Gloves
+    {class = 128, level = 40, item = 6, entry = 20095}, -- Highlander's Cloth Boots
+    {class = 128, level = 40, item = 7, entry = 19597}, -- Dryad's Wrist Bindings
 
-    {class = 128, level = 60, item = 1, entry = 16795},
-    {class = 128, level = 60, item = 2, entry = 21415},
-    {class = 128, level = 60, item = 3, entry = 16796},
-    {class = 128, level = 60, item = 4, entry = 16802},
-    {class = 128, level = 60, item = 5, entry = 16801},
-    {class = 128, level = 60, item = 6, entry = 16800},
-    {class = 128, level = 60, item = 7, entry = 16799},
+    {class = 128, level = 60, item = 1, entry = 16795}, -- Arcanist Crown
+    {class = 128, level = 60, item = 2, entry = 21415}, -- Drape of Vaulted Secrets
+    {class = 128, level = 60, item = 3, entry = 16796}, -- Arcanist Leggings
+    {class = 128, level = 60, item = 4, entry = 16802}, -- Arcanist Belt
+    {class = 128, level = 60, item = 5, entry = 16801}, -- Arcanist Gloves
+    {class = 128, level = 60, item = 6, entry = 16800}, -- Arcanist Boots
+    {class = 128, level = 60, item = 7, entry = 16799}, -- Arcanist Bindings
 
-    {class = 128, level = 80, item =  1, entry = 43971},
-    {class = 128, level = 80, item =  2, entry = 43973},
-    {class = 128, level = 80, item =  3, entry = 43972},
-    {class = 128, level = 80, item =  4, entry = 43975},
-    {class = 128, level = 80, item =  5, entry = 43969},
-    {class = 128, level = 80, item =  6, entry = 41516},
-    {class = 128, level = 80, item =  7, entry = 43970},
-    {class = 128, level = 80, item =  8, entry = 43974},
-    {class = 128, level = 80, item =  9, entry = 45810},
-    {class = 128, level = 80, item = 10, entry = 37384},
-    {class = 128, level = 80, item = 11, entry = 37626},
-    {class = 128, level = 80, item = 12, entry = 37177},
+    {class = 128, level = 80, item =  1, entry = 43971}, -- Frostsavage Cowl
+    {class = 128, level = 80, item =  2, entry = 43973}, -- Frostsavage Shoulders
+    {class = 128, level = 80, item =  3, entry = 43972}, -- Frostsavage Shoulders
+    {class = 128, level = 80, item =  4, entry = 43975}, -- Frostsavage Shoulders
+    {class = 128, level = 80, item =  5, entry = 43969}, -- Frostsavage Belt
+    {class = 128, level = 80, item =  6, entry = 41516}, -- Frostsavage Gloves
+    {class = 128, level = 80, item =  7, entry = 43970}, -- Frostsavage Boots
+    {class = 128, level = 80, item =  8, entry = 43974}, -- Frostsavage Bracers
+    {class = 128, level = 80, item =  9, entry = 45810}, -- Cloak of Crimson Snow
+    {class = 128, level = 80, item = 10, entry = 37384}, -- Staff of Wayward Principles
+    {class = 128, level = 80, item = 11, entry = 37626}, -- Wand of Sseratus
+    {class = 128, level = 80, item = 12, entry = 37177}, -- Wand of the San'layn
 
     -- Paladin
-    {class = 2, level = 20, item = 1, entry = 30419},
-    {class = 2, level = 20, item = 2, entry = 20428},
-    {class = 2, level = 20, item = 3, entry = 6087},
-    {class = 2, level = 20, item = 4, entry = 12978},
-    {class = 2, level = 20, item = 5, entry = 12994},
-    {class = 2, level = 20, item = 6, entry = 12982},
-    {class = 2, level = 20, item = 7, entry = 2868},
+    {class = 2, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 2, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
+    {class = 2, level = 20, item = 3, entry = 6087},  -- Chausses of Westfall
+    {class = 2, level = 20, item = 4, entry = 12978}, -- Stormbringer Belt
+    {class = 2, level = 20, item = 5, entry = 12994}, -- Thorbia's Gauntlets
+    {class = 2, level = 20, item = 6, entry = 12982}, -- Silver-linked Footguards
+    {class = 2, level = 20, item = 7, entry = 2868},  -- Patterned Bronze Bracers
 
-    {class = 2, level = 40, item = 1, entry = 10763},
-    {class = 2, level = 40, item = 2, entry = 10776},
-    {class = 2, level = 40, item = 3, entry = 33258},
-    {class = 2, level = 40, item = 4, entry = 20107},
-    {class = 2, level = 40, item = 5, entry = 7938},
-    {class = 2, level = 40, item = 6, entry = 20110},
-    {class = 2, level = 40, item = 7, entry = 19581},
+    {class = 2, level = 40, item = 1, entry = 10763}, -- Icemetal Barbute
+    {class = 2, level = 40, item = 2, entry = 10776}, -- Silky Spider Cape
+    {class = 2, level = 40, item = 3, entry = 33258}, -- Protective Engineer's Leggings
+    {class = 2, level = 40, item = 4, entry = 20107}, -- Highlander's Lamellar Girdle
+    {class = 2, level = 40, item = 5, entry = 7938},  -- Truesilver Gauntlets
+    {class = 2, level = 40, item = 6, entry = 20110}, -- Highlander's Lamellar Greaves
+    {class = 2, level = 40, item = 7, entry = 19581}, -- Berserker Bracers
 
-    {class = 2, level = 60, item = 1, entry = 16854},
-    {class = 2, level = 60, item = 2, entry = 21397},
-    {class = 2, level = 60, item = 3, entry = 16855},
-    {class = 2, level = 60, item = 4, entry = 16858},
-    {class = 2, level = 60, item = 5, entry = 16860},
-    {class = 2, level = 60, item = 6, entry = 16859},
-    {class = 2, level = 60, item = 7, entry = 16857},
+    {class = 2, level = 60, item = 1, entry = 16854}, -- Lawbringer Helm
+    {class = 2, level = 60, item = 2, entry = 21397}, -- Cape of Eternal Justice
+    {class = 2, level = 60, item = 3, entry = 16855}, -- Lawbringer Legplates
+    {class = 2, level = 60, item = 4, entry = 16858}, -- Lawbringer Belt
+    {class = 2, level = 60, item = 5, entry = 16860}, -- Lawbringer Gauntlets
+    {class = 2, level = 60, item = 6, entry = 16859}, -- Lawbringer Boots
+    {class = 2, level = 60, item = 7, entry = 16857}, -- Lawbringer Bracers
 
-    {class = 2, level = 80, item =  1, entry = 42728},
-    {class = 2, level = 80, item =  2, entry = 42727},
-    {class = 2, level = 80, item =  3, entry = 42725},
-    {class = 2, level = 80, item =  4, entry = 42726},
-    {class = 2, level = 80, item =  5, entry = 42729},
-    {class = 2, level = 80, item =  6, entry = 42724},
-    {class = 2, level = 80, item =  7, entry = 42730},
-    {class = 2, level = 80, item =  8, entry = 42723},
-    {class = 2, level = 80, item =  9, entry = 45810},
-    {class = 2, level = 80, item = 10, entry = 41188},
-    {class = 2, level = 80, item = 11, entry = 42443},
-    {class = 2, level = 80, item = 12, entry = 41117},
+    {class = 2, level = 80, item =  1, entry = 42728}, -- Ornate Saronite Skullshield
+    {class = 2, level = 80, item =  2, entry = 42727}, -- Ornate Saronite Pauldrons
+    {class = 2, level = 80, item =  3, entry = 42725}, -- Ornate Saronite Hauberk
+    {class = 2, level = 80, item =  4, entry = 42726}, -- Ornate Saronite Legplates
+    {class = 2, level = 80, item =  5, entry = 42729}, -- Ornate Saronite Waistguard
+    {class = 2, level = 80, item =  6, entry = 42724}, -- Ornate Saronite Gauntlets
+    {class = 2, level = 80, item =  7, entry = 42730}, -- Ornate Saronite Walkers
+    {class = 2, level = 80, item =  8, entry = 42723}, -- Ornate Saronite  Bracers
+    {class = 2, level = 80, item =  9, entry = 45810}, -- Cloak of Crimson Snow
+    {class = 2, level = 80, item = 10, entry = 41188}, -- Saronite Mindcrusher
+    {class = 2, level = 80, item = 11, entry = 42443}, -- Cudgel of Saronite Justice
+    {class = 2, level = 80, item = 12, entry = 41117}, -- Saronite Protector
 
     -- Priest
-    {class = 16, level = 20, item = 1, entry = 30419},
-    {class = 16, level = 20, item = 2, entry = 20428},
-    {class = 16, level = 20, item = 3, entry = 23173},
-    {class = 16, level = 20, item = 4, entry = 2911},
-    {class = 16, level = 20, item = 5, entry = 12977},
-    {class = 16, level = 20, item = 6, entry = 4320},
-    {class = 16, level = 20, item = 7, entry = 14375},
+    {class = 16, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 16, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
+    {class = 16, level = 20, item = 3, entry = 23173}, -- Abomination Skin Leggings
+    {class = 16, level = 20, item = 4, entry = 2911},  -- Keller's Girdle
+    {class = 16, level = 20, item = 5, entry = 12977}, -- Magefist Gloves
+    {class = 16, level = 20, item = 6, entry = 4320},  -- Spidersilk Boots
+    {class = 16, level = 20, item = 7, entry = 14375}, -- Sanguine Cuffs
 
-    {class = 16, level = 40, item = 1, entry = 20969},
-    {class = 16, level = 40, item = 2, entry = 19532},
-    {class = 16, level = 40, item = 3, entry = 7709},
-    {class = 16, level = 40, item = 4, entry = 20098},
-    {class = 16, level = 40, item = 5, entry = 10019},
-    {class = 16, level = 40, item = 6, entry = 20095},
-    {class = 16, level = 40, item = 7, entry = 19597},
+    {class = 16, level = 40, item = 1, entry = 20969}, -- Ruby Crown of Restoration
+    {class = 16, level = 40, item = 2, entry = 19532}, -- Caretaker's Cape
+    {class = 16, level = 40, item = 3, entry = 7709},  -- Blighted Leggings
+    {class = 16, level = 40, item = 4, entry = 20098}, -- Highlander's Cloth Girdle
+    {class = 16, level = 40, item = 5, entry = 10019}, -- Dreamweave Gloves
+    {class = 16, level = 40, item = 6, entry = 20095}, -- Highlander's Cloth Boots
+    {class = 16, level = 40, item = 7, entry = 19597}, -- Dryad's Wrist Bindings
 
-    {class = 16, level = 60, item = 1, entry = 16813},
-    {class = 16, level = 60, item = 2, entry = 21412},
-    {class = 16, level = 60, item = 3, entry = 16814},
-    {class = 16, level = 60, item = 4, entry = 16817},
-    {class = 16, level = 60, item = 5, entry = 16812},
-    {class = 16, level = 60, item = 6, entry = 16811},
-    {class = 16, level = 60, item = 7, entry = 16819},
+    {class = 16, level = 60, item = 1, entry = 16813}, -- Circlet of Prophecy
+    {class = 16, level = 60, item = 2, entry = 21412}, -- Shroud of Infinite Wisdom
+    {class = 16, level = 60, item = 3, entry = 16814}, -- Pants of Prophecy
+    {class = 16, level = 60, item = 4, entry = 16817}, -- Girdle of Prophecy
+    {class = 16, level = 60, item = 5, entry = 16812}, -- Gloves of Prophecy
+    {class = 16, level = 60, item = 6, entry = 16811}, -- Boots of Prophecy
+    {class = 16, level = 60, item = 7, entry = 16819}, -- Vambraces of Prophecy
 
-    {class = 16, level = 80, item =  1, entry = 43971},
-    {class = 16, level = 80, item =  2, entry = 43973},
-    {class = 16, level = 80, item =  3, entry = 43972},
-    {class = 16, level = 80, item =  4, entry = 43975},
-    {class = 16, level = 80, item =  5, entry = 43969},
-    {class = 16, level = 80, item =  6, entry = 41516},
-    {class = 16, level = 80, item =  7, entry = 43970},
-    {class = 16, level = 80, item =  8, entry = 43974},
-    {class = 16, level = 80, item =  9, entry = 45810},
-    {class = 16, level = 80, item = 10, entry = 37384},
-    {class = 16, level = 80, item = 11, entry = 37626},
-    {class = 16, level = 80, item = 12, entry = 37177},
+    {class = 16, level = 80, item =  1, entry = 43971}, -- Frostsavage Cowl
+    {class = 16, level = 80, item =  2, entry = 43973}, -- Frostsavage Shoulders
+    {class = 16, level = 80, item =  3, entry = 43972}, -- Frostsavage Shoulders
+    {class = 16, level = 80, item =  4, entry = 43975}, -- Frostsavage Shoulders
+    {class = 16, level = 80, item =  5, entry = 43969}, -- Frostsavage Belt
+    {class = 16, level = 80, item =  6, entry = 41516}, -- Frostsavage Gloves
+    {class = 16, level = 80, item =  7, entry = 43970}, -- Frostsavage Boots
+    {class = 16, level = 80, item =  8, entry = 43974}, -- Frostsavage Bracers
+    {class = 16, level = 80, item =  9, entry = 45810}, -- Cloak of Crimson Snow
+    {class = 16, level = 80, item = 10, entry = 37384}, -- Staff of Wayward Principles
+    {class = 16, level = 80, item = 11, entry = 37626}, -- Wand of Sseratus
+    {class = 16, level = 80, item = 12, entry = 37177}, -- Wand of the San'layn
 
     -- Rogue
-    {class = 8, level = 20, item = 1, entry = 30419},
-    {class = 8, level = 20, item = 2, entry = 5193},
-    {class = 8, level = 20, item = 3, entry = 10410},
-    {class = 8, level = 20, item = 4, entry = 6468},
-    {class = 8, level = 20, item = 5, entry = 14572},
-    {class = 8, level = 20, item = 6, entry = 1121},
-    {class = 8, level = 20, item = 7, entry = 4794},
+    {class = 8, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 8, level = 20, item = 2, entry = 5193},  -- Cape of the Brotherhood
+    {class = 8, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
+    {class = 8, level = 20, item = 4, entry = 6468},  -- Deviate Scale Belt
+    {class = 8, level = 20, item = 5, entry = 14572}, -- Bristlebark Gloves
+    {class = 8, level = 20, item = 6, entry = 1121},  -- Feet of the Lynx
+    {class = 8, level = 20, item = 7, entry = 4794},  -- Wolf Bracers
 
-    {class = 8, level = 40, item = 1, entry = 8176},
-    {class = 8, level = 40, item = 2, entry = 13121},
-    {class = 8, level = 40, item = 3, entry = 9414},
-    {class = 8, level = 40, item = 4, entry = 20116},
-    {class = 8, level = 40, item = 5, entry = 34417},
-    {class = 8, level = 40, item = 6, entry = 20113},
-    {class = 8, level = 40, item = 7, entry = 19590},
+    {class = 8, level = 40, item = 1, entry = 8176},  -- Nightscape Headband
+    {class = 8, level = 40, item = 2, entry = 13121}, -- Wing of the Whelpling
+    {class = 8, level = 40, item = 3, entry = 9414},  -- Oilskin Leggings
+    {class = 8, level = 40, item = 4, entry = 20116}, -- Highlander's Leather Girdle
+    {class = 8, level = 40, item = 5, entry = 34417}, -- Marauder's Handwraps
+    {class = 8, level = 40, item = 6, entry = 20113}, -- Highlander's Leather Boots
+    {class = 8, level = 40, item = 7, entry = 19590}, -- Forest Stalker's Bracers
 
-    {class = 8, level = 60, item = 1, entry = 16821},
-    {class = 8, level = 60, item = 2, entry = 21406},
-    {class = 8, level = 60, item = 3, entry = 16822},
-    {class = 8, level = 60, item = 4, entry = 16827},
-    {class = 8, level = 60, item = 5, entry = 16826},
-    {class = 8, level = 60, item = 6, entry = 16824},
-    {class = 8, level = 60, item = 7, entry = 16825},
+    {class = 8, level = 60, item = 1, entry = 16821}, -- Nightslayer Cover
+    {class = 8, level = 60, item = 2, entry = 21406}, -- Cloak of Veiled Shadows
+    {class = 8, level = 60, item = 3, entry = 16822}, -- Nightslayer Pants
+    {class = 8, level = 60, item = 4, entry = 16827}, -- Nightslayer Belt
+    {class = 8, level = 60, item = 5, entry = 16826}, -- Nightslayer Gloves
+    {class = 8, level = 60, item = 6, entry = 16824}, -- Nightslayer Boots
+    {class = 8, level = 60, item = 7, entry = 16825}, -- Nightslayer Bracelets
 
-    {class = 8, level = 80, item =  1, entry = 43260},
-    {class = 8, level = 80, item =  2, entry = 43433},
-    {class = 8, level = 80, item =  3, entry = 43434},
-    {class = 8, level = 80, item =  4, entry = 43438},
-    {class = 8, level = 80, item =  5, entry = 43437},
-    {class = 8, level = 80, item =  6, entry = 43436},
-    {class = 8, level = 80, item =  7, entry = 43439},
-    {class = 8, level = 80, item =  8, entry = 43435},
-    {class = 8, level = 80, item =  9, entry = 38441},
-    {class = 8, level = 80, item = 10, entry = 41184},
-    {class = 8, level = 80, item = 11, entry = 41184},
-    {class = 8, level = 80, item = 12, entry = 41245},
+    {class = 8, level = 80, item =  1, entry = 43260}, -- Eviscerator's Facemask
+    {class = 8, level = 80, item =  2, entry = 43433}, -- Eviscerator's Shoulderpads
+    {class = 8, level = 80, item =  3, entry = 43434}, -- Eviscerator's Chestguard
+    {class = 8, level = 80, item =  4, entry = 43438}, -- Eviscerator's Legguards
+    {class = 8, level = 80, item =  5, entry = 43437}, -- Eviscerator's Waistguard
+    {class = 8, level = 80, item =  6, entry = 43436}, -- Eviscerator's Gauntlets
+    {class = 8, level = 80, item =  7, entry = 43439}, -- Eviscerator's Treads
+    {class = 8, level = 80, item =  8, entry = 43435}, -- Eviscerator's Bindings
+    {class = 8, level = 80, item =  9, entry = 38441}, -- Cloak of Harsh Winds
+    {class = 8, level = 80, item = 10, entry = 41184}, -- Saronite Shiv
+    {class = 8, level = 80, item = 11, entry = 41184}, -- Saronite Shiv
+    {class = 8, level = 80, item = 12, entry = 41245}, -- Deadly Saronite Dirk
 
     -- Shaman
-    {class = 64, level = 20, item = 1, entry = 30419},
-    {class = 64, level = 20, item = 2, entry = 20428},
-    {class = 64, level = 20, item = 3, entry = 10410},
-    {class = 64, level = 20, item = 4, entry = 10412},
-    {class = 64, level = 20, item = 5, entry = 10413},
-    {class = 64, level = 20, item = 6, entry = 10411},
-    {class = 64, level = 20, item = 7, entry = 12999},
+    {class = 64, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 64, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
+    {class = 64, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
+    {class = 64, level = 20, item = 4, entry = 10412}, -- Belt of the Fang
+    {class = 64, level = 20, item = 5, entry = 10413}, -- Gloves of the Fang
+    {class = 64, level = 20, item = 6, entry = 10411}, -- Footpads of the Fang
+    {class = 64, level = 20, item = 7, entry = 12999}, -- Drakewing Bands
 
-    {class = 64, level = 40, item = 1, entry = 4080},
-    {class = 64, level = 40, item = 2, entry = 10776},
-    {class = 64, level = 40, item = 3, entry = 9396},
-    {class = 64, level = 40, item = 4, entry = 20119},
-    {class = 64, level = 40, item = 5, entry = 8347},
-    {class = 64, level = 40, item = 6, entry = 20122},
-    {class = 64, level = 40, item = 7, entry = 19584},
+    {class = 64, level = 40, item = 1, entry = 4080},  -- Blackforge Cowl
+    {class = 64, level = 40, item = 2, entry = 10776}, -- Silky Spider Cape
+    {class = 64, level = 40, item = 3, entry = 9396},  -- Legguards of the Vault
+    {class = 64, level = 40, item = 4, entry = 20119}, -- Highlander's Mail Girdle
+    {class = 64, level = 40, item = 5, entry = 8347},  -- Dragonscale Gauntlets
+    {class = 64, level = 40, item = 6, entry = 20122}, -- Highlander's Mail Greaves
+    {class = 64, level = 40, item = 7, entry = 19584}, -- Windtalker's Wristguards
 
-    {class = 64, level = 60, item = 1, entry = 16842},
-    {class = 64, level = 60, item = 2, entry = 21400},
-    {class = 64, level = 60, item = 3, entry = 16843},
-    {class = 64, level = 60, item = 4, entry = 16838},
-    {class = 64, level = 60, item = 5, entry = 16839},
-    {class = 64, level = 60, item = 6, entry = 16837},
-    {class = 64, level = 60, item = 7, entry = 16840},
+    {class = 64, level = 60, item = 1, entry = 16842}, -- Earthfury Helmet
+    {class = 64, level = 60, item = 2, entry = 21400}, -- Cloak of the Gathering Storm
+    {class = 64, level = 60, item = 3, entry = 16843}, -- Earthfury Legguards
+    {class = 64, level = 60, item = 4, entry = 16838}, -- Earthfury Belt
+    {class = 64, level = 60, item = 5, entry = 16839}, -- Earthfury Gauntlets
+    {class = 64, level = 60, item = 6, entry = 16837}, -- Earthfury Boots
+    {class = 64, level = 60, item = 7, entry = 16840}, -- Earthfury Bracers
 
-    {class = 64, level = 80, item =  1, entry = 43455},
-    {class = 64, level = 80, item =  2, entry = 43457},
-    {class = 64, level = 80, item =  3, entry = 43453},
-    {class = 64, level = 80, item =  4, entry = 43456},
-    {class = 64, level = 80, item =  5, entry = 43450},
-    {class = 64, level = 80, item =  6, entry = 43454},
-    {class = 64, level = 80, item =  7, entry = 43451},
-    {class = 64, level = 80, item =  8, entry = 43452},
-    {class = 64, level = 80, item =  9, entry = 45810},
-    {class = 64, level = 80, item = 10, entry = 36962},
-    {class = 64, level = 80, item = 11, entry = 42443},
-    {class = 64, level = 80, item = 12, entry = 41117},
+    {class = 64, level = 80, item =  1, entry = 43455}, -- Stormhide Crown
+    {class = 64, level = 80, item =  2, entry = 43457}, -- Stormhide Shoulders
+    {class = 64, level = 80, item =  3, entry = 43453}, -- Stormhide Hauberk
+    {class = 64, level = 80, item =  4, entry = 43456}, -- Stormhide Legguards
+    {class = 64, level = 80, item =  5, entry = 43450}, -- Stormhide Belt
+    {class = 64, level = 80, item =  6, entry = 43454}, -- Stormhide Grips
+    {class = 64, level = 80, item =  7, entry = 43451}, -- Stormhide Stompers
+    {class = 64, level = 80, item =  8, entry = 43452}, -- Stormhide Wristguards
+    {class = 64, level = 80, item =  9, entry = 45810}, -- Cloak of Crimson Snow
+    {class = 64, level = 80, item = 10, entry = 36962}, -- Wyrmclaw Battleaxe
+    {class = 64, level = 80, item = 11, entry = 42443}, -- Cudgel of Saronite Justice
+    {class = 64, level = 80, item = 12, entry = 41117}, -- Saronite Protector
 
     -- Warlock
-    {class = 256, level = 20, item = 1, entry = 30419},
-    {class = 256, level = 20, item = 2, entry = 12979},
-    {class = 256, level = 20, item = 3, entry = 23173},
-    {class = 256, level = 20, item = 4, entry = 2911},
-    {class = 256, level = 20, item = 5, entry = 12977},
-    {class = 256, level = 20, item = 6, entry = 4320},
-    {class = 256, level = 20, item = 7, entry = 14375},
+    {class = 256, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 256, level = 20, item = 2, entry = 12979}, -- Firebane Cloak
+    {class = 256, level = 20, item = 3, entry = 23173}, -- Abomination Skin Leggings
+    {class = 256, level = 20, item = 4, entry = 2911},  -- Keller's Girdle
+    {class = 256, level = 20, item = 5, entry = 12977}, -- Magefist Gloves
+    {class = 256, level = 20, item = 6, entry = 4320},  -- Spidersilk Boots
+    {class = 256, level = 20, item = 7, entry = 14375}, -- Sanguine Cuffs
 
-    {class = 256, level = 40, item = 1, entry = 9429},
-    {class = 256, level = 40, item = 2, entry = 10776},
-    {class = 256, level = 40, item = 3, entry = 2277},
-    {class = 256, level = 40, item = 4, entry = 20098},
-    {class = 256, level = 40, item = 5, entry = 10019},
-    {class = 256, level = 40, item = 6, entry = 20095},
-    {class = 256, level = 40, item = 7, entry = 19597},
+    {class = 256, level = 40, item = 1, entry = 9429},  -- Miner's Hat of the Deep
+    {class = 256, level = 40, item = 2, entry = 10776}, -- Silky Spider Cape
+    {class = 256, level = 40, item = 3, entry = 2277},  -- Necromancer Leggings
+    {class = 256, level = 40, item = 4, entry = 20098}, -- Highlander's Cloth Girdle
+    {class = 256, level = 40, item = 5, entry = 10019}, -- Dreamweave Gloves
+    {class = 256, level = 40, item = 6, entry = 20095}, -- Highlander's Cloth Boots
+    {class = 256, level = 40, item = 7, entry = 19597}, -- Dryad's Wrist Bindings
 
-    {class = 256, level = 60, item = 1, entry = 16808},
-    {class = 256, level = 60, item = 2, entry = 21418},
-    {class = 256, level = 60, item = 3, entry = 16810},
-    {class = 256, level = 60, item = 4, entry = 16806},
-    {class = 256, level = 60, item = 5, entry = 16805},
-    {class = 256, level = 60, item = 6, entry = 16803},
-    {class = 256, level = 60, item = 7, entry = 16804},
+    {class = 256, level = 60, item = 1, entry = 16808}, -- Felheart Horns
+    {class = 256, level = 60, item = 2, entry = 21418}, -- Shroud of Unspoken Names
+    {class = 256, level = 60, item = 3, entry = 16810}, -- Felheart Pants
+    {class = 256, level = 60, item = 4, entry = 16806}, -- Felheart Belt
+    {class = 256, level = 60, item = 5, entry = 16805}, -- Felheart Gloves
+    {class = 256, level = 60, item = 6, entry = 16803}, -- Felheart Slippers
+    {class = 256, level = 60, item = 7, entry = 16804}, -- Felheart Bracers
 
-    {class = 256, level = 80, item =  1, entry = 43971},
-    {class = 256, level = 80, item =  2, entry = 43973},
-    {class = 256, level = 80, item =  3, entry = 43972},
-    {class = 256, level = 80, item =  4, entry = 43975},
-    {class = 256, level = 80, item =  5, entry = 43969},
-    {class = 256, level = 80, item =  6, entry = 41516},
-    {class = 256, level = 80, item =  7, entry = 43970},
-    {class = 256, level = 80, item =  8, entry = 43974},
-    {class = 256, level = 80, item =  9, entry = 45810},
-    {class = 256, level = 80, item = 10, entry = 37384},
-    {class = 256, level = 80, item = 11, entry = 37626},
-    {class = 256, level = 80, item = 12, entry = 37177},
+    {class = 256, level = 80, item =  1, entry = 43971}, -- Frostsavage Cowl
+    {class = 256, level = 80, item =  2, entry = 43973}, -- Frostsavage Shoulders
+    {class = 256, level = 80, item =  3, entry = 43972}, -- Frostsavage Shoulders
+    {class = 256, level = 80, item =  4, entry = 43975}, -- Frostsavage Shoulders
+    {class = 256, level = 80, item =  5, entry = 43969}, -- Frostsavage Belt
+    {class = 256, level = 80, item =  6, entry = 41516}, -- Frostsavage Gloves
+    {class = 256, level = 80, item =  7, entry = 43970}, -- Frostsavage Boots
+    {class = 256, level = 80, item =  8, entry = 43974}, -- Frostsavage Bracers
+    {class = 256, level = 80, item =  9, entry = 45810}, -- Cloak of Crimson Snow
+    {class = 256, level = 80, item = 10, entry = 37384}, -- Staff of Wayward Principles
+    {class = 256, level = 80, item = 11, entry = 37626}, -- Wand of Sseratus
+    {class = 256, level = 80, item = 12, entry = 37177}, -- Wand of the San'layn
 
     -- Warrior
-    {class = 1, level = 20, item = 1, entry = 30419},
-    {class = 1, level = 20, item = 2, entry = 5193},
-    {class = 1, level = 20, item = 3, entry = 6087},
-    {class = 1, level = 20, item = 4, entry = 12978},
-    {class = 1, level = 20, item = 5, entry = 12994},
-    {class = 1, level = 20, item = 6, entry = 12982},
-    {class = 1, level = 20, item = 7, entry = 2868},
+    {class = 1, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
+    {class = 1, level = 20, item = 2, entry = 5193},  -- Cape of the Brotherhood
+    {class = 1, level = 20, item = 3, entry = 6087},  -- Chausses of Westfall
+    {class = 1, level = 20, item = 4, entry = 12978}, -- Stormbringer Belt
+    {class = 1, level = 20, item = 5, entry = 12994}, -- Thorbia's Gauntlets
+    {class = 1, level = 20, item = 6, entry = 12982}, -- Silver-linked Footguards
+    {class = 1, level = 20, item = 7, entry = 2868},  -- Patterned Bronze Bracers
 
-    {class = 1, level = 40, item = 1, entry = 10763},
-    {class = 1, level = 40, item = 2, entry = 13121},
-    {class = 1, level = 40, item = 3, entry = 7921},
-    {class = 1, level = 40, item = 4, entry = 20125},
-    {class = 1, level = 40, item = 5, entry = 7938},
-    {class = 1, level = 40, item = 6, entry = 20128},
-    {class = 1, level = 40, item = 7, entry = 19581},
+    {class = 1, level = 40, item = 1, entry = 10763}, -- Icemetal Barbute
+    {class = 1, level = 40, item = 2, entry = 13121}, -- Wing of the Whelpling
+    {class = 1, level = 40, item = 3, entry = 7921},  -- Heavy Mithril Pants
+    {class = 1, level = 40, item = 4, entry = 20125}, -- Highlander's Plate Girdle
+    {class = 1, level = 40, item = 5, entry = 7938},  -- Truesilver Gauntlets
+    {class = 1, level = 40, item = 6, entry = 20128}, -- Highlander's Plate Greaves
+    {class = 1, level = 40, item = 7, entry = 19581}, -- Berserker Bracers
 
-    {class = 1, level = 60, item = 1, entry = 16866},
-    {class = 1, level = 60, item = 2, entry = 21394},
-    {class = 1, level = 60, item = 3, entry = 16867},
-    {class = 1, level = 60, item = 4, entry = 16864},
-    {class = 1, level = 60, item = 5, entry = 16863},
-    {class = 1, level = 60, item = 6, entry = 16862},
-    {class = 1, level = 60, item = 7, entry = 16861},
+    {class = 1, level = 60, item = 1, entry = 16866}, -- Helm of Might
+    {class = 1, level = 60, item = 2, entry = 21394}, -- Drape of Unyielding Strength
+    {class = 1, level = 60, item = 3, entry = 16867}, -- Legplates of Might
+    {class = 1, level = 60, item = 4, entry = 16864}, -- Belt of Might
+    {class = 1, level = 60, item = 5, entry = 16863}, -- Gauntlets of Might
+    {class = 1, level = 60, item = 6, entry = 16862}, -- Sabatons of Might
+    {class = 1, level = 60, item = 7, entry = 16861}, -- Bracers of Might
 
-    {class = 1, level = 80, item =  1, entry = 41350},
-    {class = 1, level = 80, item =  2, entry = 41351},
-    {class = 1, level = 80, item =  3, entry = 41353},
-    {class = 1, level = 80, item =  4, entry = 41347},
-    {class = 1, level = 80, item =  5, entry = 41352},
-    {class = 1, level = 80, item =  6, entry = 41349},
-    {class = 1, level = 80, item =  7, entry = 41348},
-    {class = 1, level = 80, item =  8, entry = 41354},
-    {class = 1, level = 80, item =  9, entry = 45811},
-    {class = 1, level = 80, item = 10, entry = 41186},
-    {class = 1, level = 80, item = 11, entry = 41186},
-    {class = 1, level = 80, item = 12, entry = 41113},
+    {class = 1, level = 80, item =  1, entry = 41350}, -- Overcast Headguard
+    {class = 1, level = 80, item =  2, entry = 41351}, -- Overcast Spaulders
+    {class = 1, level = 80, item =  3, entry = 41353}, -- Overcast Chestguard
+    {class = 1, level = 80, item =  4, entry = 41347}, -- Overcast Leggings
+    {class = 1, level = 80, item =  5, entry = 41352}, -- Overcast Belt
+    {class = 1, level = 80, item =  6, entry = 41349}, -- Overcast Handwraps
+    {class = 1, level = 80, item =  7, entry = 41348}, -- Overcast Boots
+    {class = 1, level = 80, item =  8, entry = 41354}, -- Overcast Bracers
+    {class = 1, level = 80, item =  9, entry = 45811}, -- Cloak of Crimson Snow
+    {class = 1, level = 80, item = 10, entry = 41186}, -- Staff of Wayward Principles
+    {class = 1, level = 80, item = 11, entry = 41186}, -- Enraged Feral Staff
+    {class = 1, level = 80, item = 12, entry = 41113}, -- Idol of the Raven Goddess
 }
 
 function findGear(class, level, item)
