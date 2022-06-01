@@ -451,7 +451,7 @@ function levelCheck(event, player, oldLevel)
             1
         )
     end
-    if level==80 then
+    if level==80 and class ~= 32 then
         print("["..MODULE_NAME.."]: Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
