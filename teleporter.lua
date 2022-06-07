@@ -39,6 +39,15 @@ function Teleporter.OnSelect(event, player, unit, sender, intid, code)
         player:GossipSendMenu(0x7FFFFFFF, unit)
     elseif(t[intid]["type"] == 2) then
         player:Teleport(t[intid]["map"], t[intid]["x"], t[intid]["y"], t[intid]["z"], t[intid]["o"])
+    elseif(t[intid]["type"] == 3) then
+        local choice = math.random(t[intid]["x"], t[intid]["y"])
+        for k, v in pairs(t) do
+            if(v["id"] == choice) then
+                print("["..MODULE_NAME.."]: Random Dungeon: "..choice.." - "..v["name"])
+                player:Teleport(v["map"], v["x"], v["y"], v["z"], v["o"])
+            end
+        end
+        player:GossipComplete()
     end
 end
 
