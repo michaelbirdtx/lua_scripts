@@ -1,7 +1,7 @@
 -- Forked from Eluna SQL Teleporter
 
 local MODULE_NAME = "Eluna teleporter"
-local MODULE_VERSION = '1.0'
+local MODULE_VERSION = '1.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -12,8 +12,8 @@ local Teleporter = {
 
 function Teleporter.OnHello(event, player, unit)
     for k, v in pairs(Teleporter["Options"]) do
-        --print(MODULE_NAME..": Option "..k..": "..v["name"])
-        if(player:GetTeam() == v["faction"] or v["faction"] == -1) and ( v["parent"] == 0) then
+        --print(MODULE_NAME..": Option "..k..": "..v["name"].." ("..v["type"]..")")
+        if(player:GetTeam() == v["faction"] or v["faction"] == -1) and (v["parent"] == 0) then
             player:GossipMenuAddItem(v["icon"], v["name"], 0, v["id"])
         end
     end
@@ -31,7 +31,7 @@ function Teleporter.OnSelect(event, player, unit, sender, intid, code)
         for k, v in pairs(t) do
             if(v["parent"] == intid and (player:GetTeam() == v["faction"] or v["faction"] == -1)) then
                 player:GossipMenuAddItem(v["icon"], v["name"], 0, k)
-                --print(MODULE_NAME..": Menu Item added "..v["name"])
+                --print(MODULE_NAME..": Menu Item added "..v["id"]..": "..v["name"])
             end
         end
         player:GossipMenuAddItem(7, "[Back]", 0, t[intid]["parent"])
@@ -69,7 +69,7 @@ function Teleporter.LoadCache()
                 z = Query:GetFloat(9),
                 o = Query:GetFloat(10),
             };
-            --print(MODULE_NAME..": Cache loaded "..Query:GetString(5))
+            --print("["..MODULE_NAME.."]: Cache loaded "..Query:GetUInt32(0)..": "..Query:GetString(5).." ("..Query:GetUInt32(2)..")")
             item = item + 1
         until not Query:NextRow()
         print("["..MODULE_NAME.."]: Cache initialized. Loaded "..Query:GetRowCount().." results.")
