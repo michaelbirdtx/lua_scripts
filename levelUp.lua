@@ -42,7 +42,7 @@ local Titles = {
     [5]  = 125,   -- Loremaster
     [6]  = 172,   -- the Patient
     [7]  =  27,   -- Warlord
-    [8]  =  43,   -- Duelist
+    [8]  =   4,   -- Master Sergeant
     [9]  =  76,   -- Flame Keeper
     [10] =  11,   -- Commander
     [11] = 174,   -- Bane of the Fallen King
@@ -55,6 +55,36 @@ local Titles = {
     [18] = 124,   -- the Hallowed
     [19] =  83,   -- Salty
     [20] = 154,   -- of the Undercity
+}
+
+local Spells = {
+    -- All Classes (0)
+    {class = 0, level = 20, type = 1, entry = 63624}, -- Dual Talent Specialization
+    {class = 0, level = 20, type = 3, entry = 43}, -- Duelist
+    -- Druid (1024)
+    {class = 1024, level = 10, type = 1, entry = 19027}, -- Teleport: Moonglade
+    {class = 1024, level = 10, type = 1, entry = 19179}, -- Bear Form
+    {class = 1024, level = 10, type = 1, entry = 8947},  -- Cure Poison
+    -- Hunter (4)
+    {class = 4, level = 10, type = 1, entry = 1579}, -- Tame Beast
+    {class = 4, level = 10, type = 1, entry = 5300}, -- Beast Training
+    -- Shaman (64)
+    {class = 64, level = 4, type = 1, entry = 8073},  -- Stoneskin Totem
+    {class = 64, level = 4, type = 2, entry = 5175},  -- Earth Totem
+    {class = 64, level = 10, type = 1, entry = 2075}, -- Searing Totem
+    {class = 64, level = 10, type = 2, entry = 5176}, -- Fire Totem
+    {class = 64, level = 20, type = 1, entry = 5396}, -- Healing Stream Totem
+    {class = 64, level = 20, type = 2, entry = 5177}, -- Water Totem
+    {class = 64, level = 30, type = 2, entry = 5178}, -- Air Totem
+    -- Warlock (256)
+    {class = 256, level = 10, type = 1, entry = 11520}, -- Summon Voidwalker
+    {class = 256, level = 20, type = 1, entry = 11519}, -- Summon Succubus
+    {class = 256, level = 20, type = 2, entry = 22243}, -- Small Soul Pouch
+    {class = 256, level = 30, type = 1, entry = 1373},  -- Summon Felhunter
+    {class = 256, level = 30, type = 2, entry = 22244}, -- Box of Souls
+    -- Warrior (1)
+    {class = 1, level = 10, type = 1, entry = 8121}, -- Path of Defense
+    {class = 1, level = 30, type = 1, entry = 8616}, -- Path of the Berserker
 }
 
 local Gear = {
@@ -387,24 +417,41 @@ local Gear = {
     {class = 1, level = 60, item = 6, entry = 16862}, -- Sabatons of Might
     {class = 1, level = 60, item = 7, entry = 16861}, -- Bracers of Might
 
-    {class = 1, level = 80, item =  1, entry = 41350}, -- Overcast Headguard
-    {class = 1, level = 80, item =  2, entry = 41351}, -- Overcast Spaulders
-    {class = 1, level = 80, item =  3, entry = 41353}, -- Overcast Chestguard
-    {class = 1, level = 80, item =  4, entry = 41347}, -- Overcast Leggings
-    {class = 1, level = 80, item =  5, entry = 41352}, -- Overcast Belt
-    {class = 1, level = 80, item =  6, entry = 41349}, -- Overcast Handwraps
-    {class = 1, level = 80, item =  7, entry = 41348}, -- Overcast Boots
-    {class = 1, level = 80, item =  8, entry = 41354}, -- Overcast Bracers
-    {class = 1, level = 80, item =  9, entry = 45811}, -- Cloak of Crimson Snow
-    {class = 1, level = 80, item = 10, entry = 41186}, -- Staff of Wayward Principles
-    {class = 1, level = 80, item = 11, entry = 41186}, -- Enraged Feral Staff
-    {class = 1, level = 80, item = 12, entry = 41113}, -- Idol of the Raven Goddess
+    {class = 1, level = 80, item =  1, entry = 41350}, -- Savage Saronite Skullshield
+    {class = 1, level = 80, item =  2, entry = 41351}, -- Savage Saronite Pauldrons
+    {class = 1, level = 80, item =  3, entry = 41353}, -- Savage Saronite Hauberk
+    {class = 1, level = 80, item =  4, entry = 41347}, -- Savage Saronite Legplates
+    {class = 1, level = 80, item =  5, entry = 41352}, -- Savage Saronite Waistguard
+    {class = 1, level = 80, item =  6, entry = 41349}, -- Savage Saronite Gauntlets
+    {class = 1, level = 80, item =  7, entry = 41348}, -- Savage Saronite Walkers
+    {class = 1, level = 80, item =  8, entry = 41354}, -- Savage Saronite Bracers
+    {class = 1, level = 80, item =  9, entry = 45811}, -- Frotguard Drape
+    {class = 1, level = 80, item = 10, entry = 41182}, -- Savage Cobalt Slicer
+    {class = 1, level = 80, item = 11, entry = 41182}, -- Savage Cobalt Slicer
+    {class = 1, level = 80, item = 12, entry = 41113}, -- Saronite Bulwark
 }
 
 function findGear(class, level, item)
     for i, v in ipairs(Gear) do
         if v.class==class and v.level==level and v.item==item then
             return v.entry
+        end
+    end
+end
+
+function checkSpells(class, level, player)
+    for i, v in ipairs(Spells) do
+        if ((v.class==class or v.class==0) and v.level<=level) then
+            if (v.type==0) then
+                player:LearnSpell(v.entry)
+            elseif (v.type==1) then
+                player:CastSpell(player, v.entry, true)
+            elseif (v.type==2 and player:HasItem(v.entry)==false) then
+                player:AddItem(v.entry)
+            elseif (v.type==3) then
+                player:SetKnownTitle(v.entry)
+            end
+            print("["..MODULE_NAME.."]: Level: "..level.." Class: "..v.class.." Spell: "..v.entry)
         end
     end
 end
@@ -417,6 +464,7 @@ function levelCheck(event, player, oldLevel)
     emailTo = player:GetGUIDLow()
     emailStationery = 61
     emailFrom = 0
+    checkSpells(class, level, player)
     if (level==20 or level==40 or level==60) and class ~= 32 then
         print("["..MODULE_NAME.."]: Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
