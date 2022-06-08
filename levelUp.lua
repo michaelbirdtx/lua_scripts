@@ -51,14 +51,14 @@ local Titles = {
     [14] = 145,   -- the Insane
     [15] =   9,   -- Knight-Champion
     [16] =  77,   -- the Exalted
-    [17] = 158,   -- Death's Demise
+    [17] = 141,   -- the Immortal
     [18] = 124,   -- the Hallowed
     [19] =  83,   -- Salty
     [20] = 154,   -- of the Undercity
 }
 
 local Gear = {
-    -- Druid
+    -- Druid (1024)
     {class = 1024, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 1024, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
     {class = 1024, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
@@ -96,7 +96,7 @@ local Gear = {
     {class = 1024, level = 80, item = 11, entry = 37190}, -- Enraged Feral Staff
     {class = 1024, level = 80, item = 12, entry = 32387}, -- Idol of the Raven Goddesss
 
-    -- Hunter
+    -- Hunter (4)
     {class = 4, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 4, level = 20, item = 2, entry = 5193},  -- Cape of the Brotherhood
     {class = 4, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
@@ -134,7 +134,7 @@ local Gear = {
     {class = 4, level = 80, item = 11, entry = 36962}, -- Wyrmclaw Battleaxe
     {class = 4, level = 80, item = 12, entry = 41167}, -- Heartseeker Scope
 
-    -- Mage
+    -- Mage (128)
     {class = 128, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 128, level = 20, item = 2, entry = 12979}, -- Firebane Cloak
     {class = 128, level = 20, item = 3, entry = 12987}, -- Darkweave Breeches
@@ -172,7 +172,7 @@ local Gear = {
     {class = 128, level = 80, item = 11, entry = 37626}, -- Wand of Sseratus
     {class = 128, level = 80, item = 12, entry = 37177}, -- Wand of the San'layn
 
-    -- Paladin
+    -- Paladin (2)
     {class = 2, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 2, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
     {class = 2, level = 20, item = 3, entry = 6087},  -- Chausses of Westfall
@@ -210,7 +210,7 @@ local Gear = {
     {class = 2, level = 80, item = 11, entry = 42443}, -- Cudgel of Saronite Justice
     {class = 2, level = 80, item = 12, entry = 41117}, -- Saronite Protector
 
-    -- Priest
+    -- Priest (16)
     {class = 16, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 16, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
     {class = 16, level = 20, item = 3, entry = 23173}, -- Abomination Skin Leggings
@@ -248,7 +248,7 @@ local Gear = {
     {class = 16, level = 80, item = 11, entry = 37626}, -- Wand of Sseratus
     {class = 16, level = 80, item = 12, entry = 37177}, -- Wand of the San'layn
 
-    -- Rogue
+    -- Rogue (8)
     {class = 8, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 8, level = 20, item = 2, entry = 5193},  -- Cape of the Brotherhood
     {class = 8, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
@@ -286,7 +286,7 @@ local Gear = {
     {class = 8, level = 80, item = 11, entry = 41184}, -- Saronite Shiv
     {class = 8, level = 80, item = 12, entry = 41245}, -- Deadly Saronite Dirk
 
-    -- Shaman
+    -- Shaman (64)
     {class = 64, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 64, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
     {class = 64, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
@@ -324,7 +324,7 @@ local Gear = {
     {class = 64, level = 80, item = 11, entry = 42443}, -- Cudgel of Saronite Justice
     {class = 64, level = 80, item = 12, entry = 41117}, -- Saronite Protector
 
-    -- Warlock
+    -- Warlock (256)
     {class = 256, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 256, level = 20, item = 2, entry = 12979}, -- Firebane Cloak
     {class = 256, level = 20, item = 3, entry = 23173}, -- Abomination Skin Leggings
@@ -362,7 +362,7 @@ local Gear = {
     {class = 256, level = 80, item = 11, entry = 37626}, -- Wand of Sseratus
     {class = 256, level = 80, item = 12, entry = 37177}, -- Wand of the San'layn
 
-    -- Warrior
+    -- Warrior (1)
     {class = 1, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
     {class = 1, level = 20, item = 2, entry = 5193},  -- Cape of the Brotherhood
     {class = 1, level = 20, item = 3, entry = 6087},  -- Chausses of Westfall
@@ -467,6 +467,8 @@ function levelCheck(event, player, oldLevel)
             0, -- COD
             56806, -- Mini Thor
             1,
+            49177, -- Tome of Cold Weather Flying
+            1,
             findGear(class,level,1),
             1,
             findGear(class,level,2),
@@ -490,6 +492,26 @@ function levelCheck(event, player, oldLevel)
             findGear(class,level,11),
             1,
             findGear(class,level,12),
+            1
+        )
+    end
+    if level==80 and class == 32 then
+        print("["..MODULE_NAME.."]: Level: "..level.." Class: "..class)
+        player:SendNotification("Congrats on Level "..level.."!")
+        player:PlayDirectSound(8572)
+        player:SetKnownTitle(158) -- Death's Demise
+        SendMail(
+            emailSubject,
+            emailBody,
+            emailTo,
+            emailFrom,
+            emailStationery,
+            0, -- Delay
+            Gold[level],
+            0, -- COD
+            56806, -- Mini Thor
+            1,
+            49177, -- Tome of Cold Weather Flying
             1
         )
     end
