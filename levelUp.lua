@@ -72,6 +72,9 @@ local Spells = {
     -- Warrior (1)
     {class = 1, level = 10, type = 1, entry = 8121}, -- Path of Defense
     {class = 1, level = 30, type = 1, entry = 8616}, -- Path of the Berserker
+    -- Paladin (2)
+    {class = 2, level = 20, type = 0, entry = 13819}, -- Warhorse
+    {class = 2, level = 40, type = 0, entry = 23214}, -- Charger
     -- Hunter (3)
     {class = 3, level = 10, type = 1, entry = 1579}, -- Tame Beast
     {class = 3, level = 10, type = 1, entry = 5300}, -- Beast Training
