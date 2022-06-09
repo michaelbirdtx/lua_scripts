@@ -125,7 +125,7 @@ local function ProcessCopper(player)
     player:ModifyMoney(-1)
 end
 
-function wait(seconds)
+local function wait(seconds)
     local start = os.time()
     repeat until os.time() > start + seconds
 end

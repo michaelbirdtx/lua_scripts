@@ -31,7 +31,7 @@ local GlyphMaster = {
     entry = 667100
 }
 
-function findDisplayID(class, type)
+local function findDisplayID(class, type)
     for i, v in ipairs(DisplayIDs) do
         if v.class==class and v.type==type then
             return v.id
