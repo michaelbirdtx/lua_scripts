@@ -271,7 +271,7 @@ local function firstLogin(event, player)
         emailFrom,
         emailStationery,
         0, -- Delay
-        10000, -- 1 Gold
+        100000, -- 10 Gold
         0, -- COD
         bagEntry,
         1,
