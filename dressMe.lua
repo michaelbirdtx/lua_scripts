@@ -70,7 +70,7 @@ local function LoadPlayer(player)
             end
         end
     end
-    print("[Eluna dressMe]: Loaded "..player.GetName())
+    print("[Eluna dressMe]: Player "..playerGUID.." Loaded")
 end
 
 local function DeleteFakeFromDB(itemGUID)
@@ -109,7 +109,7 @@ local function SetFakeEntry(player, item, entry)
 end
 
 local function DeleteAllTransmogs(player)
-    --print("[Eluna dressMe]: Reset All")
+    print("[Eluna dressMe]: Reset All")
     player:SendAreaTriggerMessage("Transmogs have been reset")
     for slot = EQUIPMENT_SLOT_START, EQUIPMENT_SLOT_END-1 do
         local item = player:GetItemByPos(INVENTORY_SLOT_BAG_0, slot)
