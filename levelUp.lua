@@ -174,7 +174,7 @@ local Gear = {
     {class = 2, level = 80, item =  7, entry = 42730}, -- Ornate Saronite Walkers
     {class = 2, level = 80, item =  8, entry = 42723}, -- Ornate Saronite  Bracers
     {class = 2, level = 80, item =  9, entry = 45810}, -- Cloak of Crimson Snow
-    {class = 2, level = 80, item = 10, entry = 41188}, -- Saronite Mindcrusher
+    {class = 2, level = 80, item = 10, entry = 41257}, -- Titansteel Destroyer
     {class = 2, level = 80, item = 11, entry = 42443}, -- Cudgel of Saronite Justice
     {class = 2, level = 80, item = 12, entry = 41117}, -- Saronite Protector
 
