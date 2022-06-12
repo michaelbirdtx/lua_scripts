@@ -60,7 +60,7 @@ local Titles = {
 local Spells = {
     -- All Classes (0)
     {class = 0, level = 20, type = 1, entry = 63624}, -- Dual Talent Specialization
-    {class = 0, level = 20, type = 3, entry = 43}, -- Duelist
+    {class = 0, level = 20, type = 3, entry = 43},    -- Duelist
     {class = 0, level = 20, type = 1, entry = 33389}, -- Apprentice Riding
     {class = 0, level = 20, type = 0, entry = 75614}, -- Celestial Steed
     {class = 0, level = 40, type = 1, entry = 33392}, -- Journeyman Riding
@@ -72,24 +72,28 @@ local Spells = {
     -- Warrior (1)
     {class = 1, level = 10, type = 1, entry = 8121}, -- Path of Defense
     {class = 1, level = 30, type = 1, entry = 8616}, -- Path of the Berserker
+    {class = 1, level = 40, type = 0, entry = 750},  -- Plate Armor
     -- Paladin (2)
     {class = 2, level = 20, type = 0, entry = 13819}, -- Warhorse
     {class = 2, level = 40, type = 0, entry = 23214}, -- Charger
+    {class = 2, level = 40, type = 0, entry = 750},   -- Plate Armor
     -- Hunter (3)
     {class = 3, level = 10, type = 1, entry = 1579}, -- Tame Beast
     {class = 3, level = 10, type = 1, entry = 5300}, -- Beast Training
+    {class = 3, level = 40, type = 0, entry = 8737},  -- Mail Armor
     -- Shaman (7)
-    {class = 7, level = 4, type = 1, entry = 8073},  -- Stoneskin Totem
-    {class = 7, level = 4, type = 2, entry = 5175},  -- Earth Totem
+    {class = 7, level = 4, type = 1, entry  = 8073}, -- Stoneskin Totem
+    {class = 7, level = 4, type = 2, entry  = 5175}, -- Earth Totem
     {class = 7, level = 10, type = 1, entry = 2075}, -- Searing Totem
     {class = 7, level = 10, type = 2, entry = 5176}, -- Fire Totem
     {class = 7, level = 20, type = 1, entry = 5396}, -- Healing Stream Totem
     {class = 7, level = 20, type = 2, entry = 5177}, -- Water Totem
     {class = 7, level = 30, type = 2, entry = 5178}, -- Air Totem
+    {class = 7, level = 40, type = 0, entry = 8737},  -- Mail Armor
     -- Warlock (9)
     {class = 9, level = 10, type = 1, entry = 11520}, -- Summon Voidwalker
     {class = 9, level = 20, type = 1, entry = 11519}, -- Summon Succubus
-    {class = 9, level = 20, type = 1, entry = 5785}, -- Summon Felsteed
+    {class = 9, level = 20, type = 1, entry = 5785},  -- Summon Felsteed
     {class = 9, level = 20, type = 2, entry = 22243}, -- Small Soul Pouch
     {class = 9, level = 30, type = 1, entry = 1373},  -- Summon Felhunter
     {class = 9, level = 30, type = 2, entry = 22244}, -- Box of Souls
