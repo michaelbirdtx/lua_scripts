@@ -1,6 +1,6 @@
 # lua_scripts
 
-A collection of scripts for AzerothCore with the ElunaEngine mod.
+A collection of scripts for AzerothCore with the ElunaLuaEngine mod.
 
 ## dressMe.lua
 
