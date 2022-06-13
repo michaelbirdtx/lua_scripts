@@ -1,12 +1,8 @@
---[[
-1.1
-dressMe Transmog Backend for WotLK (requires modified DressMe AddOn)
-by Shermer
+local MODULE_NAME = "Eluna dressMe"
+local MODULE_VERSION = '1.2'
+local MODULE_AUTHOR = "Mpromptu Gaming"
 
-Based on Transmogrification for Classic & TBC & WotLK - Gossip Menu
-by Rochet2
-
-]]
+print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local copperCost                    = 1
 local EQUIPMENT_SLOT_START          = 0
@@ -35,8 +31,6 @@ local PLAYER_VISIBLE_ITEM_1_ENTRYID = 283
 local ITEM_SLOT_MULTIPLIER          = 2
 local entryMap                      = {}
 local dataMap                       = {}
-
-print("[Eluna dressMe]: Loaded")
 
 local function GetFakeEntry(item)
     local guid = item and item:GetGUIDLow()
@@ -70,7 +64,6 @@ local function LoadPlayer(player)
             end
         end
     end
-    print("[Eluna dressMe]: Player "..playerGUID.." Loaded")
 end
 
 local function DeleteFakeFromDB(itemGUID)
@@ -109,7 +102,7 @@ local function SetFakeEntry(player, item, entry)
 end
 
 local function DeleteAllTransmogs(player)
-    print("[Eluna dressMe]: Reset All")
+    print("["..MODULE_NAME.."]: Reset All")
     player:SendAreaTriggerMessage("Transmogs have been reset")
     for slot = EQUIPMENT_SLOT_START, EQUIPMENT_SLOT_END-1 do
         local item = player:GetItemByPos(INVENTORY_SLOT_BAG_0, slot)
@@ -117,7 +110,7 @@ local function DeleteAllTransmogs(player)
             DeleteFakeEntry(item)
         end
     end
-    --CharDBExecute("DELETE FROM custom_transmogrification WHERE Owner = "..player:GetGUIDLow())
+    CharDBExecute("DELETE FROM eluna_transmog WHERE Owner = "..player:GetGUIDLow())
 end
 
 local function ProcessCopper(player)
@@ -133,7 +126,6 @@ end
 local function onChatMessage(event, player, msg, _, lang)
     if (msg:find('#transmog reset') == 1) then
         player:PlayDirectSound(3337)
-        --wait(5)
         ProcessCopper(player)
         DeleteAllTransmogs(player)
         LoadPlayer(player)
