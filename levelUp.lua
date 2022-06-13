@@ -74,8 +74,6 @@ local Spells = {
     {class = 1, level = 30, type = 1, entry = 8616}, -- Path of the Berserker
     {class = 1, level = 40, type = 0, entry = 750},  -- Plate Armor
     -- Paladin (2)
-    {class = 2, level = 20, type = 0, entry = 13819}, -- Warhorse
-    {class = 2, level = 40, type = 0, entry = 23214}, -- Charger
     {class = 2, level = 40, type = 0, entry = 750},   -- Plate Armor
     -- Hunter (3)
     {class = 3, level = 10, type = 1, entry = 1579}, -- Tame Beast
@@ -451,9 +449,7 @@ local Gear = {
 }
 
 local function findGear(class, level, item)
-    --print("findGear entered: Class: "..class.." Level: "..level.." Item: "..item)
     for i, v in ipairs(Gear) do
-        --print("findGear: Class: "..v.class.." Level: "..v.level.." Item: "..v.item)
         if v.class==class and v.level==level and v.item==item then
             return v.entry
         end
@@ -487,7 +483,7 @@ local function levelCheck(event, player, oldLevel)
     emailStationery = 61
     emailFrom = 0
     checkSpells(class, level, player)
-    if (level==20 or level==40 or level==60) and class ~= 32 then
+    if (level==20 or level==40 or level==60) and class ~= 6 then
         print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
@@ -521,7 +517,7 @@ local function levelCheck(event, player, oldLevel)
             1
         )
     end
-    if level==80 and class ~= 32 then
+    if level==80 and class ~= 6 then
         print("["..MODULE_NAME.."]: "..player:GetName()..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
@@ -536,8 +532,6 @@ local function levelCheck(event, player, oldLevel)
             Gold[level],
             0, -- COD
             56806, -- Mini Thor
-            1,
-            49177, -- Tome of Cold Weather Flying
             1,
             findGear(class,level,1),
             1,
@@ -565,7 +559,7 @@ local function levelCheck(event, player, oldLevel)
             1
         )
     end
-    if level==80 and class == 32 then
+    if level==80 and class == 6 then
         print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
@@ -580,8 +574,6 @@ local function levelCheck(event, player, oldLevel)
             Gold[level],
             0, -- COD
             56806, -- Mini Thor
-            1,
-            49177, -- Tome of Cold Weather Flying
             1
         )
     end
