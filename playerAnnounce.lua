@@ -24,6 +24,7 @@ local function announce(player, action)
     msg = getTeamName(player).." player "..player:GetName().." ("..player:GetAccountName()..") has "..action.."."
     print("["..MODULE_NAME.."]: "..msg)
     SendWorldMessage("|"..getTeamColor(player)..msg.."|r")
+    player:PlayDirectSound(15273)    
 end
 
 local function onLogin(event, player)
