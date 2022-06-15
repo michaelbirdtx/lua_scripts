@@ -62,7 +62,8 @@ local Spells = {
     {class = 0, level = 20, type = 1, entry = 63624}, -- Dual Talent Specialization
     {class = 0, level = 20, type = 3, entry = 43},    -- Duelist
     {class = 0, level = 20, type = 1, entry = 33389}, -- Apprentice Riding
-    {class = 0, level = 20, type = 0, entry = 75614}, -- Celestial Steed
+    {class = 0, level = 20, type = 0, entry = 64731}, -- Sea Turtle
+    {class = 0, level = 40, type = 0, entry = 75614}, -- Celestial Steed
     {class = 0, level = 40, type = 1, entry = 33392}, -- Journeyman Riding
     {class = 0, level = 60, type = 1, entry = 34092}, -- Expert Riding
     {class = 0, level = 60, type = 0, entry = 48025}, -- Headless Horseman's Mount
