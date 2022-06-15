@@ -1,4 +1,4 @@
-local MODULE_NAME = "Eluna loginAnnounce"
+local MODULE_NAME = "Eluna playerAnnounce"
 local MODULE_VERSION = '1.0'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
@@ -20,17 +20,18 @@ local function getTeamName(player)
     end
 end
 
-local function sendMsg(msg, color)
+local function announce(player, action)
+    msg = getTeamName(player).." player "..player:GetName().." ("..player:GetAccountName()..") has "..action.."."
     print("["..MODULE_NAME.."]: "..msg)
-    SendWorldMessage("|"..color..msg.."|r")
+    SendWorldMessage("|"..getTeamColor(player)..msg.."|r")
 end
 
 local function onLogin(event, player)
-    sendMsg(getTeamName(player).." player "..player:GetName().." has logged in.", getTeamColor(player))
+    announce(player, "logged in")
 end
 
 local function onLogout(event, player)
-    sendMsg(getTeamName(player).." player "..player:GetName().." has logged out.", getTeamColor(player))
+    announce(player, "logged out")
 end
 
 RegisterPlayerEvent(3, onLogin)
