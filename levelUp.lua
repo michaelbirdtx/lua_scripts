@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.3'
+local MODULE_VERSION = '1.4'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -474,22 +474,38 @@ local function checkSpells(class, level, player)
     end
 end
 
+local function checkRank(level, player)
+    local guild = player:GetGuild()
+    if(guild) then
+        local rank = player:GetGuildRank()
+        print("CheckRank entered for "..player:GetName()..", Rank: "..rank.." in Guild: "..guild:GetName())
+        if level>=20 and level<40 and rank>3 then
+            guild:SetMemberRank(player,3)
+            print("Player "..player:GetName().." Rank Changed to: "..player:GetGuildRank())
+        end
+        if level>=40 and level<60 and rank>2 then
+            guild:SetMemberRank(player,2)
+            print("Player "..player:GetName().." Rank Changed to: "..player:GetGuildRank())
+        end
+    end
+end
+
 local function levelCheck(event, player, oldLevel)
-    class = player:GetClass()
-    level = player:GetLevel()
-    name = player:GetName()
-    emailSubject = "Congrats on "..level.."!"
-    emailBody = "Congratulations on reaching level "..level..", "..name.."! Here are some tokens of our appreciation!"
-    emailTo = player:GetGUIDLow()
-    emailStationery = 61
-    emailFrom = 0
+    local class = player:GetClass()
+    local level = player:GetLevel()
+    local name = player:GetName()
     checkSpells(class, level, player)
+    local emailSubject = "Congrats on "..level.."!"
+    local emailBody = "Congratulations on reaching level "..level..", "..name.."! Here are some tokens of our appreciation!"
+    local emailTo = player:GetGUIDLow()
+    local emailStationery = 61
+    local emailFrom = 0
     if (level==20 or level==40 or level==60) and class ~= 6 then
         print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
-        randomPet = math.random(1,#Pets)
-        randomTitle = math.random(1,#Titles)
+        local randomPet = math.random(1,#Pets)
+        local randomTitle = math.random(1,#Titles)
         player:SetKnownTitle(Titles[randomTitle])
         SendMail(
             emailSubject,
@@ -578,6 +594,7 @@ local function levelCheck(event, player, oldLevel)
             1
         )
     end
+    checkRank(level, player)
 end
 
 RegisterPlayerEvent(13, levelCheck)

@@ -171,7 +171,8 @@ COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB;
 ]])
 
-print("Deleting non-existing transmogrification entries...")
+print("["..MODULE_NAME.."]: Deleting non-existing transmogrification entries")
+
 CharDBQuery("DELETE FROM eluna_transmog WHERE NOT EXISTS (SELECT 1 FROM item_instance WHERE item_instance.guid = eluna_transmog.GUID)")
 
 RegisterPlayerEvent(18, onChatMessage)
