@@ -5,10 +5,10 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local Gold = {
-    [20] = 100000,
-    [40] = 1000000,
-    [60] = 10000000,
-    [80] = 100000000,
+    [20] = 1000000,
+    [40] = 10000000,
+    [60] = 100000000,
+    [80] = 1000000000,
 }
 
 local Pets = {
