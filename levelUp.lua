@@ -145,7 +145,7 @@ local Gear = {
 
     -- Paladin (2)
     {class = 2, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
-    {class = 2, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
+    {class = 2, level = 20, item = 2, entry = 6629},  -- Sporid Cape
     {class = 2, level = 20, item = 3, entry = 6087},  -- Chausses of Westfall
     {class = 2, level = 20, item = 4, entry = 12978}, -- Stormbringer Belt
     {class = 2, level = 20, item = 5, entry = 12994}, -- Thorbia's Gauntlets
@@ -259,7 +259,7 @@ local Gear = {
 
     -- Priest (5)
     {class = 5, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
-    {class = 5, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
+    {class = 5, level = 20, item = 2, entry = 6629},  -- Sporid Cape
     {class = 5, level = 20, item = 3, entry = 23173}, -- Abomination Skin Leggings
     {class = 5, level = 20, item = 4, entry = 2911},  -- Keller's Girdle
     {class = 5, level = 20, item = 5, entry = 12977}, -- Magefist Gloves
@@ -267,7 +267,7 @@ local Gear = {
     {class = 5, level = 20, item = 7, entry = 14375}, -- Sanguine Cuffs
 
     {class = 5, level = 40, item = 1, entry = 20969}, -- Ruby Crown of Restoration
-    {class = 5, level = 40, item = 2, entry = 19532}, -- Caretaker's Cape
+    {class = 5, level = 40, item = 2, entry = 6629},  -- Sporid Cape
     {class = 5, level = 40, item = 3, entry = 7709},  -- Blighted Leggings
     {class = 5, level = 40, item = 4, entry = 20098}, -- Highlander's Cloth Girdle
     {class = 5, level = 40, item = 5, entry = 10019}, -- Dreamweave Gloves
@@ -297,7 +297,7 @@ local Gear = {
 
     -- Shaman (7)
     {class = 7, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
-    {class = 7, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
+    {class = 7, level = 20, item = 2, entry = 6629},  -- Sporid Cape
     {class = 7, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
     {class = 7, level = 20, item = 4, entry = 10412}, -- Belt of the Fang
     {class = 7, level = 20, item = 5, entry = 10413}, -- Gloves of the Fang
@@ -411,7 +411,7 @@ local Gear = {
 
     -- Druid (11)
     {class = 11, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
-    {class = 11, level = 20, item = 2, entry = 20428}, -- Caretaker's Cape
+    {class = 11, level = 20, item = 2, entry = 6629},  -- Sporid Cape
     {class = 11, level = 20, item = 3, entry = 10410}, -- Leggings of the Fang
     {class = 11, level = 20, item = 4, entry = 10412}, -- Belt of the Fang
     {class = 11, level = 20, item = 5, entry = 10413}, -- Gloves of the Fang
