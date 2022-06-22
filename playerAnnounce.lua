@@ -30,7 +30,13 @@ local function listPlayers(player)
     player:SendBroadcastMessage("|CFF99E472Currently online:|r")
     allPlayers = GetPlayersInWorld(2)
     for k, v in pairs(allPlayers) do
-        player:SendBroadcastMessage("|"..getTeamColor(v)..v:GetName().." of the "..getTeamName(v).." ("..v:GetAccountName()..")|r")
+        player:SendBroadcastMessage("|"..
+            getTeamColor(v)..
+            v:GetName()..
+            " ("..v:GetAccountName()..") "..
+            "[Level "..v:GetLevel()..
+            " "..v:GetClassAsString().." - "..
+            getTeamName(v).."]|r")
     end
 end
 
