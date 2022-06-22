@@ -27,7 +27,7 @@ local function announce(player, action)
 end
 
 local function listPlayers(player)
-    player:SendBroadcastMessage("|CFF99E472Here's who's online:|r")
+    player:SendBroadcastMessage("|CFF99E472Currently online:|r")
     allPlayers = GetPlayersInWorld(2)
     for k, v in pairs(allPlayers) do
         player:SendBroadcastMessage("|"..getTeamColor(v)..v:GetName().." of the "..getTeamName(v).." ("..v:GetAccountName()..")|r")
