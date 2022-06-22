@@ -26,8 +26,17 @@ local function announce(player, action)
     SendWorldMessage("|"..getTeamColor(player)..msg.."|r")
 end
 
+local function listPlayers(player)
+    player:SendBroadcastMessage("|CFF99E472Here's who's online:|r")
+    allPlayers = GetPlayersInWorld(2)
+    for k, v in pairs(allPlayers) do
+        player:SendBroadcastMessage("|"..getTeamColor(v)..v:GetName().." of the "..getTeamName(v).." ("..v:GetAccountName()..")|r")
+    end
+end
+
 local function onLogin(event, player)
     announce(player, "logged in")
+    listPlayers(player)
 end
 
 local function onLogout(event, player)
