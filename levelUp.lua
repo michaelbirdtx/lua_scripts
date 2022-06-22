@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.4'
+local MODULE_VERSION = '1.5'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -20,14 +20,14 @@ local Pets = {
     [6]  = 46892, -- Murkimus the Gladiator
     [7]  = 49646, -- Core Hound Pup
     [8]  = 49693, -- Lil' K.T.
-    [9]  = 54857, -- Murkimus the Gladiator
+    [9]  = 34492, -- Rocket Chicken
     [10] = 49663, -- Wind Rider Cub
     [11] = 48527, -- Onyx Panther
     [12] = 54847, -- Lil' XT
     [13] = 34955, -- Scorched Stone
     [14] = 39286, -- Frosty
-    [15] = 41133, -- Mr. Chilly
-    [16] = 43517, -- Pengu
+    [15] = 54810, -- Celestial Dragon
+    [16] = 54436, -- Blue Clockwork Rocket Bot
     [17] = 49662, -- Gryphon Hatchling
     [18] = 49665, -- Pandaren Monk
     [19] = 39973, -- Ghostly Skull
@@ -500,7 +500,7 @@ local function levelCheck(event, player, oldLevel)
     local emailTo = player:GetGUIDLow()
     local emailStationery = 61
     local emailFrom = 0
-    if (level==20 or level==40 or level==60) and class ~= 6 then
+    if (level==20 or level==40 or level==60) and class~=6 then
         print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
@@ -534,7 +534,7 @@ local function levelCheck(event, player, oldLevel)
             1
         )
     end
-    if level==80 and class ~= 6 then
+    if level==80 and class~=6 then
         print("["..MODULE_NAME.."]: "..player:GetName()..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
@@ -576,11 +576,29 @@ local function levelCheck(event, player, oldLevel)
             1
         )
     end
-    if level==80 and class == 6 then
+    if level==58 and class==6 then
         print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
         player:SetKnownTitle(158) -- Death's Demise
+        SendMail(
+            emailSubject,
+            emailBody,
+            emailTo,
+            emailFrom,
+            emailStationery,
+            0, -- Delay
+            Gold[60],
+            0, -- COD
+            35227, -- Goblin Weather Machine
+            1
+        )
+    end
+    if level==80 and class==6 then
+        print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
+        player:SendNotification("Congrats on Level "..level.."!")
+        player:PlayDirectSound(8572)
+        player:SetKnownTitle(142) -- the Undying
         SendMail(
             emailSubject,
             emailBody,
