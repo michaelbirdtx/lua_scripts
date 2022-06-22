@@ -34,6 +34,12 @@ local function listPlayers(player)
     end
 end
 
+local function onChatMessage(event, player, msg, _, lang)
+    if (msg:find('#who') == 1) then
+        listPlayers(player)
+    end
+end
+
 local function onLogin(event, player)
     announce(player, "logged in")
     listPlayers(player)
@@ -43,5 +49,6 @@ local function onLogout(event, player)
     announce(player, "logged out")
 end
 
+RegisterPlayerEvent(18, onChatMessage)
 RegisterPlayerEvent(3, onLogin)
 RegisterPlayerEvent(4, onLogout)
