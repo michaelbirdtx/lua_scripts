@@ -318,9 +318,10 @@ local function firstLogin(event, player)
     emailStationery = 61
     emailFrom = 0
     bagEntry = 41599
+    foodEntry = 23364
     SendMail(
-        "Bags and money!",
-        "Because who doesn't need more of those?",
+        "Bags, Money, and The Stuff!",
+        "Because who doesn't need more of all that Stuff?",
         emailTo,
         emailFrom,
         emailStationery,
@@ -334,7 +335,9 @@ local function firstLogin(event, player)
         bagEntry,
         1,
         bagEntry,
-        1
+        1,
+        foodEntry,
+        1000
     )
     SendMail(
         "Welcome!",
