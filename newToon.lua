@@ -336,6 +336,8 @@ local function firstLogin(event, player)
         1,
         bagEntry,
         1,
+        32618,
+        1,
         foodEntry,
         1000
     )
