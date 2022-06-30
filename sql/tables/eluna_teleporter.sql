@@ -30,6 +30,7 @@ INSERT INTO `eluna_teleporter` VALUES (3, 0, 1, -1, 0, 'Northrend Dungeons', NUL
 INSERT INTO `eluna_teleporter` VALUES (4, 0, 1, -1, 0, 'Places of Interest', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `eluna_teleporter` VALUES (5, 0, 1, -1, 0, 'Starting Zones', NULL, NULL, NULL, NULL, NULL);
 INSERT INTO `eluna_teleporter` VALUES (6, 0, 1, -1, 0, 'The Caverns of Time', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `eluna_teleporter` VALUES (7, 0, 1, -1, 0, 'Raids', NULL, NULL, NULL, NULL, NULL);
 
 INSERT INTO `eluna_teleporter` VALUES (101, 1, 2, -1, 9, 'Blackfathom Deeps', 1, 4249.990, 740.102, -25.671, 1.341);
 INSERT INTO `eluna_teleporter` VALUES (102, 1, 2, -1, 9, 'Blackrock Depths', 0, -7179.34, -921.212, 165.821, 5.09599);
@@ -80,17 +81,19 @@ INSERT INTO `eluna_teleporter` VALUES (304, 3, 2, -1, 9, 'The Frozen Halls', 571
 INSERT INTO `eluna_teleporter` VALUES (305, 3, 2, -1, 9, 'Gundrak', 571, 6952.300, -4419.980, 450.078, 0.808);
 INSERT INTO `eluna_teleporter` VALUES (306, 3, 2, -1, 9, 'The Nexus', 571, 3893.510, 6985.330, 69.488, 6.279);
 INSERT INTO `eluna_teleporter` VALUES (307, 3, 2, -1, 9, 'The Nexus: The Oculus', 571, 3879.960, 6984.620, 106.312, 3.197);
-INSERT INTO `eluna_teleporter` VALUES (308, 3, 2, -1, 9, 'Ulduar: Halls of Lightning', 571, 9182.920, -1384.820, 1110.210, 5.578);
-INSERT INTO `eluna_teleporter` VALUES (309, 3, 2, -1, 9, 'Ulduar: Halls of Stone', 571, 8921.910, -993.503, 1039.410, 1.553);
-INSERT INTO `eluna_teleporter` VALUES (310, 3, 2, -1, 9, 'Utgarde Keep', 571, 1219.720, -4865.280, 41.248, 0.313);
-INSERT INTO `eluna_teleporter` VALUES (311, 3, 2, -1, 9, 'Utgarde Pinnacle', 571, 1259.330, -4852.020, 215.763, 3.483);
-INSERT INTO `eluna_teleporter` VALUES (312, 3, 2, -1, 9, 'The Violet Hold', 571, 5682.66, 490.089, 652.494, 4.03);
+INSERT INTO `eluna_teleporter` VALUES (308, 3, 2, -1, 9, 'Trial of the Champion', 571, 8588.42, 791.888, 558.236, 3.23819);
+INSERT INTO `eluna_teleporter` VALUES (309, 3, 2, -1, 9, 'Ulduar: Halls of Lightning', 571, 9182.920, -1384.820, 1110.210, 5.578);
+INSERT INTO `eluna_teleporter` VALUES (310, 3, 2, -1, 9, 'Ulduar: Halls of Stone', 571, 8921.910, -993.503, 1039.410, 1.553);
+INSERT INTO `eluna_teleporter` VALUES (311, 3, 2, -1, 9, 'Utgarde Keep', 571, 1219.720, -4865.280, 41.248, 0.313);
+INSERT INTO `eluna_teleporter` VALUES (312, 3, 2, -1, 9, 'Utgarde Pinnacle', 571, 1259.330, -4852.020, 215.763, 3.483);
+INSERT INTO `eluna_teleporter` VALUES (313, 3, 2, -1, 9, 'The Violet Hold', 571, 5682.66, 490.089, 652.494, 4.03);
 INSERT INTO `eluna_teleporter` VALUES (399, 3, 3, -1, 4, 'Random Northrend Dungeon', 0, 301, 312, NULL, NULL);
 
 INSERT INTO `eluna_teleporter` VALUES (400, 4, 2,  0, 2, 'Dwarven Airfield', 0, -4686.74, -1693.35, 503.325, 0.0234865);
 INSERT INTO `eluna_teleporter` VALUES (401, 4, 2, -1, 2, 'Emerald Forest', 169, 2738.87, -3320.93, 101.917, 0.366472);
-INSERT INTO `eluna_teleporter` VALUES (402, 4, 2, -1, 2, 'Mirage Raceway', 1, -6221.35, -3927.64, -58.7495, 0.757735);
-INSERT INTO `eluna_teleporter` VALUES (403, 4, 2, -1, 2, 'Old Ironforge', 0, -4819.56, -974.088, 464.709, 3.963);
+INSERT INTO `eluna_teleporter` VALUES (402, 4, 2, -1, 2, 'Karazhan Crypts', 0, -11069.7, -1795.77, 53.7318, 3.09641);
+INSERT INTO `eluna_teleporter` VALUES (403, 4, 2, -1, 2, 'Mirage Raceway', 1, -6221.35, -3927.64, -58.7495, 0.757735);
+INSERT INTO `eluna_teleporter` VALUES (404, 4, 2, -1, 2, 'Old Ironforge', 0, -4819.56, -974.088, 464.709, 3.963);
 
 INSERT INTO `eluna_teleporter` VALUES (500, 5, 2, 0, 2, 'Ammen Vale', 530, -4021.4, -13582.1, 54.7153, 2.06953);
 INSERT INTO `eluna_teleporter` VALUES (501, 5, 2, 0, 2, 'Coldridge Valley', 0, -6231.77, 332.993, 383.171, 0.480178);
@@ -106,10 +109,26 @@ INSERT INTO `eluna_teleporter` VALUES (601, 6, 2, -1, 9, 'Old Hillsbrad Foothill
 INSERT INTO `eluna_teleporter` VALUES (602, 6, 2, -1, 9, 'The Black Morass', 1, -8734.3, -4230.11, -209.5, 2.16212);
 INSERT INTO `eluna_teleporter` VALUES (603, 6, 2, -1, 9, 'The Culling of Stratholme', 1, -8750.76, -4442.2, -199.26, 4.37694);
 
-/* INSERT INTO `eluna_teleporter` VALUES (); */
-/*
-INSERT INTO `eluna_teleporter` VALUES ();
-*/
+INSERT INTO `eluna_teleporter` VALUES (700, 7, 2, -1, 9, 'Ahn\'Qiraj: The Ruins of Ahn\'Qiraj', 1, -8409.82, 1499.06, 27.7179, 2.51868);
+INSERT INTO `eluna_teleporter` VALUES (701, 7, 2, -1, 9, 'Ahn\'Qiraj: The Temple of Ahn\'Qiraj', 1, -8240.09, 1991.32, 129.072, 0.941603);
+INSERT INTO `eluna_teleporter` VALUES (702, 7, 2, -1, 9, 'Black Temple', 530, -3649.92, 317.469, 35.2827, 2.94285);
+INSERT INTO `eluna_teleporter` VALUES (703, 7, 2, -1, 9, 'Blackrock Spire', 0, -7527.05, -1226.77, 285.732, 5.29626);
+INSERT INTO `eluna_teleporter` VALUES (704, 7, 2, -1, 9, 'Blackwing Lair', 229, 164.789, -475.305, 116.842, 0.022714);
+INSERT INTO `eluna_teleporter` VALUES (705, 7, 2, -1, 9, 'Chamber of the Aspects: Obsidian Sanctum', 571, 3641.45, 282.75, -120.145, 3.325);
+INSERT INTO `eluna_teleporter` VALUES (706, 7, 2, -1, 9, 'Chamber of the Aspects: Ruby Sanctum', 571, 3600.5, 197.34, -113.76, 5.29905);
+INSERT INTO `eluna_teleporter` VALUES (707, 7, 2, -1, 9, 'Gruul\'s Lair', 530, 3530.06, 5104.08, 3.50861, 5.51117);
+INSERT INTO `eluna_teleporter` VALUES (708, 7, 2, -1, 9, 'Icecrown Citadel', 571, 5873.82, 2110.98, 636.011, 3.5523);
+INSERT INTO `eluna_teleporter` VALUES (709, 7, 2, -1, 9, 'Karazhan', 532, -11104.4, -2000.02, 49.8927, 0.648739);
+INSERT INTO `eluna_teleporter` VALUES (710, 7, 2, -1, 9, 'Molten Core', 230, 1126.64, -459.94, -102.535, 3.46095);
+INSERT INTO `eluna_teleporter` VALUES (711, 7, 2, -1, 9, 'Naxxramas', 571, 3668.72, -1262.46, 243.622, 4.785);
+INSERT INTO `eluna_teleporter` VALUES (712, 7, 2, -1, 9, 'The Nexus: The Eye of Eternity', 571, 3859.44, 6989.85, 152.041, 5.79635);
+INSERT INTO `eluna_teleporter` VALUES (713, 7, 2, -1, 9, 'Onyxia\'s Lair', 1, -4708.27, -3727.64, 54.5589, 3.72786);
+INSERT INTO `eluna_teleporter` VALUES (714, 7, 2, -1, 9, 'Sunwell Plateau', 530, 12574.1, -6774.81, 15.0904, 3.13788);
+INSERT INTO `eluna_teleporter` VALUES (715, 7, 2, -1, 9, 'Tempest Keep: The Eye', 530, 3088.49, 1381.57, 184.863, 4.61973);
+INSERT INTO `eluna_teleporter` VALUES (716, 7, 2, -1, 9, 'Trial of the Crusader', 571, 8515.68, 716.982, 558.248, 1.57315);
+INSERT INTO `eluna_teleporter` VALUES (717, 7, 2, -1, 9, 'Vault of Archavon', 571, 5453.72, 2840.79, 421.28, 0);
+INSERT INTO `eluna_teleporter` VALUES (718, 7, 2, -1, 9, 'Zul\'Aman', 530, 6851.78, -7972.57, 179.242, 4.64691);
+INSERT INTO `eluna_teleporter` VALUES (799, 7, 3, -1, 4, 'Random Raid', 0, 700, 718, NULL, NULL);
 
 /*!40000 ALTER TABLE `eluna_teleporter` ENABLE KEYS */;
 UNLOCK TABLES;
