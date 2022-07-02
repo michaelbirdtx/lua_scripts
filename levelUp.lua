@@ -117,9 +117,9 @@ local Gear = {
     {class = 1, level = 40, item = 1, entry = 10763}, -- Icemetal Barbute
     {class = 1, level = 40, item = 2, entry = 13121}, -- Wing of the Whelpling
     {class = 1, level = 40, item = 3, entry = 7921},  -- Heavy Mithril Pants
-    {class = 1, level = 40, item = 4, entry = 20125}, -- Highlander's Plate Girdle
+    {class = 1, level = 40, item = 4, entry = 13145}, -- Enormous Ogre Belt
     {class = 1, level = 40, item = 5, entry = 7938},  -- Truesilver Gauntlets
-    {class = 1, level = 40, item = 6, entry = 20128}, -- Highlander's Plate Greaves
+    {class = 1, level = 40, item = 6, entry = 13068}, -- Obsidian Greaves
     {class = 1, level = 40, item = 7, entry = 19581}, -- Berserker Bracers
 
     {class = 1, level = 60, item = 1, entry = 16866}, -- Helm of Might
@@ -155,9 +155,9 @@ local Gear = {
     {class = 2, level = 40, item = 1, entry = 10763}, -- Icemetal Barbute
     {class = 2, level = 40, item = 2, entry = 10776}, -- Silky Spider Cape
     {class = 2, level = 40, item = 3, entry = 33258}, -- Protective Engineer's Leggings
-    {class = 2, level = 40, item = 4, entry = 20107}, -- Highlander's Lamellar Girdle
+    {class = 2, level = 40, item = 4, entry = 13145}, -- Enormous Ogre Belt
     {class = 2, level = 40, item = 5, entry = 7938},  -- Truesilver Gauntlets
-    {class = 2, level = 40, item = 6, entry = 20110}, -- Highlander's Lamellar Greaves
+    {class = 2, level = 40, item = 6, entry = 13068}, -- Obsidian Greaves
     {class = 2, level = 40, item = 7, entry = 19581}, -- Berserker Bracers
 
     {class = 2, level = 60, item = 1, entry = 16854}, -- Lawbringer Helm
