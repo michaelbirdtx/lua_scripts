@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.5.1'
+local MODULE_VERSION = '1.5.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -612,7 +612,41 @@ local function levelCheck(event, player, oldLevel)
             1
         )
     end
-    checkRank(level, player)
+    if level==80 then
+        SendMail(
+            "Bags!",
+            "These are the best bags Azeroth has to offer. Enjoy!",
+            emailTo,
+            emailFrom,
+            emailStationery,
+            0, -- Delay
+            0, -- Gold
+            0, -- COD
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1
+        )
+    end
+checkRank(level, player)
 end
 
 RegisterPlayerEvent(13, levelCheck)
