@@ -42,21 +42,29 @@ end
 function GlyphMaster.OnHello(event, player, unit)
     player:GossipMenuAddItem(0, "I need a Major Glyph", 0, 1)
     player:GossipMenuAddItem(0, "I'm looking for a Minor Glyph", 0, 2)
+    player:GossipMenuAddItem(0, "I wish to unlearn my Talents", 0, 3, false, "Do you wish to unlearn all of your Talents?")
     player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat type of Glyph do you seek?")
     player:GossipSendMenu(0x7FFFFFFF, unit)
 end
 
 function GlyphMaster.OnSelect(event, player, unit, sender, intid, code)
+    print(event, player, unit, sender, intid, code)
     local class = player:GetClassMask()
     if sender == 0 then
-        local displayID = findDisplayID(class, intid)
-        local Query = WorldDBQuery("SELECT `name`, `entry`, `RequiredLevel` FROM item_template WHERE `name` LIKE '%Glyph of%' AND `AllowableClass` = "..class.." AND displayid = "..displayID.." ORDER BY `name`;")
-        if Query then
-            repeat
-                player:GossipMenuAddItem(3, Query:GetString(0).. " (Lvl "..Query:GetString(2)..")", 1, Query:GetInt32(1))
-            until not Query:NextRow()
-            player:GossipSetText("Choose wisely...")
-            player:GossipSendMenu(0x7FFFFFFF, unit)
+        if intid == 3 then
+            player:PlayDirectSound(1435)
+            player:ResetTalents(true)
+            player:GossipComplete()
+        else
+            local displayID = findDisplayID(class, intid)
+            local Query = WorldDBQuery("SELECT `name`, `entry`, `RequiredLevel` FROM item_template WHERE `name` LIKE '%Glyph of%' AND `AllowableClass` = "..class.." AND displayid = "..displayID.." ORDER BY `name`;")
+            if Query then
+                repeat
+                    player:GossipMenuAddItem(3, Query:GetString(0).. " (Lvl "..Query:GetString(2)..")", 1, Query:GetInt32(1))
+                until not Query:NextRow()
+                player:GossipSetText("Choose wisely...")
+                player:GossipSendMenu(0x7FFFFFFF, unit)
+            end
         end
     else
         player:AddItem(intid)
