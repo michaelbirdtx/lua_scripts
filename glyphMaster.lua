@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna glyphMaster"
-local MODULE_VERSION = '2.1'
+local MODULE_VERSION = '2.1.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -48,7 +48,6 @@ function GlyphMaster.OnHello(event, player, unit)
 end
 
 function GlyphMaster.OnSelect(event, player, unit, sender, intid, code)
-    print(event, player, unit, sender, intid, code)
     local class = player:GetClassMask()
     if sender == 0 then
         if intid == 3 then
