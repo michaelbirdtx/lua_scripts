@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.6.1'
+local MODULE_VERSION = '1.7'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -54,10 +54,11 @@ local Titles = {
     [17] = 141,   -- the Immortal
     [18] = 124,   -- the Hallowed
     [19] =  83,   -- Salty
-    [20] = 154,   -- of the Undercity
+    [20] =  77,   -- the Exalted
 }
 
 local Spells = {
+
     -- All Classes (0)
     {class = 0, level = 20, type = 1, entry = 63624}, -- Dual Talent Specialization
     {class = 0, level = 20, type = 3, entry = 43},    -- Duelist
@@ -70,16 +71,20 @@ local Spells = {
     {class = 0, level = 68, type = 0, entry = 54197}, -- Cold Weather Flying
     {class = 0, level = 70, type = 1, entry = 34093}, -- Artisan Riding
     {class = 0, level = 80, type = 0, entry = 72286}, -- Invincible
+
     -- Warrior (1)
     {class = 1, level = 10, type = 1, entry = 8121}, -- Path of Defense
     {class = 1, level = 30, type = 1, entry = 8616}, -- Path of the Berserker
     {class = 1, level = 40, type = 0, entry = 750},  -- Plate Armor
+
     -- Paladin (2)
     {class = 2, level = 40, type = 0, entry = 750},   -- Plate Armor
+
     -- Hunter (3)
     {class = 3, level = 10, type = 1, entry = 1579}, -- Tame Beast
     {class = 3, level = 10, type = 1, entry = 5300}, -- Beast Training
     {class = 3, level = 40, type = 0, entry = 8737},  -- Mail Armor
+
     -- Shaman (7)
     {class = 7, level = 4, type = 1, entry  = 8073}, -- Stoneskin Totem
     {class = 7, level = 4, type = 2, entry  = 5175}, -- Earth Totem
@@ -89,6 +94,7 @@ local Spells = {
     {class = 7, level = 20, type = 2, entry = 5177}, -- Water Totem
     {class = 7, level = 30, type = 2, entry = 5178}, -- Air Totem
     {class = 7, level = 40, type = 0, entry = 8737},  -- Mail Armor
+
     -- Warlock (9)
     {class = 9, level = 10, type = 1, entry = 11520}, -- Summon Voidwalker
     {class = 9, level = 20, type = 1, entry = 11519}, -- Summon Succubus
@@ -97,6 +103,7 @@ local Spells = {
     {class = 9, level = 30, type = 1, entry = 1373},  -- Summon Felhunter
     {class = 9, level = 30, type = 2, entry = 22244}, -- Box of Souls
     {class = 9, level = 40, type = 1, entry = 23160}, -- Summon Dreadsteed
+
     -- Druid (11)
     {class = 11, level = 10, type = 1, entry = 19027}, -- Teleport: Moonglade
     {class = 11, level = 10, type = 1, entry = 19179}, -- Bear Form
@@ -294,6 +301,21 @@ local Gear = {
     {class = 5, level = 80, item = 10, entry = 37384}, -- Staff of Wayward Principles
     {class = 5, level = 80, item = 11, entry = 37626}, -- Wand of Sseratus
     {class = 5, level = 80, item = 12, entry = 37177}, -- Wand of the San'layn
+
+    -- Death Knight (6)
+
+    {class = 6, level = 80, item =  1, entry = 41350}, -- Savage Saronite Skullshield
+    {class = 6, level = 80, item =  2, entry = 41351}, -- Savage Saronite Pauldrons
+    {class = 6, level = 80, item =  3, entry = 41353}, -- Savage Saronite Hauberk
+    {class = 6, level = 80, item =  4, entry = 41347}, -- Savage Saronite Legplates
+    {class = 6, level = 80, item =  5, entry = 41352}, -- Savage Saronite Waistguard
+    {class = 6, level = 80, item =  6, entry = 41349}, -- Savage Saronite Gauntlets
+    {class = 6, level = 80, item =  7, entry = 41348}, -- Savage Saronite Walkers
+    {class = 6, level = 80, item =  8, entry = 41354}, -- Savage Saronite Bracers
+    {class = 6, level = 80, item =  9, entry = 45811}, -- Frotguard Drape
+    {class = 6, level = 80, item = 10, entry = 41182}, -- Savage Cobalt Slicer
+    {class = 6, level = 80, item = 11, entry = 41182}, -- Savage Cobalt Slicer
+    {class = 6, level = 80, item = 12, entry = 41113}, -- Saronite Bulwark
 
     -- Shaman (7)
     {class = 7, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
@@ -534,7 +556,7 @@ local function levelCheck(event, player, oldLevel)
             1
         )
     end
-    if level==80 and class~=6 then
+    if level==80 then
         print("["..MODULE_NAME.."]: "..player:GetName()..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
@@ -575,8 +597,42 @@ local function levelCheck(event, player, oldLevel)
             findGear(class,level,12),
             1
         )
-    end
-    if level==58 and class==6 then
+        SendMail(
+            "The best bags!",
+            "These are the best bags Azeroth has to offer. Enjoy!",
+            emailTo,
+            emailFrom,
+            emailStationery,
+            0, -- Delay
+            0, -- Gold
+            0, -- COD
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            23162, -- Foror's Crate of Endless Resist Gear Storage
+            1,
+            35227, -- Goblin Weather Machine
+            1
+        )
+    end    
+    --[[if level==58 and class==6 then
         print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
         local randomPet = math.random(1,#Pets)
         player:SendNotification("Congrats on Level "..level.."!")
@@ -629,42 +685,8 @@ local function levelCheck(event, player, oldLevel)
             56806, -- Mini Thor
             1
         )
-    end
-    if level==80 then
-        SendMail(
-            "Bags!",
-            "These are the best bags Azeroth has to offer. Enjoy!",
-            emailTo,
-            emailFrom,
-            emailStationery,
-            0, -- Delay
-            0, -- Gold
-            0, -- COD
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1,
-            23162, -- Foror's Crate of Endless Resist Gear Storage
-            1
-        )
-    end
-checkRank(level, player)
+    end]]
+    checkRank(level, player)
 end
 
 RegisterPlayerEvent(13, levelCheck)

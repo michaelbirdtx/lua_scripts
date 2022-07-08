@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna newToon"
-local MODULE_VERSION = '1.4.1'
+local MODULE_VERSION = '1.5'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -40,6 +40,13 @@ local Skills = {
 
     -- Priest (5)
     {class = 5, entry = 1180}, -- Daggers
+
+    -- Death Knight (6)
+    {class = 6, entry = 198},   -- Maces
+    {class = 6, entry = 3279},  -- Apprentice First Aid
+    {class = 6, entry = 3280},  -- Journeyman First Aid
+    {class = 6, entry = 54254}, -- Expert First Aid
+
 
     -- Shaman (7)
     {class = 7, entry = 15590}, -- Fists
@@ -307,9 +314,9 @@ local function firstLogin(event, player)
     level = player:GetLevel()
     race = player:GetRace()
     team = player:GetTeam()
-    if level > 1 then
-        return
-    end
+    --if level > 1 then
+    --    return
+    --end
     print("["..MODULE_NAME.."]: "..player:GetName().." created by "..player:GetAccountName().." on team "..team)
     player:SetKnownTitle(1)
     grantSkills(player, class)
@@ -319,6 +326,14 @@ local function firstLogin(event, player)
     emailFrom = 0
     bagEntry = 41599
     foodEntry = 23364
+    local gold
+    if class == 6 then
+        gold = 100000000
+        player:LearnSpell(54729) -- Winged Steed of the Ebon Blade
+    else
+        gold = 100000
+    end
+    
     SendMail(
         "Bags, Money, and The Stuff!",
         "Because who doesn't need more of all that Stuff?",
@@ -326,7 +341,7 @@ local function firstLogin(event, player)
         emailFrom,
         emailStationery,
         0, -- Delay
-        100000, -- 10 Gold
+        gold,
         0, -- COD
         bagEntry,
         1,
@@ -336,48 +351,50 @@ local function firstLogin(event, player)
         1,
         bagEntry,
         1,
-        32618,
+        32618, -- Mind Releaser
         1,
         foodEntry,
         1000
     )
-    SendMail(
-        "Welcome!",
-        "Congratulations on your new character! Here are some tokens of our appreciation!",
-        emailTo,
-        emailFrom,
-        emailStationery,
-        0, -- Delay
-        0,
-        0, -- COD
-        findGear(class,1, team),
-        1,
-        findGear(class,2, team),
-        1,
-        findGear(class,3, team),
-        1,
-        findGear(class,4, team),
-        1,
-        findGear(class,5, team),
-        1,
-        findGear(class,6, team),
-        1,
-        findGear(class,7, team),
-        1,
-        findGear(class,8, team),
-        1,
-        findGear(class,9, team),
-        1,
-        findGear(class,10, team),
-        1,
-        findGear(class,11, team),
-        1,
-        findGear(class,12, team),
-        1,
-        findGear(class,13, team),
-        1
-    )
-    player:CastSpell(player, 54710, true)
+    if class ~= 6 then
+        SendMail(
+            "Welcome!",
+            "Congratulations on your new character! Here are some tokens of our appreciation!",
+            emailTo,
+            emailFrom,
+            emailStationery,
+            0, -- Delay
+            0,
+            0, -- COD
+            findGear(class,1, team),
+            1,
+            findGear(class,2, team),
+            1,
+            findGear(class,3, team),
+            1,
+            findGear(class,4, team),
+            1,
+            findGear(class,5, team),
+            1,
+            findGear(class,6, team),
+            1,
+            findGear(class,7, team),
+            1,
+            findGear(class,8, team),
+            1,
+            findGear(class,9, team),
+            1,
+            findGear(class,10, team),
+            1,
+            findGear(class,11, team),
+            1,
+            findGear(class,12, team),
+            1,
+            findGear(class,13, team),
+            1
+        )
+        player:CastSpell(player, 54710, true) -- Moll-E
+    end
 end
 
 RegisterPlayerEvent(30, firstLogin)
