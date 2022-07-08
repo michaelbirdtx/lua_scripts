@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.7'
+local MODULE_VERSION = '1.7.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -315,7 +315,7 @@ local Gear = {
     {class = 6, level = 80, item =  9, entry = 45811}, -- Frotguard Drape
     {class = 6, level = 80, item = 10, entry = 41182}, -- Savage Cobalt Slicer
     {class = 6, level = 80, item = 11, entry = 41182}, -- Savage Cobalt Slicer
-    {class = 6, level = 80, item = 12, entry = 41113}, -- Saronite Bulwark
+    {class = 6, level = 80, item = 12, entry = 37108}, -- Dreadlord's Blade
 
     -- Shaman (7)
     {class = 7, level = 20, item = 1, entry = 30419}, -- Brilliant Necklace
@@ -631,61 +631,7 @@ local function levelCheck(event, player, oldLevel)
             35227, -- Goblin Weather Machine
             1
         )
-    end    
-    --[[if level==58 and class==6 then
-        print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
-        local randomPet = math.random(1,#Pets)
-        player:SendNotification("Congrats on Level "..level.."!")
-        player:PlayDirectSound(8572)
-        player:SetKnownTitle(158) -- Death's Demise
-        SendMail(
-            emailSubject,
-            emailBody,
-            emailTo,
-            emailFrom,
-            emailStationery,
-            10000, -- Delay
-            Gold[20] + Gold[40] + Gold[60],
-            0, -- COD
-            35227, -- Goblin Weather Machine
-            1,
-            Pets[randomPet],
-            1,
-            41599,
-            1,
-            41599,
-            1,
-            41599,
-            1,
-            41599,
-            1,
-            23364,
-            1000
-        )
-        player:CastSpell(player, 65292, true) -- Grand Master First Aid
-        player:LearnSpell(54729) -- Winged Steed of the Ebon Blade
-        player:LearnSpell(54197) -- Cold Weather Flying
-        player:SetSkill(129, 375, 375, 375) -- First Aid
-        player:SetSkill(762, 300, 300, 300) -- Riding
     end
-    if level==80 and class==6 then
-        print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
-        player:SendNotification("Congrats on Level "..level.."!")
-        player:PlayDirectSound(8572)
-        player:SetKnownTitle(142) -- the Undying
-        SendMail(
-            emailSubject,
-            emailBody,
-            emailTo,
-            emailFrom,
-            emailStationery,
-            0, -- Delay
-            Gold[level],
-            0, -- COD
-            56806, -- Mini Thor
-            1
-        )
-    end]]
     checkRank(level, player)
 end
 

@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna newToon"
-local MODULE_VERSION = '1.5'
+local MODULE_VERSION = '1.5.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -46,7 +46,6 @@ local Skills = {
     {class = 6, entry = 3279},  -- Apprentice First Aid
     {class = 6, entry = 3280},  -- Journeyman First Aid
     {class = 6, entry = 54254}, -- Expert First Aid
-
 
     -- Shaman (7)
     {class = 7, entry = 15590}, -- Fists
@@ -329,7 +328,8 @@ local function firstLogin(event, player)
     local gold
     if class == 6 then
         gold = 100000000
-        player:LearnSpell(54729) -- Winged Steed of the Ebon Blade
+        player:LearnSpell(54729)  -- Winged Steed of the Ebon Blade
+        player:SetKnownTitle(158) -- Death's Demise
     else
         gold = 100000
     end
