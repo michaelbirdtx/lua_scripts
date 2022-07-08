@@ -42,10 +42,7 @@ local Skills = {
     {class = 5, entry = 1180}, -- Daggers
 
     -- Death Knight (6)
-    {class = 6, entry = 198},   -- Maces
-    {class = 6, entry = 3279},  -- Apprentice First Aid
-    {class = 6, entry = 3280},  -- Journeyman First Aid
-    {class = 6, entry = 54254}, -- Expert First Aid
+    {class = 6, entry = 198}, -- Maces
 
     -- Shaman (7)
     {class = 7, entry = 15590}, -- Fists
@@ -328,7 +325,10 @@ local function firstLogin(event, player)
     local gold
     if class == 6 then
         gold = 100000000
-        player:LearnSpell(54729)  -- Winged Steed of the Ebon Blade
+        player:CastSpell(player, 3279, true) -- Apprentice First Aid
+        player:CastSpell(player, 3280, true) -- Journeyman First Aid
+        player:CastSpell(player, 54254, true) -- Expert First Aid    
+        player:LearnSpell(54729) -- Winged Steed of the Ebon Blade
         player:SetKnownTitle(158) -- Death's Demise
     else
         gold = 100000
