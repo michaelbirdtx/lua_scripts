@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.5.2'
+local MODULE_VERSION = '1.6'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -578,6 +578,7 @@ local function levelCheck(event, player, oldLevel)
     end
     if level==58 and class==6 then
         print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
+        local randomPet = math.random(1,#Pets)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
         player:SetKnownTitle(158) -- Death's Demise
@@ -587,12 +588,29 @@ local function levelCheck(event, player, oldLevel)
             emailTo,
             emailFrom,
             emailStationery,
-            0, -- Delay
-            Gold[60],
+            10000, -- Delay
+            Gold[20] + Gold[40] + Gold[60],
             0, -- COD
             35227, -- Goblin Weather Machine
-            1
+            1,
+            Pets[randomPet],
+            1,
+            41599,
+            1,
+            41599,
+            1,
+            41599,
+            1,
+            41599,
+            1,
+            23364,
+            1000
         )
+        player:CastSpell(player, 65292, true) -- Grand Master First Aid
+        player:LearnSpell(54729) -- Winged Steed of the Ebon Blade
+        player:LearnSpell(54197) -- Cold Weather Flying
+        player:SetSkill(129, 450, 450, 450) -- First Aid
+        player:SetSkill(762, 300, 300, 300) -- Riding
     end
     if level==80 and class==6 then
         print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
