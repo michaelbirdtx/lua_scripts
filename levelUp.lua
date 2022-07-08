@@ -609,7 +609,7 @@ local function levelCheck(event, player, oldLevel)
         player:CastSpell(player, 65292, true) -- Grand Master First Aid
         player:LearnSpell(54729) -- Winged Steed of the Ebon Blade
         player:LearnSpell(54197) -- Cold Weather Flying
-        player:SetSkill(129, 450, 450, 450) -- First Aid
+        player:SetSkill(129, 375, 375, 375) -- First Aid
         player:SetSkill(762, 300, 300, 300) -- Riding
     end
     if level==80 and class==6 then
