@@ -289,11 +289,11 @@ local function grantMounts(player, race)
     print("["..MODULE_NAME.."]: Grant Mounts to "..player:GetName())
 
     -- Riding Skills
-    player:CastSpell(player, 33389, true)
-    player:CastSpell(player, 33392, true)
-    player:CastSpell(player, 34092, true)
-    player:CastSpell(player, 34093, true)
-    player:LearnSpell(54197)
+    player:CastSpell(player, 33389, true) -- Apprentice Riding
+    player:CastSpell(player, 33392, true) -- Journeyman Riding
+    player:CastSpell(player, 34092, true) -- Expert Riding
+    player:CastSpell(player, 34093, true) -- Artisan Riding
+    player:LearnSpell(54197) -- Cold Weather Flying
 
     -- Mounts
     for i, v in ipairs(Mounts) do
