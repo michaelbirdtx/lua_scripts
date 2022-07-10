@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.7.1'
+local MODULE_VERSION = '1.7.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -60,17 +60,23 @@ local Titles = {
 local Spells = {
 
     -- All Classes (0)
+
+    {class = 0, level = 10, type = 0, entry = 64731}, -- Sea Turtle
     {class = 0, level = 20, type = 1, entry = 63624}, -- Dual Talent Specialization
     {class = 0, level = 20, type = 3, entry = 43},    -- Duelist
     {class = 0, level = 20, type = 1, entry = 33389}, -- Apprentice Riding
-    {class = 0, level = 20, type = 0, entry = 64731}, -- Sea Turtle
+    {class = 0, level = 20, type = 0, entry = 65917}, -- Magic Rooster
+    {class = 0, level = 30, type = 0, entry = 34896}, -- Cobalt War Talbuk
     {class = 0, level = 40, type = 0, entry = 75614}, -- Celestial Steed
     {class = 0, level = 40, type = 1, entry = 33392}, -- Journeyman Riding
+    {class = 0, level = 50, type = 0, entry = 55531}, -- Mechano-Hog
     {class = 0, level = 60, type = 1, entry = 34092}, -- Expert Riding
     {class = 0, level = 60, type = 0, entry = 48025}, -- Headless Horseman's Mount
     {class = 0, level = 68, type = 0, entry = 54197}, -- Cold Weather Flying
+    {class = 0, level = 70, type = 0, entry = 71342}, -- Big Love Rocket
     {class = 0, level = 70, type = 1, entry = 34093}, -- Artisan Riding
     {class = 0, level = 80, type = 0, entry = 72286}, -- Invincible
+    {class = 0, level = 80, type = 0, entry = 75973}, -- X-53 Touring Rocket
 
     -- Warrior (1)
     {class = 1, level = 10, type = 1, entry = 8121}, -- Path of Defense
@@ -93,7 +99,7 @@ local Spells = {
     {class = 7, level = 20, type = 1, entry = 5396}, -- Healing Stream Totem
     {class = 7, level = 20, type = 2, entry = 5177}, -- Water Totem
     {class = 7, level = 30, type = 2, entry = 5178}, -- Air Totem
-    {class = 7, level = 40, type = 0, entry = 8737},  -- Mail Armor
+    {class = 7, level = 40, type = 0, entry = 8737}, -- Mail Armor
 
     -- Warlock (9)
     {class = 9, level = 10, type = 1, entry = 11520}, -- Summon Voidwalker
