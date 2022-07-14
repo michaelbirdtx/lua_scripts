@@ -5,7 +5,6 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local function onUseInstastone(event, player, item, target)
-    print("Instahearth! clicked")
     player:CastSpell(player, 8690, true)
 end
 

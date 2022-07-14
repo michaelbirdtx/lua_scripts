@@ -310,9 +310,6 @@ local function firstLogin(event, player)
     level = player:GetLevel()
     race = player:GetRace()
     team = player:GetTeam()
-    --if level > 1 then
-    --    return
-    --end
     print("["..MODULE_NAME.."]: "..player:GetName().." created by "..player:GetAccountName().." on team "..team)
     player:SetKnownTitle(1)
     grantSkills(player, class)
@@ -353,6 +350,8 @@ local function firstLogin(event, player)
         bagEntry,
         1,
         32618, -- Mind Releaser
+        1,
+        41605, -- Instastone!
         1,
         foodEntry,
         1000
