@@ -3,7 +3,7 @@
 SET
 @Entry					:= 32618,
 @Class					:= 15, /* 15 - Miscellaneous */
-@Subclass				:= 4, /* 5 - Food & Drink */
+@Subclass				:= 4, /* 4 - Scroll */
 @DisplayID				:= 45112,
 @Name					:= 'Mind Releaser',
 @Bonding				:= '1',
