@@ -333,8 +333,8 @@ local function firstLogin(event, player)
     end
     
     SendMail(
-        "Bags, Money, and The Stuff!",
-        "Because who doesn't need more of all that Stuff?",
+        "Bags and more!",
+        "Here's a few things to make your adventuring a little easier.",
         emailTo,
         emailFrom,
         emailStationery,
