@@ -21,11 +21,11 @@ SET
 @RequiredLevel			:= 1,
 @MaxCount				:= 0,
 @Stackable				:= 1,
-@SpellId				:= 46401,
+@SpellId				:= 556,
 @SpellTrigger			:= 0,
 @SpellCharges			:= 0,
 @SpellCooldown			:= 0,
-@SpellCategory			:= 1300,
+@SpellCategory			:= 0,
 @SpellCategoryCooldown	:= 0,
 @FoodType				:= 0
 ;

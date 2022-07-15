@@ -5,9 +5,9 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local function onUseInstastone(event, player, item, target)
-    if not player:IsInCombat() then
-        player:CastSpell(player, 8690, true)
-    end
+    player:CastSpell(player, 8690, true) -- Hearthstone
+    player:CastSpell(player, 45935, true) -- Spell effect
+    return false
 end
 
 RegisterItemEvent(41605, 2, onUseInstastone)
