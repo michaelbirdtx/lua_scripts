@@ -1,12 +1,12 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.0'
+local MODULE_VERSION = 'Beta 1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local hireAura = 62109
 local baseFee = 32
-local followDistance = 2.5
+local followDistance = 2
 
 local SELLSWORD = 669001
 local SELLSWORD1 = 17214
@@ -18,7 +18,7 @@ local BATTLEMAGE = 669002
 local BATTLEMAGE1 = 29869
 
 local modHP = {
-    [SELLSWORD] = 1.3,
+    [SELLSWORD] = 1.6,
     [BATTLEMAGE] = 1,
 }
 
@@ -28,14 +28,14 @@ local modMana = {
 }
 
 local modDamage = {
-    [SELLSWORD] = 1.1,
+    [SELLSWORD] = 1.6,
     [BATTLEMAGE] = 1,
 }
 
 local Spells = {
     [SELLSWORD1] = 335, -- Taunt
     [SELLSWORD2] = 11578, -- Charge
-    [SELLSWORD3] = 12292, -- Death Wish
+    [SELLSWORD3] = 57755, -- Heroic Throw
     [SELLSWORD4] = 12328, -- Sweeping Strikes
     [BATTLEMAGE1] = 31589, -- Slow
     --[29869] = 31117, -- Blood Elf - Unstable Affliction
@@ -98,6 +98,7 @@ local function getBaseStats(unit)
         stats['hp'] = Query:GetString(0)*modHP[entry]
         stats['mana'] = Query:GetString(1)*modMana[entry]
         stats['armor'] = Query:GetString(2)
+        stats['attackPower'] = Query:GetString(4)
         stats['minDamage'] = ((Query:GetString(4) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
         stats['maxDamage'] = (((Query:GetString(4)*1.5) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
         print("entry: "..entry)
@@ -110,6 +111,7 @@ local function getBaseStats(unit)
         print("damage_base: "..Query:GetString(4))
         print("minDamage: "..stats['minDamage'])
         print("maxDamage: "..stats['maxDamage'])
+        print("Power type: "..unit:GetPowerType())
     end
     return stats
 end
@@ -128,8 +130,13 @@ local function summonHireling(entry, player)
         hStats = getBaseStats(hireling)
         hireling:SetMaxHealth(hStats['hp'])
         hireling:SetHealth(hStats['hp'])
-        hireling:SetFloatValue(70, hStats['minDamage']) -- Set MinDamage based on player
-        hireling:SetFloatValue(71, hStats['maxDamage']) -- Set MaxDamage based on player
+        --hireling:SetPower(hStats['mana'], POWER_ALL)
+        --hireling:SetFloatValue(25, hStats['mana'])
+        hireling:SetInt32Value(25, hStats['mana'])
+        hireling:SetInt32Value(33, hStats['mana'])
+        hireling:SetFloatValue(70, hStats['minDamage'])
+        hireling:SetFloatValue(71, hStats['maxDamage'])
+        hireling:SetInt32Value(123, hStats['attackPower'])
         hireling:MoveFollow(player, followDistance, 60)
         hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
         hireling:SetSheath(0)
@@ -137,7 +144,6 @@ local function summonHireling(entry, player)
         aura = player:AddAura(hireAura, player)
         aura:SetMaxDuration(2147483647)
         aura:SetDuration(2147483647)
-        --print("Spell Test: "..getRankedSpell("frostbolt", hireling))
     end
 end
 
