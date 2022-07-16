@@ -28,7 +28,7 @@ local baseFees = {
 
 local modHP = {
     [SELLSWORD] = 1.8,
-    [BATTLEMAGE] = 1,
+    [BATTLEMAGE] = 1.2,
 }
 
 local modMana = {
@@ -38,7 +38,12 @@ local modMana = {
 
 local modDamage = {
     [SELLSWORD] = 1.6,
-    [BATTLEMAGE] = 1,
+    [BATTLEMAGE] = 1.2,
+}
+
+local modMaxLevel = {
+    [SELLSWORD] = 3,
+    [BATTLEMAGE] = 5,
 }
 
 local Spells = {
@@ -146,7 +151,7 @@ local function summonHireling(entry, player)
     if player:HasAura(hireAura) then
         player:SendBroadcastMessage("Sorry, you already have a hireling.")
     else
-        local hLevel = player:GetLevel()+math.random(1,3)
+        local hLevel = player:GetLevel()+math.random(1,modMaxLevel[entry])
         local hHealth = (player:GetMaxHealth()/player:GetLevel()) * hLevel
         print("Hireling summoned by "..player:GetName())
         local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, HIRELING_DURATION)
