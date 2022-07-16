@@ -5,26 +5,35 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local hireAura = 62109
-local baseFee = 32
 local followDistance = 2
 
 local SELLSWORD = 669001
-local SELLSWORD1 = 17214
-local SELLSWORD2 = 3054
-local SELLSWORD3 = 1314
-local SELLSWORD4 = 17671
+local SELLSWORD1 = 17214 -- Female Draenei
+local SELLSWORD2 = 3054 -- Male Dwarf
+local SELLSWORD3 = 1314 -- Male Orc
+local SELLSWORD4 = 17671 -- Female Blood Elf
 
 local BATTLEMAGE = 669002
-local BATTLEMAGE1 = 29869
+local BATTLEMAGE1 = 29869 -- Female Blood Elf
+local BATTLEMAGE2 = 26073 -- Female Blood Elf
+local BATTLEMAGE3 = 28160 -- Female Gnome
+local BATTLEMAGE4 = 25166 -- Male Human
+
+local HIRELING_DURATION = 1000*60*60 -- Milliseconds*Seconds*Minutes
+
+local baseFees = {
+    [SELLSWORD] = 36,
+    [BATTLEMAGE] = 57,
+}
 
 local modHP = {
-    [SELLSWORD] = 1.6,
+    [SELLSWORD] = 1.8,
     [BATTLEMAGE] = 1,
 }
 
 local modMana = {
     [SELLSWORD] = 1,
-    [BATTLEMAGE] = 1.3,
+    [BATTLEMAGE] = 1,
 }
 
 local modDamage = {
@@ -33,13 +42,14 @@ local modDamage = {
 }
 
 local Spells = {
-    [SELLSWORD1] = 335, -- Taunt
+    [SELLSWORD1] = 355, -- Taunt
     [SELLSWORD2] = 11578, -- Charge
-    [SELLSWORD3] = 57755, -- Heroic Throw
-    [SELLSWORD4] = 12328, -- Sweeping Strikes
+    [SELLSWORD3] = 4336, -- Jump Jets
+    [SELLSWORD4] = 57755, -- Heroic Throw
     [BATTLEMAGE1] = 31589, -- Slow
-    --[29869] = 31117, -- Blood Elf - Unstable Affliction
-    --[29869] = 8406, -- Blood Elf - Frostbolt
+    [BATTLEMAGE2] = 31589, -- Slow
+    [BATTLEMAGE3] = 31589, -- Slow
+    [BATTLEMAGE4] = 31589, -- Slow
 }
 
 local rankedSpells = {
@@ -53,16 +63,32 @@ local rankedSpells = {
     {name = 'frostbolt', rank = '7', entry = 42841},
     {name = 'frostbolt', rank = '8', entry = 42842},
 
-    --[[
-    {name = , rank = 1, entry = },
-    {name = , rank = 2, entry = },
-    {name = , rank = 3, entry = },
-    {name = , rank = 4, entry = },
-    {name = , rank = 5, entry = },
-    {name = , rank = 6, entry = },
-    {name = , rank = 7, entry = },
-    {name = , rank = 8, entry = },
-    ]]
+    {name = 'fireball', rank = '1', entry = 145},
+    {name = 'fireball', rank = '2', entry = 8400},
+    {name = 'fireball', rank = '3', entry = 8402},
+    {name = 'fireball', rank = '4', entry = 10149},
+    {name = 'fireball', rank = '5', entry = 10150},
+    {name = 'fireball', rank = '6', entry = 27070},
+    {name = 'fireball', rank = '7', entry = 42832},
+    {name = 'fireball', rank = '8', entry = 42833},
+
+    {name = 'shadowbolt', rank = '1', entry = 695},
+    {name = 'shadowbolt', rank = '2', entry = 1106},
+    {name = 'shadowbolt', rank = '3', entry = 7641},
+    {name = 'shadowbolt', rank = '4', entry = 11659},
+    {name = 'shadowbolt', rank = '5', entry = 11661},
+    {name = 'shadowbolt', rank = '6', entry = 27209},
+    {name = 'shadowbolt', rank = '7', entry = 47808},
+    {name = 'shadowbolt', rank = '8', entry = 47809},
+
+    {name = 'lightningbolt', rank = '1', entry = 548},
+    {name = 'lightningbolt', rank = '2', entry = 943},
+    {name = 'lightningbolt', rank = '3', entry = 10391},
+    {name = 'lightningbolt', rank = '4', entry = 15207},
+    {name = 'lightningbolt', rank = '5', entry = 15208},
+    {name = 'lightningbolt', rank = '6', entry = 25449},
+    {name = 'lightningbolt', rank = '7', entry = 49237},
+    {name = 'lightningbolt', rank = '8', entry = 49238},
 
 }
 
@@ -73,7 +99,6 @@ local Weapons = {
 
 local function getRankedSpell(name, caster)
     rank = string.sub(caster:GetLevel(), 1, 1)
-    --print("Spell Rank: "..rank)
     for i, v in ipairs(rankedSpells) do
         if v.name==name and v.rank==rank then
             print("Spell Name: "..v.name.." Rank: "..v.rank.." Entry: "..v.entry)
@@ -102,6 +127,7 @@ local function getBaseStats(unit)
         stats['minDamage'] = ((Query:GetString(4) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
         stats['maxDamage'] = (((Query:GetString(4)*1.5) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
         print("entry: "..entry)
+        print("model: "..unit:GetDisplayId())
         print("class: "..class)
         print("level: "..level)
         print("health: "..stats['hp'])
@@ -120,28 +146,29 @@ local function summonHireling(entry, player)
     if player:HasAura(hireAura) then
         player:SendBroadcastMessage("Sorry, you already have a hireling.")
     else
-        hLevel = player:GetLevel()+math.random(1,3)
-        hHealth = (player:GetMaxHealth()/player:GetLevel()) * hLevel
-        hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, 1800000)
+        local hLevel = player:GetLevel()+math.random(1,3)
+        local hHealth = (player:GetMaxHealth()/player:GetLevel()) * hLevel
+        print("Hireling summoned by "..player:GetName())
+        local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, HIRELING_DURATION)
         hireling:SetFaction(35)
         hireling:SetCreatorGUID(player:GetGUID())
         hireling:SetOwnerGUID(player:GetGUID())
         hireling:SetLevel(hLevel)
-        hStats = getBaseStats(hireling)
+        local hStats = getBaseStats(hireling)
+        print("Duration: "..HIRELING_DURATION)
         hireling:SetMaxHealth(hStats['hp'])
         hireling:SetHealth(hStats['hp'])
-        --hireling:SetPower(hStats['mana'], POWER_ALL)
-        --hireling:SetFloatValue(25, hStats['mana'])
         hireling:SetInt32Value(25, hStats['mana'])
         hireling:SetInt32Value(33, hStats['mana'])
         hireling:SetFloatValue(70, hStats['minDamage'])
         hireling:SetFloatValue(71, hStats['maxDamage'])
+        hireling:SetFlag(79, 2) -- Set trackable on minimap
         hireling:SetInt32Value(123, hStats['attackPower'])
         hireling:MoveFollow(player, followDistance, 60)
         hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
         hireling:SetSheath(0)
         hireling:SendUnitSay("Greetings, "..player:GetName()..".", 0)
-        aura = player:AddAura(hireAura, player)
+        local aura = player:AddAura(hireAura, player)
         aura:SetMaxDuration(2147483647)
         aura:SetDuration(2147483647)
     end
@@ -160,21 +187,30 @@ local function onChatMessage(event, player, msg, _, lang)
 end
 
 local function onEnterCombat(event, creature, target)
-    spell = Spells[creature:GetDisplayId()]
-    print("Hireling casts "..spell)
+    local spell = Spells[creature:GetDisplayId()]
+    print("Spell: "..spell)
     creature:CastSpell(target, spell, true)
 end
 
 local function onLeaveCombat(event, creature)
-    player = creature:GetOwner()
+    local player = creature:GetOwner()
     creature:SetHealth(creature:GetMaxHealth())
+    creature:CastSpell(creature, 52895, true)
     creature:SetSheath(0)
     creature:MoveFollow(player, followDistance, 60)
 end
 
 local function onSpellHitTarget(event, creature, target, spellid)
-    spell = getRankedSpell("frostbolt", creature)
-    --print("Hireling casts "..spell)
+    local spell
+    if creature:GetDisplayId() == BATTLEMAGE1 then
+        spell = getRankedSpell("frostbolt", creature)
+    elseif creature:GetDisplayId() == BATTLEMAGE2 then
+        spell = getRankedSpell("fireball", creature)
+    elseif creature:GetDisplayId() == BATTLEMAGE3 then
+        spell = getRankedSpell("shadowbolt", creature)
+    elseif creature:GetDisplayId() == BATTLEMAGE4 then
+        spell = getRankedSpell("lightningbolt", creature)
+    end
     creature:CastSpell(target, spell, false)
 end
 
@@ -191,8 +227,8 @@ local function brokerOnHello(event, player, unit)
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
-        player:GossipMenuAddItem(0, "I'd like to hire a Sellsword.", 0, 1, null, "The fee for this hireling is...", baseFee*player:GetLevel())
-        player:GossipMenuAddItem(0, "I'd like to hire a Battle Mage.", 0, 2, null, "The fee for this hireling is...", baseFee*player:GetLevel())
+        player:GossipMenuAddItem(0, "I'd like to hire a Sellsword.", 0, 1, null, "The fee for this hireling is...", baseFees[SELLSWORD]*player:GetLevel())
+        player:GossipMenuAddItem(0, "I'd like to hire a Battle Mage.", 0, 2, null, "The fee for this hireling is...", baseFees[BATTLEMAGE]*player:GetLevel())
         player:GossipMenuAddItem(0, "Never mind, I'll do it by myself.", 0, 3)
         player:GossipSendMenu(0x7FFFFFFF, unit)
     end
@@ -201,12 +237,12 @@ end
 local function brokerOnSelect(event, player, unit, sender, intid, code)
     if intid == 1 then
         summonHireling(SELLSWORD, player)
-        player:ModifyMoney(-(baseFee*player:GetLevel()))
+        player:ModifyMoney(-(baseFees[SELLSWORD]*player:GetLevel()))
         player:GossipComplete()
     end
     if intid == 2 then
         summonHireling(BATTLEMAGE, player)
-        player:ModifyMoney(-(baseFee*player:GetLevel()))
+        player:ModifyMoney(-(baseFees[BATTLEMAGE]*player:GetLevel()))
         player:GossipComplete()
     end
     if intid == 3 then
@@ -218,7 +254,7 @@ local function hirelingOnHello(event, player, unit)
     if player:GetGUID() == unit:GetOwnerGUID() then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
-        player:GossipMenuAddItem(0, "Wait here, I'll bring them to you.", 0, 2)
+        player:GossipMenuAddItem(0, "Wait here, I'll take care of this.", 0, 2)
         player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 3)
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
@@ -231,11 +267,13 @@ local function hirelingOnSelect(event, player, unit, sender, intid, code)
         unit:MoveExpire()
         unit:MoveIdle()
         unit:MoveFollow(player, followDistance, 60)
+        unit:SetAggroEnabled(true)
         player:GossipComplete()
     end
     if intid == 2 then
         unit:MoveExpire()
         unit:MoveIdle()
+        unit:SetAggroEnabled(false)
         player:GossipComplete()
     end
     if intid == 3 then
@@ -252,6 +290,7 @@ RegisterPlayerEvent(18, onChatMessage)
 
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
 RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
+--RegisterCreatureEvent(SELLSWORD, 15, onSpellHitTarget)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
 RegisterCreatureEvent(BATTLEMAGE, 1, onEnterCombat)

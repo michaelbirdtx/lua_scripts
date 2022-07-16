@@ -1,14 +1,14 @@
 SET
 @Entry 			:= 669002,
 @Model1 		:= 29869,
-@Model2 		:= 0,
-@Model3 		:= 0,
-@Model4 		:= 0,
+@Model2 		:= 26073,
+@Model3 		:= 28160,
+@Model4 		:= 25166,
 @Name 			:= "Battle Mage",
 @MinLevel 		:= 20,
 @MaxLevel 		:= 20,
 @Faction 		:= 35,
-@DetectionRange := 50,
+@DetectionRange := 100,
 @Class			:= 8,
 @AIName			:= "ArcherAI"
 ;
