@@ -1,16 +1,16 @@
 SET
-@Entry 			:= 669001,
-@Model1 		:= 17214,
-@Model2 		:= 3054,
-@Model3 		:= 1314,
-@Model4 		:= 17671,
-@Name 			:= 'Sellsword',
-@MinLevel 		:= 10,
-@MaxLevel 		:= 10,
+@Entry 			:= 669002,
+@Model1 		:= 29869,
+@Model2 		:= 0,
+@Model3 		:= 0,
+@Model4 		:= 0,
+@Name 			:= "Battle Mage",
+@MinLevel 		:= 20,
+@MaxLevel 		:= 20,
 @Faction 		:= 35,
 @DetectionRange := 50,
-@Class			:= 1,
-@AIName			:= "CombatAI"
+@Class			:= 8,
+@AIName			:= "ArcherAI"
 ;
 
 DELETE FROM acore_world.creature_template WHERE entry = @Entry;
