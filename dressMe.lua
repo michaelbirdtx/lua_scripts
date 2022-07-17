@@ -129,6 +129,7 @@ local function onChatMessage(event, player, msg, _, lang)
         ProcessCopper(player)
         DeleteAllTransmogs(player)
         LoadPlayer(player)
+        return false
     elseif (msg:find('#transmog') == 1) then
         local slotID = string.sub(msg, 10, 12)
         local entry = string.sub(msg, 14)
@@ -136,6 +137,7 @@ local function onChatMessage(event, player, msg, _, lang)
         player:PlayDirectSound(3337)
         ProcessCopper(player)
         SetFakeEntry(player, item, entry)
+        return false
     end
 end
 

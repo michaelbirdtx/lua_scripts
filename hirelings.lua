@@ -193,12 +193,19 @@ end
 local function onChatMessage(event, player, msg, _, lang)
     if (msg:find('#hire sword') == 1) then
         summonHireling(SELLSWORD, player)
+        return false
     end
     if (msg:find('#hire mage') == 1) then
         summonHireling(BATTLEMAGE, player)
+        return false
     end
     if (msg:find('#hire aura') == 1) then
         player:SendBroadcastMessage("Aura status: "..tostring(player:HasAura(hireAura)))
+        return false
+    end
+    if (msg:find('#hire fly') == 1) then
+        player:SendBroadcastMessage("Can fly: "..tostring(player:CanFly()))
+        return false
     end
 end
 
