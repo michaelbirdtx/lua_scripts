@@ -47,14 +47,14 @@ local modMaxLevel = {
 }
 
 local Mounts = {
-    [SELLSWORD1] = 2410, -- White Stallion
+    [SELLSWORD1] = 2410, -- White Riding Stallion
     [SELLSWORD2] = 2408,
     [SELLSWORD3] = 2408,
     [SELLSWORD4] = 2408, -- Palomino
-    [BATTLEMAGE1] = 2408,
+    [BATTLEMAGE1] = 2410, -- White Riding Stallion
     [BATTLEMAGE2] = 2408,
-    [BATTLEMAGE3] = 2408,
-    [BATTLEMAGE4] = 2408,
+    [BATTLEMAGE3] = 14376, -- Swift White Mechanostrider
+    [BATTLEMAGE4] = 2402, -- Black Stallion
 }
 
 local Spells = {
@@ -211,7 +211,7 @@ end
 
 local function onEnterCombat(event, creature, target)
     local spell = Spells[creature:GetDisplayId()]
-    print("Spell: "..spell)
+    --print("Spell: "..spell)
     creature:CastSpell(target, spell, true)
 end
 
@@ -311,7 +311,6 @@ local function hirelingOnSelect(event, player, unit, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 4 then
-        unit:Dismount()
         unit:DespawnOrUnsummon(0)
     end
 end
