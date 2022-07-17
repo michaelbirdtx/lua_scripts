@@ -306,6 +306,8 @@ local function onServerStartup(event)
     CharDBExecute("DELETE FROM character_aura WHERE spell = 62109")
 end
 
+RegisterServerEvent(14, onServerStartup)
+
 RegisterPlayerEvent(18, onChatMessage)
 
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
@@ -325,5 +327,3 @@ RegisterCreatureGossipEvent(BATTLEMAGE, 2, hirelingOnSelect)
 
 RegisterCreatureGossipEvent(BROKER, 1, brokerOnHello)
 RegisterCreatureGossipEvent(BROKER, 2, brokerOnSelect)
-
-RegisterServerEvent(14, onServerStartup)
