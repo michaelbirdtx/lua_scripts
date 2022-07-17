@@ -46,6 +46,17 @@ local modMaxLevel = {
     [BATTLEMAGE] = 5,
 }
 
+local Mounts = {
+    [SELLSWORD1] = 2410, -- White Stallion
+    [SELLSWORD2] = 2408,
+    [SELLSWORD3] = 2408,
+    [SELLSWORD4] = 2408, -- Palomino
+    [BATTLEMAGE1] = 2408,
+    [BATTLEMAGE2] = 2408,
+    [BATTLEMAGE3] = 2408,
+    [BATTLEMAGE4] = 2408,
+}
+
 local Spells = {
     [SELLSWORD1] = 355, -- Taunt
     [SELLSWORD2] = 11578, -- Charge
@@ -106,7 +117,7 @@ local function getRankedSpell(name, caster)
     rank = string.sub(caster:GetLevel(), 1, 1)
     for i, v in ipairs(rankedSpells) do
         if v.name==name and v.rank==rank then
-            print("Spell Name: "..v.name.." Rank: "..v.rank.." Entry: "..v.entry)
+            --print("Spell Name: "..v.name.." Rank: "..v.rank.." Entry: "..v.entry)
             return v.entry
         end
     end
@@ -131,7 +142,7 @@ local function getBaseStats(unit)
         stats['attackPower'] = Query:GetString(4)
         stats['minDamage'] = ((Query:GetString(4) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
         stats['maxDamage'] = (((Query:GetString(4)*1.5) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
-        print("entry: "..entry)
+        --[[print("entry: "..entry)
         print("model: "..unit:GetDisplayId())
         print("class: "..class)
         print("level: "..level)
@@ -142,8 +153,8 @@ local function getBaseStats(unit)
         print("damage_base: "..Query:GetString(4))
         print("minDamage: "..stats['minDamage'])
         print("maxDamage: "..stats['maxDamage'])
-        print("Power type: "..unit:GetPowerType())
-    end
+        print("Power type: "..unit:GetPowerType())]]
+        end
     return stats
 end
 
@@ -153,14 +164,14 @@ local function summonHireling(entry, player)
     else
         local hLevel = player:GetLevel()+math.random(1,modMaxLevel[entry])
         local hHealth = (player:GetMaxHealth()/player:GetLevel()) * hLevel
-        print("Hireling summoned by "..player:GetName())
+        --print("Hireling summoned by "..player:GetName())
         local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, HIRELING_DURATION)
         hireling:SetFaction(35)
         hireling:SetCreatorGUID(player:GetGUID())
         hireling:SetOwnerGUID(player:GetGUID())
         hireling:SetLevel(hLevel)
         local hStats = getBaseStats(hireling)
-        print("Duration: "..HIRELING_DURATION)
+        --print("Duration: "..HIRELING_DURATION)
         hireling:SetMaxHealth(hStats['hp'])
         hireling:SetHealth(hStats['hp'])
         hireling:SetInt32Value(25, hStats['mana'])
@@ -285,7 +296,10 @@ local function hirelingOnSelect(event, player, unit, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 3 then
-        unit:Mount(2408)
+        unit:Mount(Mounts[unit:GetDisplayId()])
+        unit:MoveExpire()
+        unit:MoveIdle()
+        unit:MoveFollow(player, followDistance, 60)
         unit:SetAggroEnabled(false)
         player:GossipComplete()
     end
