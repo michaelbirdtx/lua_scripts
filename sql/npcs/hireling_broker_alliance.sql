@@ -2,8 +2,8 @@ SET
 @Entry 		:= 669010,
 @Model1 	:= 17213,
 @Model2 	:= 6198,
-@Model3 	:= 12778,
-@Model4 	:= 12780,
+@Model3 	:= 9811,
+@Model4 	:= 12924,
 @Name 		:= "Hireling Broker",
 @Title		:= "Blackwater Raiders",
 @Icon 		:= "Speak", /* Options: Directions, Gunner, vehicleCursor, Driver, Attack, Buy, Speak, Pickup, Interact, Trainer, Taxi, Repair, LootAll, Quest, PVP */
