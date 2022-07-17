@@ -43,6 +43,7 @@ end
 local function onChatMessage(event, player, msg, _, lang)
     if (msg:find('#who') == 1) then
         listPlayers(player)
+        return false
     end
 end
 
