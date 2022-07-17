@@ -1,11 +1,13 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = 'Beta 1.1'
+local MODULE_VERSION = 'Beta 1.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 local hireAura = 62109
 local followDistance = 2
+
+local BROKER = 669000
 
 local SELLSWORD = 669001
 local SELLSWORD1 = 17214 -- Female Draenei
@@ -47,13 +49,13 @@ local modMaxLevel = {
 }
 
 local Mounts = {
-    [SELLSWORD1] = 2410, -- White Riding Stallion
-    [SELLSWORD2] = 2408,
-    [SELLSWORD3] = 2408,
-    [SELLSWORD4] = 2408, -- Palomino
+    [SELLSWORD1] = 14582, -- Swift Palomino
+    [SELLSWORD2] = 22350, -- SWift Brewfest Ram
+    [SELLSWORD3] = 2326, -- Red Wolf
+    [SELLSWORD4] = 21074, -- Dark Riding Talbuk
     [BATTLEMAGE1] = 2410, -- White Riding Stallion
-    [BATTLEMAGE2] = 2408,
-    [BATTLEMAGE3] = 14376, -- Swift White Mechanostrider
+    [BATTLEMAGE2] = 28889, -- Sunreaver Hawkstrider
+    [BATTLEMAGE3] = 14372, -- Black Battlestrider
     [BATTLEMAGE4] = 2402, -- Black Stallion
 }
 
@@ -117,7 +119,6 @@ local function getRankedSpell(name, caster)
     rank = string.sub(caster:GetLevel(), 1, 1)
     for i, v in ipairs(rankedSpells) do
         if v.name==name and v.rank==rank then
-            --print("Spell Name: "..v.name.." Rank: "..v.rank.." Entry: "..v.entry)
             return v.entry
         end
     end
@@ -142,19 +143,7 @@ local function getBaseStats(unit)
         stats['attackPower'] = Query:GetString(4)
         stats['minDamage'] = ((Query:GetString(4) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
         stats['maxDamage'] = (((Query:GetString(4)*1.5) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
-        --[[print("entry: "..entry)
-        print("model: "..unit:GetDisplayId())
-        print("class: "..class)
-        print("level: "..level)
-        print("health: "..stats['hp'])
-        print("mana: "..stats['mana'])
-        print("armor: "..stats['armor'])
-        print("attackpower: "..Query:GetString(3))
-        print("damage_base: "..Query:GetString(4))
-        print("minDamage: "..stats['minDamage'])
-        print("maxDamage: "..stats['maxDamage'])
-        print("Power type: "..unit:GetPowerType())]]
-        end
+    end
     return stats
 end
 
@@ -164,14 +153,12 @@ local function summonHireling(entry, player)
     else
         local hLevel = player:GetLevel()+math.random(1,modMaxLevel[entry])
         local hHealth = (player:GetMaxHealth()/player:GetLevel()) * hLevel
-        --print("Hireling summoned by "..player:GetName())
         local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, HIRELING_DURATION)
         hireling:SetFaction(35)
         hireling:SetCreatorGUID(player:GetGUID())
         hireling:SetOwnerGUID(player:GetGUID())
         hireling:SetLevel(hLevel)
         local hStats = getBaseStats(hireling)
-        --print("Duration: "..HIRELING_DURATION)
         hireling:SetMaxHealth(hStats['hp'])
         hireling:SetHealth(hStats['hp'])
         hireling:SetInt32Value(25, hStats['mana'])
@@ -211,7 +198,6 @@ end
 
 local function onEnterCombat(event, creature, target)
     local spell = Spells[creature:GetDisplayId()]
-    --print("Spell: "..spell)
     creature:CastSpell(target, spell, true)
 end
 
@@ -278,7 +264,7 @@ local function hirelingOnHello(event, player, unit)
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
         player:GossipMenuAddItem(0, "Wait here, I'll take care of this.", 0, 2)
-        player:GossipMenuAddItem(0, "Mount up. Our work here is done.", 0, 3)
+        player:GossipMenuAddItem(0, "Mount up, it's time to move.", 0, 3)
         player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 4)
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
@@ -324,7 +310,6 @@ RegisterPlayerEvent(18, onChatMessage)
 
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
 RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
---RegisterCreatureEvent(SELLSWORD, 15, onSpellHitTarget)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
 RegisterCreatureEvent(BATTLEMAGE, 1, onEnterCombat)
@@ -338,10 +323,7 @@ RegisterCreatureGossipEvent(SELLSWORD, 2, hirelingOnSelect)
 RegisterCreatureGossipEvent(BATTLEMAGE, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(BATTLEMAGE, 2, hirelingOnSelect)
 
-RegisterCreatureGossipEvent(669010, 1, brokerOnHello)
-RegisterCreatureGossipEvent(669010, 2, brokerOnSelect)
-
---RegisterCreatureGossipEvent(669011, 1, brokerOnHello)
---RegisterCreatureGossipEvent(669011, 2, brokerOnSelect)
+RegisterCreatureGossipEvent(BROKER, 1, brokerOnHello)
+RegisterCreatureGossipEvent(BROKER, 2, brokerOnSelect)
 
 RegisterServerEvent(14, onServerStartup)
