@@ -8,7 +8,7 @@ SET
 @MinLevel 		:= 20,
 @MaxLevel 		:= 20,
 @Faction 		:= 35,
-@DetectionRange := 100,
+@DetectionRange := 60,
 @Class			:= 8,
 @AIName			:= "ArcherAI"
 ;

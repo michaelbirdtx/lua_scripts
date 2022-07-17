@@ -8,7 +8,7 @@ SET
 @MinLevel 		:= 10,
 @MaxLevel 		:= 10,
 @Faction 		:= 35,
-@DetectionRange := 100,
+@DetectionRange := 60,
 @Class			:= 1,
 @AIName			:= "CombatAI"
 ;

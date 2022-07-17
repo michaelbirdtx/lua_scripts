@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = 'Beta 1'
+local MODULE_VERSION = 'Beta 1.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -22,8 +22,8 @@ local BATTLEMAGE4 = 25166 -- Male Human
 local HIRELING_DURATION = 1000*60*60 -- Milliseconds*Seconds*Minutes
 
 local baseFees = {
-    [SELLSWORD] = 36,
-    [BATTLEMAGE] = 57,
+    [SELLSWORD] = 12,
+    [BATTLEMAGE] = 18,
 }
 
 local modHP = {
@@ -260,7 +260,8 @@ local function hirelingOnHello(event, player, unit)
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
         player:GossipMenuAddItem(0, "Wait here, I'll take care of this.", 0, 2)
-        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 3)
+        player:GossipMenuAddItem(0, "Mount up. Our work here is done.", 0, 3)
+        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 4)
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
         player:SendBroadcastMessage("That's not your hireling!")
@@ -269,6 +270,7 @@ end
 
 local function hirelingOnSelect(event, player, unit, sender, intid, code)
     if intid == 1 then
+        unit:Dismount()
         unit:MoveExpire()
         unit:MoveIdle()
         unit:MoveFollow(player, followDistance, 60)
@@ -276,12 +278,19 @@ local function hirelingOnSelect(event, player, unit, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 2 then
+        unit:Dismount()
         unit:MoveExpire()
         unit:MoveIdle()
         unit:SetAggroEnabled(false)
         player:GossipComplete()
     end
     if intid == 3 then
+        unit:Mount(2408)
+        unit:SetAggroEnabled(false)
+        player:GossipComplete()
+    end
+    if intid == 4 then
+        unit:Dismount()
         unit:DespawnOrUnsummon(0)
     end
 end
