@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = 'Beta 1.3'
+local MODULE_VERSION = 'Beta 1.3.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -21,7 +21,7 @@ local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 25166 -- Male Human
 
-local HIRELING_DURATION = 1000*60*60 -- Milliseconds*Seconds*Minutes
+local HIRELING_DURATION = 1000*60*120 -- Milliseconds*Seconds*Minutes
 
 local baseFees = {
     [SELLSWORD] = 12,
