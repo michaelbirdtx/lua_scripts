@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = 'Beta 1.3.1'
+local MODULE_VERSION = 'Beta 1.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -21,7 +21,7 @@ local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 25166 -- Male Human
 
-local HIRELING_DURATION = 1000*60*120 -- Milliseconds*Seconds*Minutes
+local HIRELING_DURATION = 1000*60*60 -- Milliseconds*Seconds*Minutes
 
 local baseFees = {
     [SELLSWORD] = 12,
@@ -265,8 +265,7 @@ local function hirelingOnHello(event, player, unit)
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
         player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
         player:GossipMenuAddItem(0, "Mount up, it's time to move. (Passive)", 0, 3)
-        player:GossipMenuAddItem(0, "Hop on, I'll do the driving. (Passive)", 0, 4)
-        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 5)
+        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 4)
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
         player:SendBroadcastMessage("That's not your hireling!")
@@ -298,26 +297,6 @@ local function hirelingOnSelect(event, player, unit, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 4 then
-        --print("On vehicle? "..tostring(player:IsOnVehicle()))
-        --local vehicle = player:GetVehicleKit():GetOwner()
-        print("Vehicle Entry: "..player:GetVehicleKit():GetEntry())
-        print("Vehicle Owner: "..player:GetVehicleKit():GetOwner():GetName())
-        unit:MoveExpire()
-        unit:MoveIdle()
-        unit:SetAggroEnabled(false)
-        player:GetVehicleKit():AddPassenger(unit, 0)
-        player:GetVehicleKit():AddPassenger(unit, 1)
-        player:GetVehicleKit():AddPassenger(unit, 2)
-        player:GetVehicleKit():AddPassenger(unit, 3)
-        player:GetVehicleKit():AddPassenger(unit, 4)
-        player:GetVehicleKit():AddPassenger(unit, 5)
-        player:GetVehicleKit():AddPassenger(unit, 6)
-        player:GetVehicleKit():AddPassenger(unit, 7)
-        player:GetVehicleKit():AddPassenger(unit, 8)
-        player:GetVehicleKit():AddPassenger(unit, 9)
-        player:GossipComplete()
-    end
-    if intid == 5 then
         unit:DespawnOrUnsummon(0)
     end
 end
