@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = 'Beta 1.2'
+local MODULE_VERSION = 'Beta 1.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -262,9 +262,9 @@ end
 local function hirelingOnHello(event, player, unit)
     if player:GetGUID() == unit:GetOwnerGUID() then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
-        player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
-        player:GossipMenuAddItem(0, "Wait here, I'll take care of this.", 0, 2)
-        player:GossipMenuAddItem(0, "Mount up, it's time to move.", 0, 3)
+        player:GossipMenuAddItem(0, "Follow me, there's killing to be done. (Active)", 0, 1)
+        player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
+        player:GossipMenuAddItem(0, "Mount up, it's time to move. (Passive)", 0, 3)
         player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 4)
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
@@ -302,8 +302,8 @@ local function hirelingOnSelect(event, player, unit, sender, intid, code)
 end
 
 local function onServerStartup(event)
-    print("Server Startup event triggered.")
     CharDBExecute("DELETE FROM character_aura WHERE spell = 62109")
+    print("["..MODULE_NAME.."]: Cleaned Auras table.")
 end
 
 RegisterServerEvent(14, onServerStartup)
