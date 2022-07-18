@@ -262,7 +262,7 @@ end
 local function hirelingOnHello(event, player, unit)
     if player:GetGUID() == unit:GetOwnerGUID() then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
-        player:GossipMenuAddItem(0, "Follow me, there's killing to be done. (Active)", 0, 1)
+        player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
         player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
         player:GossipMenuAddItem(0, "Mount up, it's time to move. (Passive)", 0, 3)
         player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 4)
