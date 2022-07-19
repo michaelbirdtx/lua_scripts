@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = 'Beta 1.3.2'
+local MODULE_VERSION = 'Beta 1.3.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -21,7 +21,7 @@ local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 25166 -- Male Human
 
-local HIRELING_DURATION = 1000*60*120 -- Milliseconds*Seconds*Minutes
+local HIRELING_DURATION = 1000*60*360 -- Milliseconds*Seconds*Minutes
 
 local baseFees = {
     [SELLSWORD] = 12,
@@ -171,11 +171,9 @@ local function summonHireling(entry, player)
         hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
         hireling:SetSheath(0)
         hireling:SendUnitSay("Greetings, "..player:GetName()..".", 0)
-        --hireling:CastSpell(player, 62109, true)
         local aura = hireling:AddAura(HIRE_AURA, player)
         aura:SetMaxDuration(2147483647)
         aura:SetDuration(2147483647)
-        --print("Hireling GUID: "..tostring(hireling:GetGUID()))
     end
 end
 
@@ -242,7 +240,7 @@ end
 local function brokerOnHello(event, player, unit)
     if player:HasAura(HIRE_AURA) then
         player:GossipSetText("What can I do for you today, "..player:GetClassAsString().."?")
-            player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 10, null, "Are you sure?")
+            player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 10, null, "Are you sure you want to dismiss your hireling?")
             player:GossipSendMenu(0x7FFFFFFF, unit)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
@@ -273,6 +271,29 @@ local function brokerOnSelect(event, player, unit, sender, intid, code)
     end
 end
 
+local function hirelingSetFollow(unit, player)
+    unit:Dismount()
+    unit:MoveExpire()
+    unit:MoveIdle()
+    unit:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    unit:SetAggroEnabled(true)
+end
+
+local function hirelingSetStay(unit)
+    unit:Dismount()
+    unit:MoveExpire()
+    unit:MoveIdle()
+    unit:SetAggroEnabled(false)
+end
+
+local function hirelingSetMounted(unit, player)
+    unit:Mount(Mounts[unit:GetDisplayId()])
+    unit:MoveExpire()
+    unit:MoveIdle()
+    unit:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    unit:SetAggroEnabled(false)
+end
+
 local function hirelingOnHello(event, player, unit)
     if player:GetGUID() == unit:GetOwnerGUID() then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
@@ -287,30 +308,19 @@ local function hirelingOnHello(event, player, unit)
 end
 
 local function hirelingOnSelect(event, player, unit, sender, intid, code)
-    if intid == 1 then
-        unit:Dismount()
-        unit:MoveExpire()
-        unit:MoveIdle()
-        unit:MoveFollow(player, FOLLOW_DISTANCE, 60)
-        unit:SetAggroEnabled(true)
+    if intid == 1 then -- follow
+        hirelingSetFollow(unit, player)
         player:GossipComplete()
     end
-    if intid == 2 then
-        unit:Dismount()
-        unit:MoveExpire()
-        unit:MoveIdle()
-        unit:SetAggroEnabled(false)
+    if intid == 2 then -- stay
+        hirelingSetStay(unit)
         player:GossipComplete()
     end
-    if intid == 3 then
-        unit:Mount(Mounts[unit:GetDisplayId()])
-        unit:MoveExpire()
-        unit:MoveIdle()
-        unit:MoveFollow(player, FOLLOW_DISTANCE, 60)
-        unit:SetAggroEnabled(false)
+    if intid == 3 then -- mount
+        hirelingSetMounted(unit, player)
         player:GossipComplete()
     end
-    if intid == 4 then
+    if intid == 4 then -- dismiss
         dismissHireling(player)
     end
 end
