@@ -21,7 +21,7 @@ local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 25166 -- Male Human
 
-local HIRELING_DURATION = 1000*60*120 -- Milliseconds*Seconds*Minutes
+local HIRELING_DURATION = 1000*60*360 -- Milliseconds*Seconds*Minutes
 
 local baseFees = {
     [SELLSWORD] = 12,

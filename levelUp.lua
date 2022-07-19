@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.7.2'
+local MODULE_VERSION = '1.7.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -80,16 +80,21 @@ local Spells = {
 
     -- Warrior (1)
     {class = 1, level = 10, type = 1, entry = 8121}, -- Path of Defense
+    {class = 1, level = 20, type = 0, entry = 674},  -- Dual Wield
     {class = 1, level = 30, type = 1, entry = 8616}, -- Path of the Berserker
     {class = 1, level = 40, type = 0, entry = 750},  -- Plate Armor
 
     -- Paladin (2)
-    {class = 2, level = 40, type = 0, entry = 750},   -- Plate Armor
+    {class = 2, level = 40, type = 0, entry = 750},  -- Plate Armor
 
     -- Hunter (3)
     {class = 3, level = 10, type = 1, entry = 1579}, -- Tame Beast
     {class = 3, level = 10, type = 1, entry = 5300}, -- Beast Training
-    {class = 3, level = 40, type = 0, entry = 8737},  -- Mail Armor
+    {class = 3, level = 20, type = 0, entry = 674},  -- Dual Wield
+    {class = 3, level = 40, type = 0, entry = 8737}, -- Mail Armor
+
+    -- Rogue (4)
+    {class = 4, level = 10, type = 0, entry = 674}, -- Dual Wield
 
     -- Shaman (7)
     {class = 7, level = 4, type = 1, entry  = 8073}, -- Stoneskin Totem
