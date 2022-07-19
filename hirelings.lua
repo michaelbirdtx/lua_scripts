@@ -21,7 +21,7 @@ local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 25166 -- Male Human
 
-local HIRELING_DURATION = 1000*60*360 -- Milliseconds*Seconds*Minutes
+local HIRELING_DURATION = 1000*60*120 -- Milliseconds*Seconds*Minutes
 
 local baseFees = {
     [SELLSWORD] = 12,
@@ -232,7 +232,7 @@ end
 
 local function brokerOnHello(event, player, unit)
     if player:HasAura(hireAura) then
-        player:GossipSetText("Sorry, "..player:GetClassAsString()..". Due to high demand, I can't spare another hireling right now.")
+        player:GossipSetText("Sorry, "..player:GetClassAsString()..". You'll need to dismiss your current hireling before I can offer you another contract.")
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
