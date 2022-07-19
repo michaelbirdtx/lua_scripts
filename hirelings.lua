@@ -1,11 +1,12 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.4'
+local MODULE_VERSION = '1.5'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
-local HIRE_AURA = 62109
+local FAIL_SOUND = 847
 local FOLLOW_DISTANCE = 2
+local HIRE_AURA = 62109
 
 local BROKER = 669000
 
@@ -147,7 +148,7 @@ local function getBaseStats(unit)
     return stats
 end
 
-local function summonHireling(entry, player)
+local function spawnHireling(entry, player)
     if player:HasAura(HIRE_AURA) then
         player:SendBroadcastMessage("Sorry, you already have a hireling.")
     else
@@ -177,36 +178,78 @@ local function summonHireling(entry, player)
     end
 end
 
+local function summonHireling(player)
+    aura = player:GetAura(HIRE_AURA)
+    if aura then
+        unit = aura:GetCaster()
+        if unit then
+            if unit:GetMapId() == player:GetMapId() then
+                x, y, z, o = player:GetLocation()
+                unit:NearTeleport( x, y, z, o )
+            else
+                player:SendBroadcastMessage("Your hireling is too far away to be summoned.")
+                player:PlayDirectSound(FAIL_SOUND)
+            end
+        else
+            player:SendBroadcastMessage("Your hireling is too far away to be summoned.")
+            player:PlayDirectSound(FAIL_SOUND)
+        end
+    else
+        player:SendBroadcastMessage("You don't have a hireling right now.")
+        player:PlayDirectSound(FAIL_SOUND)
+    end
+end
+
 local function dismissHireling(player)
     aura = player:GetAura(HIRE_AURA)
     unit = aura:GetCaster()
-    unit:DespawnOrUnsummon(0)
-    player:RemoveAura(HIRE_AURA)
+    if unit then
+        unit:DespawnOrUnsummon(0)
+        player:RemoveAura(HIRE_AURA)
+    else
+        player:SendBroadcastMessage("Your hireling is too far away to be dismissed.")
+        player:PlayDirectSound(FAIL_SOUND)
+    end
 end
 
 local function onChatMessage(event, player, msg, _, lang)
-    if (msg:find('#hire sword') == 1) then
-        summonHireling(SELLSWORD, player)
-        return false
-    end
-    if (msg:find('#hire mage') == 1) then
-        summonHireling(BATTLEMAGE, player)
-        return false
-    end
-    if (msg:find('#hire aura') == 1) then
-        player:SendBroadcastMessage("Aura status: "..tostring(player:HasAura(HIRE_AURA)))
-        return false
-    end
-    if (msg:find('#hire dismiss') == 1) then
-        dismissHireling(player)
-        return false
+    if (msg:find('#hire') == 1) and player:GetGMRank() > 2 then
+        if (msg:find('#hire sword') == 1) then
+            spawnHireling(SELLSWORD, player)
+            return false
+        elseif (msg:find('#hire mage') == 1) then
+            spawnHireling(BATTLEMAGE, player)
+            return false
+        elseif (msg:find('#hire aura') == 1) then
+            player:SendBroadcastMessage("Aura status: "..tostring(player:HasAura(HIRE_AURA)))
+            return false
+        elseif (msg:find('#hire dismiss') == 1) then
+            dismissHireling(player)
+            return false
+        elseif (msg:find('#hire loc') == 1) then
+            aura = player:GetAura(HIRE_AURA)
+            unit = aura:GetCaster()
+            if unit then
+                x, y, z, o = unit:GetLocation()
+                player:SendBroadcastMessage("Hireling Location X:"..x.." Y:"..y.." Z:"..z.." O:"..o.." Map:"..unit:GetMapId())
+            else
+                player:SendBroadcastMessage("Hireling Location: Unknown")
+            end
+            return false
+        elseif (msg:find('#hire summon') == 1) then
+            summonHireling(player)
+            return false
+        else
+            player:SendBroadcastMessage(msg.." command does not exist")
+            return false
+        end
     end
 end
 
 local function onEnterCombat(event, creature, target)
     local spell = Spells[creature:GetDisplayId()]
     creature:CastSpell(target, spell, true)
-end
+end    
 
 local function onLeaveCombat(event, creature)
     local player = creature:GetOwner()
@@ -240,7 +283,8 @@ end
 local function brokerOnHello(event, player, unit)
     if player:HasAura(HIRE_AURA) then
         player:GossipSetText("What can I do for you today, "..player:GetClassAsString().."?")
-            player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 10, null, "Are you sure you want to dismiss your hireling?")
+            player:GossipMenuAddItem(0, "Please bring my minion here.", 0, 10)
+            player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 11, null, "Are you sure you want to dismiss your hireling?")
             player:GossipSendMenu(0x7FFFFFFF, unit)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
@@ -253,12 +297,12 @@ end
 
 local function brokerOnSelect(event, player, unit, sender, intid, code)
     if intid == 1 then
-        summonHireling(SELLSWORD, player)
+        spawnHireling(SELLSWORD, player)
         player:ModifyMoney(-(baseFees[SELLSWORD]*player:GetLevel()))
         player:GossipComplete()
     end
     if intid == 2 then
-        summonHireling(BATTLEMAGE, player)
+        spawnHireling(BATTLEMAGE, player)
         player:ModifyMoney(-(baseFees[BATTLEMAGE]*player:GetLevel()))
         player:GossipComplete()
     end
@@ -266,6 +310,10 @@ local function brokerOnSelect(event, player, unit, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 10 then
+        summonHireling(player)
+        player:GossipComplete()
+    end
+    if intid == 11 then
         dismissHireling(player)
         player:GossipComplete()
     end
