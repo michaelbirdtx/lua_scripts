@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = 'Beta 1.3.1'
+local MODULE_VERSION = 'Beta 1.3.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -265,7 +265,7 @@ local function hirelingOnHello(event, player, unit)
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
         player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
         player:GossipMenuAddItem(0, "Mount up, it's time to move. (Passive)", 0, 3)
-        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 4)
+        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 4, null, "Are you sure you want to dismiss this hireling?")
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
         player:SendBroadcastMessage("That's not your hireling!")
