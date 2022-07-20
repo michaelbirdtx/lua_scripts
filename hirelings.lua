@@ -339,7 +339,7 @@ local function onLeaveCombat(event, hireling)
     hireling:SetHealth(hireling:GetMaxHealth())
     hireling:SetSheath(0)
     hireling:SetInt32Value(33, hireling:GetInt32Value(25)) -- Set mana to max
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    hirelingSetFollow(hireling, player)
 end
 
 local function onSpellHitTarget(event, hireling, target, spellid)
