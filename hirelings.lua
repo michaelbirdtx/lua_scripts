@@ -241,7 +241,6 @@ local function dismissHireling(player)
     aura = player:GetAura(HIRE_AURA)
     hireling = aura:GetCaster()
     if hireling then
-        --hireling:PlayDistanceSound(9636, player)
         hireling:DespawnOrUnsummon(0)
         player:RemoveAura(HIRE_AURA)
     else
@@ -360,7 +359,7 @@ end
 
 local function onReceiveEmote(event, hireling, player, emoteid)
     if player:GetGUID() == hireling:GetOwnerGUID() then
-        --player:SendBroadcastMessage("Emote Received: "..emoteid)
+        print("Emote Received: "..emoteid)
         if emoteid == 324 then -- followme
             if player:IsMounted() then
                 hirelingSetMounted(hireling, player)
@@ -377,6 +376,12 @@ local function onReceiveEmote(event, hireling, player, emoteid)
             hireling:PerformEmote(4)
         elseif emoteid == 264 then -- train
             hireling:PerformEmote(275)
+        elseif emoteid == 326 then --healme
+            if hireling:GetEntry() == SELLSWORD then
+                hireling:SendUnitSay("Dammit, "..player:GetName()..", I'm a Sellsword, not a doctor!", 0)
+            elseif hireling:GetEntry() == BATTLEMAGE then
+                hireling:SendUnitSay("Do I look like a healer, "..player:GetName().."?", 0)
+            end
         end
     end
     if emoteid == 34 then -- dance
