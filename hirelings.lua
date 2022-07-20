@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.6.1'
+local MODULE_VERSION = '1.7'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -7,6 +7,7 @@ print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 local FAIL_SOUND = 847
 local FOLLOW_DISTANCE = 2
 local HIRE_AURA = 62109
+local PASSIVE_AURA = 31260
 
 local BROKER = 669000
 
@@ -23,6 +24,15 @@ local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 25166 -- Male Human
 
 --local HIRELING_DURATION = 1000*60*360 -- Milliseconds*Seconds*Minutes
+
+local faq = {
+    ["intro"] = "Here are some commands you can give me (you must target me first):",
+    ["follow"] = "\n\n/follow\n    If you are mounted, I will mount up and follow you, not attacking anything, even if you or I am attacked.\n    If you are not mounted, I will follow you and attack anything you attack or are attacked by.",
+    ["wait"] = "\n\n/wait\n    I will stay where I am and not attack anything until you tell me otherwise.",
+    ["flee"] = "\n\n/flee\n    I will stop my attack and follow you, not starting any new attacks until you tell me otherwise.",
+    ["macros"] = "\n\nYou can also use these commands in macros. Here's a sample macro:\n\n    /tar Battle Mage\n    /tar Sellsword\n    /follow\n    /targetlasttarget\n\nThis will target your hireling (of either type), issue the /follow command, and then retarget your previous target, if any.",
+    ["outro"] = "\n\nP.S.: When I have been instructed not to attack anything, I will have a pulsing blue circle around me, thanks to that clever and handsome Wizard, Mykal.\n\n",
+}
 
 local baseFees = {
     [SELLSWORD] = 12,
@@ -152,10 +162,10 @@ local function getRankedSpell(name, caster)
     end
 end
 
-local function getBaseStats(unit)
-    entry = unit:GetEntry()
-    class = unit:GetClass()
-    level = unit:GetLevel()
+local function getBaseStats(hireling)
+    entry = hireling:GetEntry()
+    class = hireling:GetClass()
+    level = hireling:GetLevel()
     stats = {
         ['hp'] = 0,
         ['mana'] = 0,
@@ -208,11 +218,11 @@ end
 local function summonHireling(player)
     aura = player:GetAura(HIRE_AURA)
     if aura then
-        unit = aura:GetCaster()
-        if unit then
-            if unit:GetMapId() == player:GetMapId() then
+        hireling = aura:GetCaster()
+        if hireling then
+            if hireling:GetMapId() == player:GetMapId() then
                 x, y, z, o = player:GetLocation()
-                unit:NearTeleport( x, y, z, o )
+                hireling:NearTeleport( x, y, z, o )
             else
                 player:SendBroadcastMessage("Your hireling is too far away to be summoned.")
                 player:PlayDirectSound(FAIL_SOUND)
@@ -229,15 +239,49 @@ end
 
 local function dismissHireling(player)
     aura = player:GetAura(HIRE_AURA)
-    unit = aura:GetCaster()
-    if unit then
-        --unit:PlayDistanceSound(9636, player)
-        unit:DespawnOrUnsummon(0)
+    hireling = aura:GetCaster()
+    if hireling then
+        --hireling:PlayDistanceSound(9636, player)
+        hireling:DespawnOrUnsummon(0)
         player:RemoveAura(HIRE_AURA)
     else
         player:SendBroadcastMessage("Your hireling is too far away to be dismissed.")
         player:PlayDirectSound(FAIL_SOUND)
     end
+end
+
+local function hirelingSetFollow(hireling, player)
+    hireling:Dismount()
+    hireling:MoveExpire()
+    hireling:MoveIdle()
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    hireling:SetAggroEnabled(true)
+    hireling:RemoveAura(PASSIVE_AURA)
+end
+
+local function hirelingSetStay(hireling, player)
+    hireling:MoveExpire()
+    hireling:MoveIdle()
+    hireling:SetAggroEnabled(false)
+    hireling:AddAura(PASSIVE_AURA, hireling)
+end
+
+local function hirelingSetMounted(hireling, player)
+    hireling:Mount(Mounts[hireling:GetDisplayId()])
+    hireling:MoveExpire()
+    hireling:MoveIdle()
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    hireling:SetAggroEnabled(false)
+    hireling:AddAura(PASSIVE_AURA, hireling)
+end
+
+local function hirelingFlee(hireling, player)
+    hireling:AttackStop()
+    hireling:MoveExpire()
+    hireling:MoveIdle()
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    hireling:SetAggroEnabled(false)
+    hireling:AddAura(PASSIVE_AURA, hireling)
 end
 
 local function onChatMessage(event, player, msg, _, lang)
@@ -256,10 +300,10 @@ local function onChatMessage(event, player, msg, _, lang)
             return false
         elseif (msg:find('#hire loc') == 1) then
             aura = player:GetAura(HIRE_AURA)
-            unit = aura:GetCaster()
-            if unit then
-                x, y, z, o = unit:GetLocation()
-                player:SendBroadcastMessage("Hireling Location X:"..x.." Y:"..y.." Z:"..z.." O:"..o.." Map:"..unit:GetMapId())
+            hireling = aura:GetCaster()
+            if hireling then
+                x, y, z, o = hireling:GetLocation()
+                player:SendBroadcastMessage("Hireling Location X:"..x.." Y:"..y.." Z:"..z.." O:"..o.." Map:"..hireling:GetMapId())
             else
                 player:SendBroadcastMessage("Hireling Location: Unknown")
             end
@@ -274,67 +318,99 @@ local function onChatMessage(event, player, msg, _, lang)
     end
 end
 
-local function onPreCombat(event, creature, target)
-    local buff = Buffs[creature:GetEntry()]
-    if not creature:HasAura(buff) then
-        creature:CastSpell(creature, buff, true)
+local function onPreCombat(event, hireling, target)
+    local buff = Buffs[hireling:GetEntry()]
+    if not hireling:HasAura(buff) then
+        hireling:CastSpell(hireling, buff, true)
     end
 end    
 
-local function onEnterCombat(event, creature, target)
-    local player = creature:GetOwner()
-    local spell = Spells[creature:GetDisplayId()]
-    creature:CastSpell(target, spell, true)
+local function onEnterCombat(event, hireling, target)
+    local player = hireling:GetOwner()
+    local spell = Spells[hireling:GetDisplayId()]
+    hireling:CastSpell(target, spell, true)
     if math.random(1,5) == 1 then
-        creature:PlayDistanceSound(talkAttack[creature:GetDisplayId()], player)
+        hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
     end
 end    
 
-local function onLeaveCombat(event, creature)
-    local player = creature:GetOwner()
-    creature:SetHealth(creature:GetMaxHealth())
-    creature:SetSheath(0)
-    creature:SetInt32Value(33, creature:GetInt32Value(25)) -- Set mana to max
-    creature:MoveFollow(player, FOLLOW_DISTANCE, 60)
+local function onLeaveCombat(event, hireling)
+    local player = hireling:GetOwner()
+    hireling:SetHealth(hireling:GetMaxHealth())
+    hireling:SetSheath(0)
+    hireling:SetInt32Value(33, hireling:GetInt32Value(25)) -- Set mana to max
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
 end
 
-local function onSpellHitTarget(event, creature, target, spellid)
+local function onSpellHitTarget(event, hireling, target, spellid)
     local spell
-    if creature:GetDisplayId() == BATTLEMAGE1 then
-        spell = getRankedSpell("frostbolt", creature)
-    elseif creature:GetDisplayId() == BATTLEMAGE2 then
-        spell = getRankedSpell("fireball", creature)
-    elseif creature:GetDisplayId() == BATTLEMAGE3 then
-        spell = getRankedSpell("shadowbolt", creature)
-    elseif creature:GetDisplayId() == BATTLEMAGE4 then
-        spell = getRankedSpell("lightningbolt", creature)
+    if hireling:GetDisplayId() == BATTLEMAGE1 then
+        spell = getRankedSpell("frostbolt", hireling)
+    elseif hireling:GetDisplayId() == BATTLEMAGE2 then
+        spell = getRankedSpell("fireball", hireling)
+    elseif hireling:GetDisplayId() == BATTLEMAGE3 then
+        spell = getRankedSpell("shadowbolt", hireling)
+    elseif hireling:GetDisplayId() == BATTLEMAGE4 then
+        spell = getRankedSpell("lightningbolt", hireling)
     end
-    creature:CastSpell(target, spell, false)
+    hireling:CastSpell(target, spell, false)
 end
 
-local function onRemove(event, creature)
-    player = creature:GetOwner()
-    creature:SendUnitSay("Fair well, "..player:GetName()..".", 0)
-    creature:PerformEmote(2) -- Bow
+local function onReceiveEmote(event, hireling, player, emoteid)
+    if player:GetGUID() == hireling:GetOwnerGUID() then
+        --player:SendBroadcastMessage("Emote Received: "..emoteid)
+        if emoteid == 324 then -- followme
+            if player:IsMounted() then
+                hirelingSetMounted(hireling, player)
+            else
+                hirelingSetFollow(hireling, player)
+            end
+        elseif emoteid == 325 then -- wait
+            hirelingSetStay(hireling, player)
+        elseif emoteid == 19 then -- bye
+            dismissHireling(player)
+        elseif emoteid == 306 then -- flee
+            hirelingFlee(hireling, player)
+        elseif emoteid == 21 then -- cheer
+            hireling:PerformEmote(4)
+        elseif emoteid == 264 then -- train
+            hireling:PerformEmote(275)
+        end
+    end
+    if emoteid == 34 then -- dance
+        hireling:PerformEmote(10)
+    elseif emoteid == 5 then -- applaud
+        hireling:PerformEmote(2)
+    elseif (emoteid == 58 or emoteid == 78 or emoteid == 101) then -- kiss, salute, wave
+        hireling:PerformEmote(66)
+    elseif emoteid == 77 then -- rude
+        hireling:PerformEmote(35)
+    end
+end
+
+local function onRemove(event, hireling)
+    player = hireling:GetOwner()
+    hireling:SendUnitSay("Fair well, "..player:GetName()..".", 0)
+    hireling:PerformEmote(2) -- Bow
     player:RemoveAura(HIRE_AURA)
 end
 
-local function brokerOnHello(event, player, unit)
+local function brokerOnHello(event, player, hireling)
     if player:HasAura(HIRE_AURA) then
         player:GossipSetText("What can I do for you today, "..player:GetClassAsString().."?")
-            player:GossipMenuAddItem(0, "Please bring my minion here.", 0, 10)
-            player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 11, null, "Are you sure you want to dismiss your hireling?")
-            player:GossipSendMenu(0x7FFFFFFF, unit)
+        player:GossipMenuAddItem(0, "Please bring my minion here.", 0, 10)
+        player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 11, null, "Are you sure you want to dismiss your hireling?")
+        player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
         player:GossipMenuAddItem(0, "I'd like to hire a Sellsword.", 0, 1, null, "The fee for this hireling is...", baseFees[SELLSWORD]*player:GetLevel())
         player:GossipMenuAddItem(0, "I'd like to hire a Battle Mage.", 0, 2, null, "The fee for this hireling is...", baseFees[BATTLEMAGE]*player:GetLevel())
         player:GossipMenuAddItem(0, "Never mind, I'll do it by myself.", 0, 3)
-        player:GossipSendMenu(0x7FFFFFFF, unit)
+        player:GossipSendMenu(0x7FFFFFFF, hireling)
     end
 end
 
-local function brokerOnSelect(event, player, unit, sender, intid, code)
+local function brokerOnSelect(event, player, hireling, sender, intid, code)
     if intid == 1 then
         spawnHireling(SELLSWORD, player)
         player:ModifyMoney(-(baseFees[SELLSWORD]*player:GetLevel()))
@@ -358,62 +434,45 @@ local function brokerOnSelect(event, player, unit, sender, intid, code)
     end
 end
 
-local function hirelingSetFollow(unit, player)
-    unit:Dismount()
-    unit:MoveExpire()
-    unit:MoveIdle()
-    unit:MoveFollow(player, FOLLOW_DISTANCE, 60)
-    unit:SetAggroEnabled(true)
-end
-
-local function hirelingSetStay(unit)
-    unit:MoveExpire()
-    unit:MoveIdle()
-    unit:SetAggroEnabled(false)
-end
-
-local function hirelingSetMounted(unit, player)
-    unit:Mount(Mounts[unit:GetDisplayId()])
-    unit:MoveExpire()
-    unit:MoveIdle()
-    unit:MoveFollow(player, FOLLOW_DISTANCE, 60)
-    unit:SetAggroEnabled(false)
-end
-
-local function hirelingOnHello(event, player, unit)
-    if player:GetGUID() == unit:GetOwnerGUID() then
+local function hirelingOnHello(event, player, hireling)
+    if player:GetGUID() == hireling:GetOwnerGUID() then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
         player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
         player:GossipMenuAddItem(0, "Mount up and follow me, it's time to move. (Passive)", 0, 3)
-        player:GossipMenuAddItem(0, "Do you know any good jokes?", 0, 4)
-        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 5, null, "Are you sure you want to dismiss this hireling?")
-        player:GossipSendMenu(0x7FFFFFFF, unit)
+        player:GossipMenuAddItem(0, "What commands do you understand?", 0, 4)
+        player:GossipMenuAddItem(0, "Do you know any good jokes?", 0, 5)
+        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 6, null, "Are you sure you want to dismiss this hireling?")
+        player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nI'm with a client right now, but you can visit any Hireling Broker to get some help!")
-        player:GossipSendMenu(0x7FFFFFFF, unit)
-        --player:SendBroadcastMessage("That's not your hireling!")
+        player:GossipSendMenu(0x7FFFFFFF, hireling)
     end
 end
 
-local function hirelingOnSelect(event, player, unit, sender, intid, code)
+local function hirelingOnSelect(event, player, hireling, sender, intid, code)
     if intid == 1 then -- follow
-        hirelingSetFollow(unit, player)
+        hirelingSetFollow(hireling, player)
         player:GossipComplete()
     end
     if intid == 2 then -- stay
-        hirelingSetStay(unit)
+        hirelingSetStay(hireling, player)
         player:GossipComplete()
     end
     if intid == 3 then -- mount
-        hirelingSetMounted(unit, player)
+        hirelingSetMounted(hireling, player)
         player:GossipComplete()
     end
-    if intid == 4 then -- joke
-        unit:PlayDistanceSound(talkJoke[unit:GetDisplayId()], player)
-        player:GossipComplete()
+    if intid == 4 then -- faq
+        player:GossipSetText(faq["intro"]..faq["follow"]..faq["wait"]..faq["flee"]..faq["macros"]..faq["outro"])
+        player:GossipSendMenu(0x7FFFFFFF, hireling)
     end
-    if intid == 5 then -- dismiss
+    if intid == 5 then -- joke
+        hireling:PlayDistanceSound(talkJoke[hireling:GetDisplayId()], player)
+        player:GossipSetText("Have you heard that one before?")
+        player:GossipSendMenu(0x7FFFFFFF, hireling)
+    end
+    if intid == 6 then -- dismiss
         dismissHireling(player)
     end
 end
@@ -430,12 +489,14 @@ RegisterPlayerEvent(18, onChatMessage)
 RegisterCreatureEvent(SELLSWORD, 10, onPreCombat)
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
 RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
+RegisterCreatureEvent(SELLSWORD, 8, onReceiveEmote)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
 RegisterCreatureEvent(BATTLEMAGE, 10, onPreCombat)
 RegisterCreatureEvent(BATTLEMAGE, 1, onEnterCombat)
 RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
 RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
+RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
 RegisterCreatureGossipEvent(SELLSWORD, 1, hirelingOnHello)
