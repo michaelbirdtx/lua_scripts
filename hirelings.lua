@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.7.3'
+local MODULE_VERSION = '1.8'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -23,7 +23,11 @@ local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 3876  -- Male Undead
 
---local HIRELING_DURATION = 1000*60*360 -- Milliseconds*Seconds*Minutes
+local GLADIATOR = 669011
+local GLADIATOR1 = 27154
+local GLADIATOR2 = 0
+local GLADIATOR3 = 0
+local GLADIATOR4 = 0
 
 local faq = {
     ["intro"] = "Here are some commands you can give me (you must target me first):",
@@ -37,26 +41,37 @@ local faq = {
 local baseFees = {
     [SELLSWORD] = 12,
     [BATTLEMAGE] = 18,
+    [GLADIATOR] = 1000,
 }
 
 local modHP = {
     [SELLSWORD] = 2,
     [BATTLEMAGE] = 1.2,
+    [GLADIATOR] = 100
 }
 
 local modMana = {
     [SELLSWORD] = 1,
     [BATTLEMAGE] = 1.5,
+    [GLADIATOR] = 1
 }
 
 local modDamage = {
     [SELLSWORD] = 1.2,
     [BATTLEMAGE] = 2,
+    [GLADIATOR] = 100
 }
 
-local modMaxLevel = {
-    [SELLSWORD] = 3,
-    [BATTLEMAGE] = 3,
+local modMinLevelBoost = {
+    [SELLSWORD] =  0,
+    [BATTLEMAGE] = 1,
+    [GLADIATOR] =  3,
+}
+
+local modMaxLevelBoost = {
+    [SELLSWORD] =  3,
+    [BATTLEMAGE] = 4,
+    [GLADIATOR] =  4,
 }
 
 local talkAttack = {
@@ -68,6 +83,10 @@ local talkAttack = {
     [BATTLEMAGE2] = 9625,
     [BATTLEMAGE3] = 2840,
     [BATTLEMAGE4] = 2694,
+    [GLADIATOR1] = 2718,
+    [GLADIATOR2] = 0,
+    [GLADIATOR3] = 0,
+    [GLADIATOR4] = 0,
 }
 
 local talkJoke = {
@@ -79,6 +98,10 @@ local talkJoke = {
     [BATTLEMAGE2] = 9643,
     [BATTLEMAGE3] = 6124,
     [BATTLEMAGE4] = 6422,
+    [GLADIATOR1] = 6115,
+    [GLADIATOR2] = 0,
+    [GLADIATOR3] = 0,
+    [GLADIATOR4] = 0,
 }
 
 local Mounts = {
@@ -90,6 +113,10 @@ local Mounts = {
     [BATTLEMAGE2] = 28889, -- Sunreaver Hawkstrider
     [BATTLEMAGE3] = 14372, -- Black Battlestrider
     [BATTLEMAGE4] = 2402, -- Black Stallion
+    [GLADIATOR1] = 22350, -- SWift Brewfest Ram
+    [GLADIATOR2] = 0,
+    [GLADIATOR3] = 0,
+    [GLADIATOR4] = 0,
 }
 
 local Spells = {
@@ -101,11 +128,16 @@ local Spells = {
     [BATTLEMAGE2] = 31589, -- Slow
     [BATTLEMAGE3] = 31589, -- Slow
     [BATTLEMAGE4] = 31589, -- Slow
+    [GLADIATOR1] = 11578, -- Charge
+    [GLADIATOR2] = 0,
+    [GLADIATOR3] = 0,
+    [GLADIATOR4] = 0,
 }
 
 local Buffs = {
     [SELLSWORD] = 35361,  -- Thorns
     [BATTLEMAGE] = 12042, -- Arcane Power
+    [GLADIATOR] = 53307,  -- Thorns (Rank 8)
 }
 
 local rankedSpells = {
@@ -149,8 +181,9 @@ local rankedSpells = {
 }
 
 local Weapons = {
-    [SELLSWORD] = 11786, -- Stone of the Earth
+    [SELLSWORD] = 11786,  -- Stone of the Earth
     [BATTLEMAGE] = 31334, -- Staff of Natural Fury
+    [GLADIATOR] = 47069,  -- Justicebringer
 }
 
 local function getRankedSpell(name, caster)
@@ -185,13 +218,16 @@ local function getBaseStats(hireling)
     return stats
 end
 
-local function spawnHireling(entry, player)
+function spawnHireling(entry, player)
     if player:HasAura(HIRE_AURA) then
         player:SendBroadcastMessage("Sorry, you already have a hireling.")
     else
-        local hLevel = player:GetLevel()+math.random(1,modMaxLevel[entry])
+        local hLevel = player:GetLevel()+math.random(modMinLevelBoost[entry],modMaxLevelBoost[entry])
+        if hLevel > 80 then
+            hLevel = 80
+        end
         local hHealth = (player:GetMaxHealth()/player:GetLevel()) * hLevel
-        local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false)
+        local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, 4294967295, player:GetPhaseMaskForSpawn())
         hireling:SetFaction(35)
         hireling:SetCreatorGUID(player:GetGUID())
         hireling:SetOwnerGUID(player:GetGUID())
@@ -215,14 +251,16 @@ local function spawnHireling(entry, player)
     end
 end
 
-local function summonHireling(player)
-    aura = player:GetAura(HIRE_AURA)
+function summonHireling(player)
+    local aura = player:GetAura(HIRE_AURA)
     if aura then
-        hireling = aura:GetCaster()
+        local hireling = aura:GetCaster()
         if hireling then
             if hireling:GetMapId() == player:GetMapId() then
                 x, y, z, o = player:GetLocation()
                 hireling:NearTeleport( x, y, z, o )
+                hireling:CastSpell(hireling, 75128, true) -- Teleport effect
+                hirelingSetFollow(hireling, player)
             else
                 player:SendBroadcastMessage("Your hireling is too far away to be summoned.")
                 player:PlayDirectSound(FAIL_SOUND)
@@ -237,9 +275,9 @@ local function summonHireling(player)
     end
 end
 
-local function dismissHireling(player)
-    aura = player:GetAura(HIRE_AURA)
-    hireling = aura:GetCaster()
+function dismissHireling(player)
+    local aura = player:GetAura(HIRE_AURA)
+    local hireling = aura:GetCaster()
     if hireling then
         hireling:DespawnOrUnsummon(0)
         player:RemoveAura(HIRE_AURA)
@@ -249,7 +287,7 @@ local function dismissHireling(player)
     end
 end
 
-local function hirelingSetFollow(hireling, player)
+function hirelingSetFollow(hireling, player)
     hireling:Dismount()
     hireling:MoveExpire()
     hireling:MoveIdle()
@@ -258,14 +296,14 @@ local function hirelingSetFollow(hireling, player)
     hireling:RemoveAura(PASSIVE_AURA)
 end
 
-local function hirelingSetStay(hireling, player)
+function hirelingSetStay(hireling, player)
     hireling:MoveExpire()
     hireling:MoveIdle()
     hireling:SetAggroEnabled(false)
     hireling:AddAura(PASSIVE_AURA, hireling)
 end
 
-local function hirelingSetMounted(hireling, player)
+function hirelingSetMounted(hireling, player)
     hireling:Mount(Mounts[hireling:GetDisplayId()])
     hireling:MoveExpire()
     hireling:MoveIdle()
@@ -274,22 +312,26 @@ local function hirelingSetMounted(hireling, player)
     hireling:AddAura(PASSIVE_AURA, hireling)
 end
 
-local function hirelingFlee(hireling, player)
+function hirelingFlee(hireling, player)
     hireling:AttackStop()
     hireling:MoveExpire()
     hireling:MoveIdle()
     hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
     hireling:SetAggroEnabled(false)
     hireling:AddAura(PASSIVE_AURA, hireling)
+    hireling:CastSpell(hireling, 11305, true)
 end
 
 local function onChatMessage(event, player, msg, _, lang)
-    if (msg:find('#hire') == 1) and player:GetGMRank() > 2 then
+    if (msg:find('#hire') == 1) and player:GetGMRank() > 0 then
         if (msg:find('#hire sword') == 1) then
             spawnHireling(SELLSWORD, player)
             return false
         elseif (msg:find('#hire mage') == 1) then
             spawnHireling(BATTLEMAGE, player)
+            return false
+        elseif (msg:find('#hire gladiator') == 1) then
+            spawnHireling(GLADIATOR, player)
             return false
         elseif (msg:find('#hire aura') == 1) then
             player:SendBroadcastMessage("Aura status: "..tostring(player:HasAura(HIRE_AURA)))
@@ -311,9 +353,12 @@ local function onChatMessage(event, player, msg, _, lang)
             summonHireling(player)
             return false
         else
-            player:SendBroadcastMessage(msg.." command does not exist")
+            player:SendBroadcastMessage("Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire summon\n#hire dismiss\n#hire aura\n#hire loc")
             return false
         end
+    elseif msg:find('#hire') == 1 then
+        player:SendBroadcastMessage("Command '"..msg.."' does not exist")
+        return false
     end
 end
 
@@ -358,8 +403,12 @@ local function onSpellHitTarget(event, hireling, target, spellid)
     hireling:CastSpell(target, spell, false)
 end
 
+local function onHitBySpell(event, hireling, caster, spellid)
+    hireling:CastSpell(hireling:GetAITarget(0), 8078, true)
+end
+
 local function onReceiveEmote(event, hireling, player, emoteid)
-    if player:GetGUID() == hireling:GetOwnerGUID() then
+    if player:GetGUID() == hireling:GetOwnerGUID() and hireling:GetEntry() ~= GLADIATOR then
         print("Emote Received: "..emoteid)
         if emoteid == 324 then -- followme
             if player:IsMounted() then
@@ -413,12 +462,18 @@ local function brokerOnHello(event, player, hireling)
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
         player:GossipMenuAddItem(0, "I'd like to hire a Sellsword.", 0, 1, null, "The fee for this hireling is...", baseFees[SELLSWORD]*player:GetLevel())
         player:GossipMenuAddItem(0, "I'd like to hire a Battle Mage.", 0, 2, null, "The fee for this hireling is...", baseFees[BATTLEMAGE]*player:GetLevel())
-        player:GossipMenuAddItem(0, "Never mind, I'll do it by myself.", 0, 3)
+        if player:GetInstanceId() > 0 then
+            player:GossipMenuAddItem(0, "I'd like to hire a Thorngrim, the\nRelentless Gladiator.", 0, 3, null, "The fee for this hireling is...", baseFees[GLADIATOR]*player:GetLevel())
+        end
+        player:GossipMenuAddItem(0, "Never mind, I'll do it by myself.", 0, 0)
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     end
 end
 
 local function brokerOnSelect(event, player, hireling, sender, intid, code)
+    if intid == 0 then
+        player:GossipComplete()
+    end
     if intid == 1 then
         spawnHireling(SELLSWORD, player)
         player:ModifyMoney(-(baseFees[SELLSWORD]*player:GetLevel()))
@@ -430,6 +485,8 @@ local function brokerOnSelect(event, player, hireling, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 3 then
+        spawnHireling(GLADIATOR, player)
+        player:ModifyMoney(-(baseFees[GLADIATOR]*player:GetLevel()))
         player:GossipComplete()
     end
     if intid == 10 then
@@ -446,10 +503,12 @@ local function hirelingOnHello(event, player, hireling)
     if player:GetGUID() == hireling:GetOwnerGUID() then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
-        player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
-        player:GossipMenuAddItem(0, "Mount up and follow me, it's time to move. (Passive)", 0, 3)
-        player:GossipMenuAddItem(0, "What commands do you understand?", 0, 4)
-        player:GossipMenuAddItem(0, "Do you know any good jokes?", 0, 5)
+        if hireling:GetEntry() ~= GLADIATOR then
+            player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
+            player:GossipMenuAddItem(0, "Mount up and follow me, it's time to move. (Passive)", 0, 3)
+            player:GossipMenuAddItem(0, "What commands do you understand?", 0, 4)
+            player:GossipMenuAddItem(0, "Do you know any good jokes?", 0, 5)
+        end
         player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 6, null, "Are you sure you want to dismiss this hireling?")
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
@@ -507,11 +566,22 @@ RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
+RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
+RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
+RegisterCreatureEvent(GLADIATOR, 14, onHitBySpell)
+--RegisterCreatureEvent(GLADIATOR, 15, onSpellHitTarget)
+RegisterCreatureEvent(GLADIATOR, 2, onLeaveCombat)
+RegisterCreatureEvent(GLADIATOR, 8, onReceiveEmote)
+RegisterCreatureEvent(GLADIATOR, 37, onRemove)
+
 RegisterCreatureGossipEvent(SELLSWORD, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(SELLSWORD, 2, hirelingOnSelect)
 
 RegisterCreatureGossipEvent(BATTLEMAGE, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(BATTLEMAGE, 2, hirelingOnSelect)
+
+RegisterCreatureGossipEvent(GLADIATOR, 1, hirelingOnHello)
+RegisterCreatureGossipEvent(GLADIATOR, 2, hirelingOnSelect)
 
 RegisterCreatureGossipEvent(BROKER, 1, brokerOnHello)
 RegisterCreatureGossipEvent(BROKER, 2, brokerOnSelect)
