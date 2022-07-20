@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.7.1'
+local MODULE_VERSION = '1.7.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -339,7 +339,9 @@ local function onLeaveCombat(event, hireling)
     hireling:SetHealth(hireling:GetMaxHealth())
     hireling:SetSheath(0)
     hireling:SetInt32Value(33, hireling:GetInt32Value(25)) -- Set mana to max
-    hirelingSetFollow(hireling, player)
+    hireling:MoveExpire()
+    hireling:MoveIdle()
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
 end
 
 local function onSpellHitTarget(event, hireling, target, spellid)
