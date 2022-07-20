@@ -3,7 +3,7 @@ SET
 @Model1 		:= 29869,
 @Model2 		:= 26073,
 @Model3 		:= 28160,
-@Model4 		:= 25166,
+@Model4 		:= 3876,
 @Name 			:= "Battle Mage",
 @MinLevel 		:= 20,
 @MaxLevel 		:= 20,

@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.7.2'
+local MODULE_VERSION = '1.7.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -21,7 +21,7 @@ local BATTLEMAGE = 669002
 local BATTLEMAGE1 = 29869 -- Female Blood Elf
 local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
-local BATTLEMAGE4 = 25166 -- Male Human
+local BATTLEMAGE4 = 3876  -- Male Undead
 
 --local HIRELING_DURATION = 1000*60*360 -- Milliseconds*Seconds*Minutes
 
@@ -51,12 +51,12 @@ local modMana = {
 
 local modDamage = {
     [SELLSWORD] = 1.2,
-    [BATTLEMAGE] = 1.6,
+    [BATTLEMAGE] = 2,
 }
 
 local modMaxLevel = {
     [SELLSWORD] = 3,
-    [BATTLEMAGE] = 5,
+    [BATTLEMAGE] = 3,
 }
 
 local talkAttack = {
@@ -67,7 +67,7 @@ local talkAttack = {
     [BATTLEMAGE1] = 9625,
     [BATTLEMAGE2] = 9625,
     [BATTLEMAGE3] = 2840,
-    [BATTLEMAGE4] = 2670,
+    [BATTLEMAGE4] = 2694,
 }
 
 local talkJoke = {
@@ -78,7 +78,7 @@ local talkJoke = {
     [BATTLEMAGE1] = 9643,
     [BATTLEMAGE2] = 9643,
     [BATTLEMAGE3] = 6124,
-    [BATTLEMAGE4] = 6170,
+    [BATTLEMAGE4] = 6422,
 }
 
 local Mounts = {
@@ -341,6 +341,7 @@ local function onLeaveCombat(event, hireling)
     hireling:MoveExpire()
     hireling:MoveIdle()
     hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    --player:SendBroadcastMessage("Left combat.")
 end
 
 local function onSpellHitTarget(event, hireling, target, spellid)
@@ -350,9 +351,9 @@ local function onSpellHitTarget(event, hireling, target, spellid)
     elseif hireling:GetDisplayId() == BATTLEMAGE2 then
         spell = getRankedSpell("fireball", hireling)
     elseif hireling:GetDisplayId() == BATTLEMAGE3 then
-        spell = getRankedSpell("shadowbolt", hireling)
-    elseif hireling:GetDisplayId() == BATTLEMAGE4 then
         spell = getRankedSpell("lightningbolt", hireling)
+    elseif hireling:GetDisplayId() == BATTLEMAGE4 then
+        spell = getRankedSpell("shadowbolt", hireling)
     end
     hireling:CastSpell(target, spell, false)
 end
