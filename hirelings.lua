@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.5.1'
+local MODULE_VERSION = '1.6'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -31,12 +31,12 @@ local baseFees = {
 
 local modHP = {
     [SELLSWORD] = 2,
-    [BATTLEMAGE] = 1,
+    [BATTLEMAGE] = 1.2,
 }
 
 local modMana = {
     [SELLSWORD] = 1,
-    [BATTLEMAGE] = 2,
+    [BATTLEMAGE] = 1.5,
 }
 
 local modDamage = {
@@ -47,6 +47,28 @@ local modDamage = {
 local modMaxLevel = {
     [SELLSWORD] = 3,
     [BATTLEMAGE] = 5,
+}
+
+local talkAttack = {
+    [SELLSWORD1] = 9680,
+    [SELLSWORD2] = 2718, 
+    [SELLSWORD3] = 2694,
+    [SELLSWORD4] = 9625,
+    [BATTLEMAGE1] = 9625,
+    [BATTLEMAGE2] = 9625,
+    [BATTLEMAGE3] = 2840,
+    [BATTLEMAGE4] = 2670,
+}
+
+local talkJoke = {
+    [SELLSWORD1] = 9695,
+    [SELLSWORD2] = 6115, 
+    [SELLSWORD3] = 6368,
+    [SELLSWORD4] = 9643,
+    [BATTLEMAGE1] = 9643,
+    [BATTLEMAGE2] = 9643,
+    [BATTLEMAGE3] = 6124,
+    [BATTLEMAGE4] = 6170,
 }
 
 local Mounts = {
@@ -69,6 +91,11 @@ local Spells = {
     [BATTLEMAGE2] = 31589, -- Slow
     [BATTLEMAGE3] = 31589, -- Slow
     [BATTLEMAGE4] = 31589, -- Slow
+}
+
+local Buffs = {
+    [SELLSWORD] = 35361,  -- Thorns
+    [BATTLEMAGE] = 12042, -- Arcane Power
 }
 
 local rankedSpells = {
@@ -162,8 +189,8 @@ local function spawnHireling(entry, player)
         local hStats = getBaseStats(hireling)
         hireling:SetMaxHealth(hStats['hp'])
         hireling:SetHealth(hStats['hp'])
-        hireling:SetInt32Value(25, hStats['mana'])
-        hireling:SetInt32Value(33, hStats['mana'])
+        hireling:SetInt32Value(25, hStats['mana']) -- Set max mana
+        hireling:SetInt32Value(33, hStats['mana']) -- Set current mana
         hireling:SetFloatValue(70, hStats['minDamage'])
         hireling:SetFloatValue(71, hStats['maxDamage'])
         hireling:SetFlag(79, 2) -- Set trackable on minimap
@@ -204,6 +231,7 @@ local function dismissHireling(player)
     aura = player:GetAura(HIRE_AURA)
     unit = aura:GetCaster()
     if unit then
+        --unit:PlayDistanceSound(9636, player)
         unit:DespawnOrUnsummon(0)
         player:RemoveAura(HIRE_AURA)
     else
@@ -246,16 +274,27 @@ local function onChatMessage(event, player, msg, _, lang)
     end
 end
 
+local function onPreCombat(event, creature, target)
+    local buff = Buffs[creature:GetEntry()]
+    if not creature:HasAura(buff) then
+        creature:CastSpell(creature, buff, true)
+    end
+end    
+
 local function onEnterCombat(event, creature, target)
+    local player = creature:GetOwner()
     local spell = Spells[creature:GetDisplayId()]
     creature:CastSpell(target, spell, true)
+    if math.random(1,5) == 1 then
+        creature:PlayDistanceSound(talkAttack[creature:GetDisplayId()], player)
+    end
 end    
 
 local function onLeaveCombat(event, creature)
     local player = creature:GetOwner()
     creature:SetHealth(creature:GetMaxHealth())
-    creature:CastSpell(creature, 52895, true)
     creature:SetSheath(0)
+    creature:SetInt32Value(33, creature:GetInt32Value(25)) -- Set mana to max
     creature:MoveFollow(player, FOLLOW_DISTANCE, 60)
 end
 
@@ -348,10 +387,13 @@ local function hirelingOnHello(event, player, unit)
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
         player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
         player:GossipMenuAddItem(0, "Mount up, it's time to move. (Passive)", 0, 3)
-        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 4, null, "Are you sure you want to dismiss this hireling?")
+        player:GossipMenuAddItem(0, "Do you know any good jokes?", 0, 4)
+        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 5, null, "Are you sure you want to dismiss this hireling?")
         player:GossipSendMenu(0x7FFFFFFF, unit)
     else
-        player:SendBroadcastMessage("That's not your hireling!")
+        player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nI'm with a client right now, but you can visit any Hireling Broker to get some help!")
+        player:GossipSendMenu(0x7FFFFFFF, unit)
+        --player:SendBroadcastMessage("That's not your hireling!")
     end
 end
 
@@ -368,7 +410,11 @@ local function hirelingOnSelect(event, player, unit, sender, intid, code)
         hirelingSetMounted(unit, player)
         player:GossipComplete()
     end
-    if intid == 4 then -- dismiss
+    if intid == 4 then -- joke
+        unit:PlayDistanceSound(talkJoke[unit:GetDisplayId()], player)
+        player:GossipComplete()
+    end
+    if intid == 5 then -- dismiss
         dismissHireling(player)
     end
 end
@@ -382,10 +428,12 @@ RegisterServerEvent(14, onServerStartup)
 
 RegisterPlayerEvent(18, onChatMessage)
 
+RegisterCreatureEvent(SELLSWORD, 10, onPreCombat)
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
 RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
+RegisterCreatureEvent(BATTLEMAGE, 10, onPreCombat)
 RegisterCreatureEvent(BATTLEMAGE, 1, onEnterCombat)
 RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
 RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
