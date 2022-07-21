@@ -32,6 +32,18 @@ local ITEM_SLOT_MULTIPLIER          = 2
 local entryMap                      = {}
 local dataMap                       = {}
 
+local slotNames = {
+    ["head"] = "00",
+    ["shoulders"] = "02",
+    ["chest"] = "04",
+    ["waist"] = "05",
+    ["legs"] = "06",
+    ["feet"] = "07",
+    ["wrists"] = "08",
+    ["hands"] = "09",
+    ["back"] = "14",
+}
+
 local function GetFakeEntry(item)
     local guid = item and item:GetGUIDLow()
     if guid and dataMap[guid] then
@@ -129,6 +141,15 @@ local function onChatMessage(event, player, msg, _, lang)
         ProcessCopper(player)
         DeleteAllTransmogs(player)
         LoadPlayer(player)
+        return false
+    elseif (msg:find('#transmog hide') == 1) then
+        local slotName = slotNames[string.sub(msg, 16)]
+        local entry = 11930
+        if slotName then
+            player:SendUnitSay("#transmog "..slotName.." "..entry, 0)
+        else
+            player:SendBroadcastMessage("Unknown slot name")
+        end
         return false
     elseif (msg:find('#transmog') == 1) then
         local slotID = string.sub(msg, 10, 12)
