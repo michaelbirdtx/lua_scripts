@@ -407,12 +407,14 @@ end
 
 local function onLeaveCombat(event, hireling)
     local player = hireling:GetOwner()
-    hireling:SetHealth(hireling:GetMaxHealth())
-    hireling:SetSheath(0)
-    hireling:SetInt32Value(33, hireling:GetInt32Value(25)) -- Set mana to max
-    hireling:MoveExpire()
-    hireling:MoveIdle()
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    if player then
+        hireling:SetHealth(hireling:GetMaxHealth())
+        hireling:SetSheath(0)
+        hireling:SetInt32Value(33, hireling:GetInt32Value(25)) -- Set mana to max
+        hireling:MoveExpire()
+        hireling:MoveIdle()
+        hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    end
 end
 
 local function onSpellHitTarget(event, hireling, target, spellid)
