@@ -4,6 +4,12 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
+function Set (list)
+    local set = {}
+    for _, l in ipairs(list) do set[l] = true end
+    return set
+end
+
 local FAIL_SOUND = 847
 local FOLLOW_DISTANCE = 2
 local HIRE_AURA = 62109
@@ -138,6 +144,27 @@ local Buffs = {
     [SELLSWORD] = 35361,  -- Thorns
     [BATTLEMAGE] = 12042, -- Arcane Power
     [GLADIATOR] = 53307,  -- Thorns (Rank 8)
+}
+
+local raidMaps = Set {
+    509, -- AQ Ruins
+    531, -- AQ Temple
+    564, -- Black Temple
+    229, -- Blackrock Spire
+    469, -- Blackwing Lair
+    615, -- Chamber of the Aspects: Obsidian Sanctum
+    724, -- Chamber of the Aspects: Ruby Sanctum
+    565, -- Gruul's Lair
+    532, -- Karazhan
+    409, -- Molten Core
+    533, -- Naxxramas
+    616, -- Nexus: Eye of Eternity
+    249, -- Onyxia's Lair
+    580, -- The Sunwell
+    550, -- Tempest Keep
+    649, -- Trial of the Crusader
+    624, -- Vault of Archavon
+    568, -- Zul'Aman
 }
 
 local rankedSpells = {
@@ -462,8 +489,8 @@ local function brokerOnHello(event, player, hireling)
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
         player:GossipMenuAddItem(0, "I'd like to hire a Sellsword.", 0, 1, null, "The fee for this hireling is...", baseFees[SELLSWORD]*player:GetLevel())
         player:GossipMenuAddItem(0, "I'd like to hire a Battle Mage.", 0, 2, null, "The fee for this hireling is...", baseFees[BATTLEMAGE]*player:GetLevel())
-        if player:GetInstanceId() > 0 then
-            player:GossipMenuAddItem(0, "I'd like to hire a Thorngrim, the\nRelentless Gladiator.", 0, 3, null, "The fee for this hireling is...", baseFees[GLADIATOR]*player:GetLevel())
+        if raidMaps[player:GetMapId()] then
+            player:GossipMenuAddItem(0, "I'd like to hire Thorngrim, the\nRelentless Gladiator.", 0, 3, null, "The fee for this hireling is...", baseFees[GLADIATOR]*player:GetLevel())
         end
         player:GossipMenuAddItem(0, "Never mind, I'll do it by myself.", 0, 0)
         player:GossipSendMenu(0x7FFFFFFF, hireling)
