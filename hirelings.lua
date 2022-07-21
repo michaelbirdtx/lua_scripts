@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.8.1'
+local MODULE_VERSION = '1.8.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -65,7 +65,7 @@ local modMana = {
 local modDamage = {
     [SELLSWORD] = 1.2,
     [BATTLEMAGE] = 2,
-    [GLADIATOR] = 100
+    [GLADIATOR] = 150
 }
 
 local modMinLevelBoost = {
