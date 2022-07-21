@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.9'
+local MODULE_VERSION = '2.0'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -406,22 +406,8 @@ local function onChatMessage(event, player, msg, _, lang)
             hireling:CastSpell(player, spell, true)
             player:SendBroadcastMessage("Hireling Casts "..spell)
             return false
-        elseif (msg:find('#hire mindamage') == 1) then
-            aura = player:GetAura(HIRE_AURA)
-            hireling = aura:GetCaster()
-            value = string.sub(msg, 17)
-            print(value)
-            hireling:SetFloatValue(UNIT_FIELD_MINDAMAGE, value)
-            return false
-        elseif (msg:find('#hire maxdamage') == 1) then
-            aura = player:GetAura(HIRE_AURA)
-            hireling = aura:GetCaster()
-            value = string.sub(msg, 17)
-            print(value)
-            hireling:SetFloatValue(UNIT_FIELD_MAXDAMAGE, value)
-            return false
         else
-            player:SendBroadcastMessage("Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire summon\n#hire dismiss\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self\n#hire mindamage\n#hire maxdamage")
+            player:SendBroadcastMessage("Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire summon\n#hire dismiss\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self")
             return false
         end
     elseif msg:find('#hire') == 1 then
@@ -431,24 +417,7 @@ local function onChatMessage(event, player, msg, _, lang)
 end
 
 local function onPlayerDeath(event, killer, player)
-    print(player:GetName().." died")
     dismissHireling(player)
-end
-
-local function onSpawn(event, hireling)
-    hireling:SetFaction(35)
-    hireling:SetLevel(hLevel)
-    local hStats = getBaseStats(hireling)
-    hireling:SetMaxHealth(hStats['hp'])
-    hireling:SetHealth(hStats['hp'])
-    hireling:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
-    hireling:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
-    hireling:SetFlag(79, 2) -- Set trackable on minimap
-    hireling:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
-    hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
-    hireling:SetSheath(0)
-    hireling:SendUnitSay("Greetings, "..player:GetName()..".", 0)
 end
 
 local function onPreCombat(event, hireling, target)
@@ -483,11 +452,8 @@ local function onSpellHitTarget(event, hireling, target, spellid)
         spell = getRankedSpell("lightningbolt", hireling)
     elseif hireling:GetDisplayId() == BATTLEMAGE4 then
         spell = getRankedSpell("shadowbolt", hireling)
-    -- elseif hireling:GetEntry() == SELLSWORD then
-    --     spell = 31935
     end
     hireling:CastSpell(target, spell, false)
-    print("Spell hit target")
 end
 
 local function onHitBySpell(event, hireling, caster, spellid)
@@ -497,12 +463,11 @@ local function onHitBySpell(event, hireling, caster, spellid)
     elseif entry == BATTLEMAGE then
         hireling:CastSpell(hireling, reactSpells[entry], true)
     end
-    print("Hireling hit by spell")
 end
 
 local function onReceiveEmote(event, hireling, player, emoteid)
     if player:GetGUID() == hireling:GetOwnerGUID() and hireling:GetEntry() ~= GLADIATOR then
-        print("Emote Received: "..emoteid)
+        --print("Emote Received: "..emoteid)
         if emoteid == 324 then -- followme
             if player:IsMounted() then
                 hirelingSetMounted(hireling, player)
@@ -548,7 +513,7 @@ end
 local function brokerOnHello(event, player, hireling)
     if player:HasAura(HIRE_AURA) then
         player:GossipSetText("What can I do for you today, "..player:GetClassAsString().."?")
-        player:GossipMenuAddItem(0, "Please bring my minion here.", 0, 10)
+        player:GossipMenuAddItem(0, "Please bring my hireling here.", 0, 10)
         player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 11, null, "Are you sure you want to dismiss your hireling?")
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
@@ -638,25 +603,23 @@ local function hirelingOnSelect(event, player, hireling, sender, intid, code)
 end
 
 local function onServerStartup(event)
-    CharDBExecute("DELETE FROM character_aura WHERE spell = 62109")
+    CharDBExecute("DELETE FROM character_aura WHERE spell = "..HIRE_AURA)
     print("["..MODULE_NAME.."]: Cleaned Auras table.")
 end
 
 RegisterServerEvent(14, onServerStartup)
 
 RegisterPlayerEvent(18, onChatMessage)
+RegisterPlayerEvent(6, onPlayerDeath)
 RegisterPlayerEvent(8, onPlayerDeath)
 
--- RegisterCreatureEvent(SELLSWORD, 5, onSpawn)
 RegisterCreatureEvent(SELLSWORD, 10, onPreCombat)
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
 RegisterCreatureEvent(SELLSWORD, 14, onHitBySpell)
 RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
--- RegisterCreatureEvent(SELLSWORD, 15, onSpellHitTarget)
 RegisterCreatureEvent(SELLSWORD, 8, onReceiveEmote)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
--- RegisterCreatureEvent(BATTLEMAGE, 5, onSpawn)
 RegisterCreatureEvent(BATTLEMAGE, 10, onPreCombat)
 RegisterCreatureEvent(BATTLEMAGE, 1, onEnterCombat)
 RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
@@ -664,7 +627,6 @@ RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
--- RegisterCreatureEvent(GLADIATOR, 5, onSpawn)
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
 RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
 RegisterCreatureEvent(GLADIATOR, 14, onHitBySpell)
