@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna dressMe"
-local MODULE_VERSION = '1.3.1'
+local MODULE_VERSION = '1.3.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -155,7 +155,7 @@ local function onChatMessage(event, player, msg, _, lang)
         local slotID = string.sub(msg, 10, 12)
         local entry = string.sub(msg, 14)
         local item = player:GetItemByPos(INVENTORY_SLOT_BAG_0, slotID)
-        player:PlayDirectSound(3337)
+        player:PlayDirectSound(3337, player)
         ProcessCopper(player)
         SetFakeEntry(player, item, entry)
         return false

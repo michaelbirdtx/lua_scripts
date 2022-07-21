@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.0'
+local MODULE_VERSION = '2.0.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -304,13 +304,17 @@ end
 
 function dismissHireling(player)
     local aura = player:GetAura(HIRE_AURA)
-    local hireling = aura:GetCaster()
-    if hireling then
-        hireling:DespawnOrUnsummon(0)
-        player:RemoveAura(HIRE_AURA)
+    if aura then
+        local hireling = aura:GetCaster()
+        if hireling then
+            hireling:DespawnOrUnsummon(0)
+            player:RemoveAura(HIRE_AURA)
+        else
+            player:SendBroadcastMessage("Your hireling is too far away to be dismissed.")
+            player:PlayDirectSound(FAIL_SOUND)
+        end
     else
-        player:SendBroadcastMessage("Your hireling is too far away to be dismissed.")
-        player:PlayDirectSound(FAIL_SOUND)
+        player:SendBroadcastMessage("You don't have a hireling.")
     end
 end
 
