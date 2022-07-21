@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '1.8.2'
+local MODULE_VERSION = '1.9'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -51,9 +51,9 @@ local baseFees = {
 }
 
 local modHP = {
-    [SELLSWORD] = 2,
+    [SELLSWORD] = 2.5,
     [BATTLEMAGE] = 1.2,
-    [GLADIATOR] = 100
+    [GLADIATOR] = 100,
 }
 
 local modMana = {
@@ -62,22 +62,16 @@ local modMana = {
     [GLADIATOR] = 1
 }
 
-local modDamage = {
-    [SELLSWORD] = 1.2,
-    [BATTLEMAGE] = 2,
-    [GLADIATOR] = 150
-}
-
 local modMinLevelBoost = {
-    [SELLSWORD] =  0,
-    [BATTLEMAGE] = 1,
+    [SELLSWORD] =  1,
+    [BATTLEMAGE] = 2,
     [GLADIATOR] =  3,
 }
 
 local modMaxLevelBoost = {
     [SELLSWORD] =  3,
     [BATTLEMAGE] = 4,
-    [GLADIATOR] =  4,
+    [GLADIATOR] =  6,
 }
 
 local talkAttack = {
@@ -129,7 +123,7 @@ local Spells = {
     [SELLSWORD1] = 355, -- Taunt
     [SELLSWORD2] = 11578, -- Charge
     [SELLSWORD3] = 4336, -- Jump Jets
-    [SELLSWORD4] = 57755, -- Heroic Throw
+    [SELLSWORD4] = 64382, -- Shattering Throw
     [BATTLEMAGE1] = 31589, -- Slow
     [BATTLEMAGE2] = 31589, -- Slow
     [BATTLEMAGE3] = 31589, -- Slow
@@ -140,31 +134,22 @@ local Spells = {
     [GLADIATOR4] = 0,
 }
 
+local reactSpells = {
+    [SELLSWORD] = 62124,  -- Hand of Reckoning
+    [BATTLEMAGE] = 586,   -- Fade
+    [GLADIATOR] =  8078, -- Thunderclap
+}
+
 local Buffs = {
     [SELLSWORD] = 35361,  -- Thorns
     [BATTLEMAGE] = 12042, -- Arcane Power
     [GLADIATOR] = 53307,  -- Thorns (Rank 8)
 }
 
-local raidMaps = Set {
-    509, -- AQ Ruins
-    531, -- AQ Temple
-    564, -- Black Temple
-    229, -- Blackrock Spire
-    469, -- Blackwing Lair
-    615, -- Chamber of the Aspects: Obsidian Sanctum
-    724, -- Chamber of the Aspects: Ruby Sanctum
-    565, -- Gruul's Lair
-    532, -- Karazhan
-    409, -- Molten Core
-    533, -- Naxxramas
-    616, -- Nexus: Eye of Eternity
-    249, -- Onyxia's Lair
-    580, -- The Sunwell
-    550, -- Tempest Keep
-    649, -- Trial of the Crusader
-    624, -- Vault of Archavon
-    568, -- Zul'Aman
+local Auras = {
+    [SELLSWORD] = 48942,  -- Devotion Aura
+    [BATTLEMAGE] = 48942, -- Devotion Aura
+    [GLADIATOR] = 48942,  -- Devotion Aura
 }
 
 local rankedSpells = {
@@ -207,6 +192,27 @@ local rankedSpells = {
 
 }
 
+local raidMaps = Set {
+    509, -- AQ Ruins
+    531, -- AQ Temple
+    564, -- Black Temple
+    229, -- Blackrock Spire
+    469, -- Blackwing Lair
+    615, -- Chamber of the Aspects: Obsidian Sanctum
+    724, -- Chamber of the Aspects: Ruby Sanctum
+    565, -- Gruul's Lair
+    532, -- Karazhan
+    409, -- Molten Core
+    533, -- Naxxramas
+    616, -- Nexus: Eye of Eternity
+    249, -- Onyxia's Lair
+    580, -- The Sunwell
+    550, -- Tempest Keep
+    649, -- Trial of the Crusader
+    624, -- Vault of Archavon
+    568, -- Zul'Aman
+}
+
 local Weapons = {
     [SELLSWORD] = 11786,  -- Stone of the Earth
     [BATTLEMAGE] = 31334, -- Staff of Natural Fury
@@ -230,17 +236,13 @@ local function getBaseStats(hireling)
         ['hp'] = 0,
         ['mana'] = 0,
         ['armor'] = 0,
-        ['minDamage'] = 0,
-        ['maxDamage'] = 0,
     }
     local Query = WorldDBQuery("SELECT `basehp0`, `basemana`, `basearmor`, `attackpower`, `damage_base` FROM creature_classlevelstats WHERE `class` = "..class.." AND level = "..level..";")
     if Query then
-        stats['hp'] = Query:GetString(0)*modHP[entry]
-        stats['mana'] = Query:GetString(1)*modMana[entry]
-        stats['armor'] = Query:GetString(2)
-        stats['attackPower'] = Query:GetString(4)
-        stats['minDamage'] = ((Query:GetString(4) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
-        stats['maxDamage'] = (((Query:GetString(4)*1.5) + (Query:GetString(3)/14)) * modDamage[entry]) * 2
+        stats['hp'] = Query:GetInt32(0)*modHP[entry]
+        stats['mana'] = Query:GetInt32(1)*modMana[entry]
+        stats['armor'] = Query:GetInt32(2)
+        stats['attackPower'] = Query:GetInt32(3)
     end
     return stats
 end
@@ -249,12 +251,11 @@ function spawnHireling(entry, player)
     if player:HasAura(HIRE_AURA) then
         player:SendBroadcastMessage("Sorry, you already have a hireling.")
     else
-        local hLevel = player:GetLevel()+math.random(modMinLevelBoost[entry],modMaxLevelBoost[entry])
+        hLevel = player:GetLevel()+math.random(modMinLevelBoost[entry],modMaxLevelBoost[entry])
         if hLevel > 80 then
             hLevel = 80
         end
-        local hHealth = (player:GetMaxHealth()/player:GetLevel()) * hLevel
-        local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, 4294967295, player:GetPhaseMaskForSpawn())
+        local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, 4294967295, 1) --player:GetPhaseMaskForSpawn())
         hireling:SetFaction(35)
         hireling:SetCreatorGUID(player:GetGUID())
         hireling:SetOwnerGUID(player:GetGUID())
@@ -262,12 +263,10 @@ function spawnHireling(entry, player)
         local hStats = getBaseStats(hireling)
         hireling:SetMaxHealth(hStats['hp'])
         hireling:SetHealth(hStats['hp'])
-        hireling:SetInt32Value(25, hStats['mana']) -- Set max mana
-        hireling:SetInt32Value(33, hStats['mana']) -- Set current mana
-        hireling:SetFloatValue(70, hStats['minDamage'])
-        hireling:SetFloatValue(71, hStats['maxDamage'])
+        hireling:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
+        hireling:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
         hireling:SetFlag(79, 2) -- Set trackable on minimap
-        hireling:SetInt32Value(123, hStats['attackPower'])
+        hireling:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
         hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
         hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
         hireling:SetSheath(0)
@@ -275,6 +274,7 @@ function spawnHireling(entry, player)
         local aura = hireling:AddAura(HIRE_AURA, player)
         aura:SetMaxDuration(2147483647)
         aura:SetDuration(2147483647)
+        hireling:AddAura(Auras[entry], hireling)
     end
 end
 
@@ -379,14 +379,76 @@ local function onChatMessage(event, player, msg, _, lang)
         elseif (msg:find('#hire summon') == 1) then
             summonHireling(player)
             return false
+        elseif (msg:find('#hire info') == 1) then
+            aura = player:GetAura(HIRE_AURA)
+            hireling = aura:GetCaster()
+            player:SendBroadcastMessage("Hireling Info:")
+            player:SendBroadcastMessage("  Entry: "..hireling:GetEntry())
+            player:SendBroadcastMessage("  DisplayID: "..hireling:GetInt32Value(UNIT_FIELD_DISPLAYID))
+            player:SendBroadcastMessage("  Level: "..hireling:GetInt32Value(UNIT_FIELD_LEVEL))
+            player:SendBroadcastMessage("  Health: "..hireling:GetInt32Value(UNIT_FIELD_HEALTH))
+            player:SendBroadcastMessage("  Mana: "..hireling:GetInt32Value(UNIT_FIELD_POWER1))
+            player:SendBroadcastMessage("  Min Damage: "..hireling:GetFloatValue(UNIT_FIELD_MINDAMAGE))
+            player:SendBroadcastMessage("  Max Damage: "..hireling:GetFloatValue(UNIT_FIELD_MAXDAMAGE))
+            player:SendBroadcastMessage("  Attack Power: "..hireling:GetInt32Value(UNIT_FIELD_ATTACK_POWER))
+            return false
+        elseif (msg:find('#hire cast self') == 1) then
+            spell = string.sub(msg, 17)
+            aura = player:GetAura(HIRE_AURA)
+            hireling = aura:GetCaster()
+            hireling:CastSpell(hireling, spell, true)
+            player:SendBroadcastMessage("Hireling Casts "..spell)
+            return false
+        elseif (msg:find('#hire cast me') == 1) then
+            spell = string.sub(msg, 15)
+            aura = player:GetAura(HIRE_AURA)
+            hireling = aura:GetCaster()
+            hireling:CastSpell(player, spell, true)
+            player:SendBroadcastMessage("Hireling Casts "..spell)
+            return false
+        elseif (msg:find('#hire mindamage') == 1) then
+            aura = player:GetAura(HIRE_AURA)
+            hireling = aura:GetCaster()
+            value = string.sub(msg, 17)
+            print(value)
+            hireling:SetFloatValue(UNIT_FIELD_MINDAMAGE, value)
+            return false
+        elseif (msg:find('#hire maxdamage') == 1) then
+            aura = player:GetAura(HIRE_AURA)
+            hireling = aura:GetCaster()
+            value = string.sub(msg, 17)
+            print(value)
+            hireling:SetFloatValue(UNIT_FIELD_MAXDAMAGE, value)
+            return false
         else
-            player:SendBroadcastMessage("Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire summon\n#hire dismiss\n#hire aura\n#hire loc")
+            player:SendBroadcastMessage("Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire summon\n#hire dismiss\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self\n#hire mindamage\n#hire maxdamage")
             return false
         end
     elseif msg:find('#hire') == 1 then
         player:SendBroadcastMessage("Command '"..msg.."' does not exist")
         return false
     end
+end
+
+local function onPlayerDeath(event, killer, player)
+    print(player:GetName().." died")
+    dismissHireling(player)
+end
+
+local function onSpawn(event, hireling)
+    hireling:SetFaction(35)
+    hireling:SetLevel(hLevel)
+    local hStats = getBaseStats(hireling)
+    hireling:SetMaxHealth(hStats['hp'])
+    hireling:SetHealth(hStats['hp'])
+    hireling:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
+    hireling:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
+    hireling:SetFlag(79, 2) -- Set trackable on minimap
+    hireling:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
+    hireling:SetSheath(0)
+    hireling:SendUnitSay("Greetings, "..player:GetName()..".", 0)
 end
 
 local function onPreCombat(event, hireling, target)
@@ -406,15 +468,9 @@ local function onEnterCombat(event, hireling, target)
 end    
 
 local function onLeaveCombat(event, hireling)
-    local player = hireling:GetOwner()
     hireling:SetHealth(hireling:GetMaxHealth())
     hireling:SetSheath(0)
-    hireling:SetInt32Value(33, hireling:GetInt32Value(25)) -- Set mana to max
-    hireling:MoveExpire()
-    hireling:MoveIdle()
-    if player then
-        hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
-    end
+    hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
 end
 
 local function onSpellHitTarget(event, hireling, target, spellid)
@@ -427,12 +483,21 @@ local function onSpellHitTarget(event, hireling, target, spellid)
         spell = getRankedSpell("lightningbolt", hireling)
     elseif hireling:GetDisplayId() == BATTLEMAGE4 then
         spell = getRankedSpell("shadowbolt", hireling)
+    -- elseif hireling:GetEntry() == SELLSWORD then
+    --     spell = 31935
     end
     hireling:CastSpell(target, spell, false)
+    print("Spell hit target")
 end
 
 local function onHitBySpell(event, hireling, caster, spellid)
-    hireling:CastSpell(hireling:GetAITarget(0), 8078, true)
+    entry = hireling:GetEntry()
+    if entry == SELLSWORD or entry == GLADIATOR then
+        hireling:CastSpell(hireling:GetAITarget(0), reactSpells[entry], true)
+    elseif entry == BATTLEMAGE then
+        hireling:CastSpell(hireling, reactSpells[entry], true)
+    end
+    print("Hireling hit by spell")
 end
 
 local function onReceiveEmote(event, hireling, player, emoteid)
@@ -580,13 +645,18 @@ end
 RegisterServerEvent(14, onServerStartup)
 
 RegisterPlayerEvent(18, onChatMessage)
+RegisterPlayerEvent(8, onPlayerDeath)
 
+-- RegisterCreatureEvent(SELLSWORD, 5, onSpawn)
 RegisterCreatureEvent(SELLSWORD, 10, onPreCombat)
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
+RegisterCreatureEvent(SELLSWORD, 14, onHitBySpell)
 RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
+-- RegisterCreatureEvent(SELLSWORD, 15, onSpellHitTarget)
 RegisterCreatureEvent(SELLSWORD, 8, onReceiveEmote)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
+-- RegisterCreatureEvent(BATTLEMAGE, 5, onSpawn)
 RegisterCreatureEvent(BATTLEMAGE, 10, onPreCombat)
 RegisterCreatureEvent(BATTLEMAGE, 1, onEnterCombat)
 RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
@@ -594,6 +664,7 @@ RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
+-- RegisterCreatureEvent(GLADIATOR, 5, onSpawn)
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
 RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
 RegisterCreatureEvent(GLADIATOR, 14, onHitBySpell)
