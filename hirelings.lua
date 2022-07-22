@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.0.2'
+local MODULE_VERSION = '2.0.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -48,18 +48,6 @@ local baseFees = {
     [SELLSWORD] = 12,
     [BATTLEMAGE] = 18,
     [GLADIATOR] = 1000,
-}
-
-local modHP = {
-    [SELLSWORD] = 2.5,
-    [BATTLEMAGE] = 1.2,
-    [GLADIATOR] = 100,
-}
-
-local modMana = {
-    [SELLSWORD] = 1,
-    [BATTLEMAGE] = 1.5,
-    [GLADIATOR] = 1
 }
 
 local modMinLevelBoost = {
@@ -232,17 +220,22 @@ local function getBaseStats(hireling)
     entry = hireling:GetEntry()
     class = hireling:GetClass()
     level = hireling:GetLevel()
-    stats = {
-        ['hp'] = 0,
-        ['mana'] = 0,
-        ['armor'] = 0,
-    }
-    local Query = WorldDBQuery("SELECT `basehp0`, `basemana`, `basearmor`, `attackpower`, `damage_base` FROM creature_classlevelstats WHERE `class` = "..class.." AND level = "..level..";")
-    if Query then
-        stats['hp'] = Query:GetInt32(0)*modHP[entry]
-        stats['mana'] = Query:GetInt32(1)*modMana[entry]
-        stats['armor'] = Query:GetInt32(2)
-        stats['attackPower'] = Query:GetInt32(3)
+    stats = {}
+    local qryStats = WorldDBQuery("SELECT `basehp0`, `basemana`, `basearmor`, `attackpower`, `damage_base` FROM creature_classlevelstats WHERE `class` = "..class.." AND level = "..level..";")
+    local qryNPC = WorldDBQuery("SELECT `damagemodifier`, `baseattacktime`, `basevariance`, `HealthModifier`, `ManaModifier` FROM creature_template WHERE `entry` = "..entry..";")
+    if qryStats and qryNPC then
+        stats['damageModifier'] = qryNPC:GetFloat(0)
+        stats['baseAttackTime'] = qryNPC:GetInt32(1)
+        stats['baseVariance'] = qryNPC:GetFloat(2)
+        stats['HealthModifier'] = qryNPC:GetFloat(3)
+        stats['ManaModifier'] = qryNPC:GetFloat(4)
+        stats['health'] = qryStats:GetInt32(0)*stats['HealthModifier']
+        stats['mana'] = qryStats:GetInt32(1)*stats['ManaModifier']
+        stats['armor'] = qryStats:GetInt32(2)
+        stats['attackPower'] = qryStats:GetInt32(3)
+        stats['damageBase'] = qryStats:GetFloat(4)
+        stats['minDamage'] = (((stats['damageBase'] + (stats['attackPower'] / 14) * stats['baseVariance']) * stats['damageModifier']) * (stats['baseAttackTime'] / 1000))
+        stats['maxDamage'] = ((((stats['damageBase'] * 1.5) + (stats['attackPower'] / 14) * stats['baseVariance']) * stats['damageModifier']) * (stats['baseAttackTime'] / 1000))
     end
     return stats
 end
@@ -261,12 +254,14 @@ function spawnHireling(entry, player)
         hireling:SetOwnerGUID(player:GetGUID())
         hireling:SetLevel(hLevel)
         local hStats = getBaseStats(hireling)
-        hireling:SetMaxHealth(hStats['hp'])
-        hireling:SetHealth(hStats['hp'])
+        hireling:SetMaxHealth(hStats['health'])
+        hireling:SetHealth(hStats['health'])
         hireling:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
         hireling:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
-        hireling:SetFlag(79, 2) -- Set trackable on minimap
         hireling:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
+        hireling:SetFloatValue(70, hStats['minDamage'])
+        hireling:SetFloatValue(71, hStats['maxDamage'])
+        hireling:SetFlag(79, 2) -- Set trackable on minimap
         hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
         hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
         hireling:SetSheath(0)
