@@ -147,7 +147,6 @@ local function onChatMessage(event, player, msg, _, lang)
         LoadPlayer(player)
         return false
     elseif (msg:find('#transmog nude') == 1) then
-        print ("Nude")
         for i, v in pairs(slotNames) do
             player:SendUnitSay("#transmog "..v.." "..HIDDEN_ENTRY, 0)
         end
