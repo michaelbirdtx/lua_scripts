@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna dressMe"
-local MODULE_VERSION = '1.3.2'
+local MODULE_VERSION = '1.3.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -28,6 +28,7 @@ local EQUIPMENT_SLOT_TABARD         = 18
 local EQUIPMENT_SLOT_END            = 19
 local INVENTORY_SLOT_BAG_0          = 255
 local PLAYER_VISIBLE_ITEM_1_ENTRYID = 283
+local HIDDEN_ENTRY                  = 11930
 local ITEM_SLOT_MULTIPLIER          = 2
 local entryMap                      = {}
 local dataMap                       = {}
@@ -136,17 +137,25 @@ local function wait(seconds)
 end
 
 local function onChatMessage(event, player, msg, _, lang)
-    if (msg:find('#transmog reset') == 1) then
+    if (msg:find('#transmog') == 1 and #msg == 9) then
+        player:SendBroadcastMessage("Command '#transmog' help:\n#transmog nude\n#transmog hide [slot] (slots: head, shoulders, chest, waist, legs, feet, wrists, hands, back")
+        return false
+    elseif (msg:find('#transmog reset') == 1) then
         player:PlayDirectSound(3337)
         ProcessCopper(player)
         DeleteAllTransmogs(player)
         LoadPlayer(player)
         return false
+    elseif (msg:find('#transmog nude') == 1) then
+        print ("Nude")
+        for i, v in pairs(slotNames) do
+            player:SendUnitSay("#transmog "..v.." "..HIDDEN_ENTRY, 0)
+        end
+        return false   
     elseif (msg:find('#transmog hide') == 1) then
         local slotName = slotNames[string.sub(msg, 16)]
-        local entry = 11930
         if slotName then
-            player:SendUnitSay("#transmog "..slotName.." "..entry, 0)
+            player:SendUnitSay("#transmog "..slotName.." "..HIDDEN_ENTRY, 0)
         else
             player:SendBroadcastMessage("Unknown slot name")
         end
