@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.0.1'
+local MODULE_VERSION = '2.0.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -274,7 +274,7 @@ function spawnHireling(entry, player)
         local aura = hireling:AddAura(HIRE_AURA, player)
         aura:SetMaxDuration(2147483647)
         aura:SetDuration(2147483647)
-        hireling:AddAura(Auras[entry], hireling)
+        --hireling:AddAura(Auras[entry], hireling)
     end
 end
 
@@ -471,7 +471,7 @@ end
 
 local function onReceiveEmote(event, hireling, player, emoteid)
     if player:GetGUID() == hireling:GetOwnerGUID() and hireling:GetEntry() ~= GLADIATOR then
-        --print("Emote Received: "..emoteid)
+        --player:SendBroadcastMessage("Emote Received: "..emoteid)
         if emoteid == 324 then -- followme
             if player:IsMounted() then
                 hirelingSetMounted(hireling, player)
