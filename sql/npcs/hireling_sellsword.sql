@@ -12,7 +12,7 @@ SET
 @DetectionRange		:= 60,
 @Scale				:= 1,
 @Rank				:= 0,
-@DamageModifier		:= 2,
+@DamageModifier		:= 2.5,
 @BaseAttackTime		:= 1000,
 @RangedAttackTime	:= 2000,
 @Type				:= 7,
