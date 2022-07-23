@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.0.3'
+local MODULE_VERSION = '2.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -29,6 +29,12 @@ local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 3876  -- Male Undead
 
+local WITCHDOCTOR = 669003
+local WITCHDOCTOR1 = 11764 -- Female Troll
+local WITCHDOCTOR2 = 11762 -- Male Troll
+local WITCHDOCTOR3 = 0
+local WITCHDOCTOR4 = 0
+
 local GLADIATOR = 669011
 local GLADIATOR1 = 27154
 local GLADIATOR2 = 0
@@ -40,6 +46,7 @@ local faq = {
     ["follow"] = "\n\n/follow\n    If you are mounted, I will mount up and follow you, not attacking anything, even if you or I am attacked.\n    If you are not mounted, I will follow you and attack anything you attack or are attacked by.",
     ["wait"] = "\n\n/wait\n    I will stay where I am and not attack anything until you tell me otherwise.",
     ["flee"] = "\n\n/flee\n    I will stop my attack and follow you, not starting any new attacks until you tell me otherwise.",
+    ["healme"] = "\n\n/healme\n    I will cast a healing spell on you, if I have one.",
     ["macros"] = "\n\nYou can also use these commands in macros. Here's a sample macro:\n\n    /tar Battle Mage\n    /tar Sellsword\n    /follow\n    /targetlasttarget\n\nThis will target your hireling (of either type), issue the /follow command, and then retarget your previous target, if any.",
     ["outro"] = "\n\nP.S.: When I have been instructed not to attack anything, I will have a pulsing blue circle around me, thanks to that clever and handsome Wizard, Mykal.\n\n",
 }
@@ -47,18 +54,21 @@ local faq = {
 local baseFees = {
     [SELLSWORD] = 12,
     [BATTLEMAGE] = 18,
+    [WITCHDOCTOR] = 21,
     [GLADIATOR] = 1000,
 }
 
 local modMinLevelBoost = {
     [SELLSWORD] =  1,
     [BATTLEMAGE] = 2,
+    [WITCHDOCTOR] = 2,
     [GLADIATOR] =  3,
 }
 
 local modMaxLevelBoost = {
     [SELLSWORD] =  3,
     [BATTLEMAGE] = 4,
+    [WITCHDOCTOR] = 4,
     [GLADIATOR] =  6,
 }
 
@@ -71,6 +81,10 @@ local talkAttack = {
     [BATTLEMAGE2] = 9625,
     [BATTLEMAGE3] = 2840,
     [BATTLEMAGE4] = 2694,
+    [WITCHDOCTOR1] = 2863,
+    [WITCHDOCTOR2] = 2852,
+    [WITCHDOCTOR3] = 0,
+    [WITCHDOCTOR4] = 0,
     [GLADIATOR1] = 2718,
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -86,6 +100,10 @@ local talkJoke = {
     [BATTLEMAGE2] = 9643,
     [BATTLEMAGE3] = 6124,
     [BATTLEMAGE4] = 6422,
+    [WITCHDOCTOR1] = 6395,
+    [WITCHDOCTOR2] = 6404,
+    [WITCHDOCTOR3] = 0,
+    [WITCHDOCTOR4] = 0,
     [GLADIATOR1] = 6115,
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -101,6 +119,10 @@ local Mounts = {
     [BATTLEMAGE2] = 28889, -- Sunreaver Hawkstrider
     [BATTLEMAGE3] = 14372, -- Black Battlestrider
     [BATTLEMAGE4] = 2402, -- Black Stallion
+    [WITCHDOCTOR1] = 6469, -- Mottled Red Raptor
+    [WITCHDOCTOR2] = 6469, -- Mottled Red Raptor
+    [WITCHDOCTOR3] = 0,
+    [WITCHDOCTOR4] = 0,
     [GLADIATOR1] = 22350, -- SWift Brewfest Ram
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -116,6 +138,10 @@ local Spells = {
     [BATTLEMAGE2] = 31589, -- Slow
     [BATTLEMAGE3] = 31589, -- Slow
     [BATTLEMAGE4] = 31589, -- Slow
+    -- [WITCHDOCTOR1] = 0,
+    -- [WITCHDOCTOR2] = 0,
+    -- [WITCHDOCTOR3] = 0,
+    -- [WITCHDOCTOR4] = 0,
     [GLADIATOR1] = 11578, -- Charge
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -125,19 +151,29 @@ local Spells = {
 local reactSpells = {
     [SELLSWORD] = 62124,  -- Hand of Reckoning
     [BATTLEMAGE] = 586,   -- Fade
-    [GLADIATOR] =  8078, -- Thunderclap
+    [WITCHDOCTOR] = 8053, -- Flame Shock
+    [GLADIATOR] =  8078,  -- Thunderclap
 }
 
 local Buffs = {
     [SELLSWORD] = 35361,  -- Thorns
     [BATTLEMAGE] = 12042, -- Arcane Power
+    --[WITCHDOCTOR] = 325,  -- Lightning Shield
     [GLADIATOR] = 53307,  -- Thorns (Rank 8)
 }
 
 local Auras = {
     [SELLSWORD] = 48942,  -- Devotion Aura
     [BATTLEMAGE] = 48942, -- Devotion Aura
+    [WITCHDOCTOR] = 0,
     [GLADIATOR] = 48942,  -- Devotion Aura
+}
+
+local Weapons = {
+    [SELLSWORD] = 11786,  -- Stone of the Earth
+    [BATTLEMAGE] = 31334, -- Staff of Natural Fury
+    [WITCHDOCTOR] = 22799, -- Soulseeker
+    [GLADIATOR] = 47069,  -- Justicebringer
 }
 
 local rankedSpells = {
@@ -178,6 +214,33 @@ local rankedSpells = {
     {name = 'lightningbolt', rank = '7', entry = 49237},
     {name = 'lightningbolt', rank = '8', entry = 49238},
 
+    {name = 'earthshield', rank = '1', entry = 974},
+    {name = 'earthshield', rank = '2', entry = 974},
+    {name = 'earthshield', rank = '3', entry = 974},
+    {name = 'earthshield', rank = '4', entry = 974},
+    {name = 'earthshield', rank = '5', entry = 32593},
+    {name = 'earthshield', rank = '6', entry = 32594},
+    {name = 'earthshield', rank = '7', entry = 49283},
+    {name = 'earthshield', rank = '8', entry = 49284},
+
+    {name = 'healingwave', rank = '1', entry = 547},
+    {name = 'healingwave', rank = '2', entry = 913},
+    {name = 'healingwave', rank = '3', entry = 959},
+    {name = 'healingwave', rank = '4', entry = 8005},
+    {name = 'healingwave', rank = '5', entry = 10396},
+    {name = 'healingwave', rank = '6', entry = 25357},
+    {name = 'healingwave', rank = '7', entry = 25396},
+    {name = 'healingwave', rank = '8', entry = 49273},
+
+    {name = 'watershield', rank = '1', entry = 52127},
+    {name = 'watershield', rank = '2', entry = 52129},
+    {name = 'watershield', rank = '3', entry = 52131},
+    {name = 'watershield', rank = '4', entry = 52136},
+    {name = 'watershield', rank = '5', entry = 52138},
+    {name = 'watershield', rank = '6', entry = 24398},
+    {name = 'watershield', rank = '7', entry = 33736},
+    {name = 'watershield', rank = '8', entry = 57960},
+
 }
 
 local raidMaps = Set {
@@ -201,16 +264,13 @@ local raidMaps = Set {
     568, -- Zul'Aman
 }
 
-local Weapons = {
-    [SELLSWORD] = 11786,  -- Stone of the Earth
-    [BATTLEMAGE] = 31334, -- Staff of Natural Fury
-    [GLADIATOR] = 47069,  -- Justicebringer
-}
-
-local function getRankedSpell(name, caster)
-    rank = string.sub(caster:GetLevel(), 1, 1)
+local function getRankedSpell(name, caster, stepdown)
+    rank = string.sub(caster:GetLevel(), 1, 1) - stepdown
+    if rank < 1 then
+        rank = 1
+    end
     for i, v in ipairs(rankedSpells) do
-        if v.name==name and v.rank==rank then
+        if v.name==name and v.rank==tostring(rank) then
             return v.entry
         end
     end
@@ -356,6 +416,9 @@ local function onChatMessage(event, player, msg, _, lang)
         elseif (msg:find('#hire mage') == 1) then
             spawnHireling(BATTLEMAGE, player)
             return false
+        elseif (msg:find('#hire doc') == 1) then
+            spawnHireling(WITCHDOCTOR, player)
+            return false
         elseif (msg:find('#hire gladiator') == 1) then
             spawnHireling(GLADIATOR, player)
             return false
@@ -420,7 +483,11 @@ local function onPlayerDeath(event, killer, player)
 end
 
 local function onPreCombat(event, hireling, target)
-    local buff = Buffs[hireling:GetEntry()]
+    if hireling:GetEntry() == WITCHDOCTOR then
+        buff = getRankedSpell("watershield", hireling, 0)
+    else
+        buff = Buffs[hireling:GetEntry()]
+    end
     if not hireling:HasAura(buff) then
         hireling:CastSpell(hireling, buff, true)
     end
@@ -428,8 +495,13 @@ end
 
 local function onEnterCombat(event, hireling, target)
     local player = hireling:GetOwner()
-    local spell = Spells[hireling:GetDisplayId()]
-    hireling:CastSpell(target, spell, true)
+    if hireling:GetEntry() == WITCHDOCTOR then
+        local spell = getRankedSpell("earthshield", hireling, 0)
+        hireling:CastSpell(player, spell, false)
+    else
+        local spell = Spells[hireling:GetDisplayId()]
+        hireling:CastSpell(target, spell, true)
+    end
     if math.random(1,5) == 1 then
         hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
     end
@@ -443,24 +515,31 @@ end
 
 local function onSpellHitTarget(event, hireling, target, spellid)
     local spell
-    if hireling:GetDisplayId() == BATTLEMAGE1 then
-        spell = getRankedSpell("frostbolt", hireling)
-    elseif hireling:GetDisplayId() == BATTLEMAGE2 then
-        spell = getRankedSpell("fireball", hireling)
-    elseif hireling:GetDisplayId() == BATTLEMAGE3 then
-        spell = getRankedSpell("lightningbolt", hireling)
-    elseif hireling:GetDisplayId() == BATTLEMAGE4 then
-        spell = getRankedSpell("shadowbolt", hireling)
+    if hireling:GetEntry() == BATTLEMAGE then
+        if hireling:GetDisplayId() == BATTLEMAGE1 then
+            spell = getRankedSpell("frostbolt", hireling, 0)
+        elseif hireling:GetDisplayId() == BATTLEMAGE2 then
+            spell = getRankedSpell("fireball", hireling, 0)
+        elseif hireling:GetDisplayId() == BATTLEMAGE3 then
+            spell = getRankedSpell("lightningbolt", hireling, 0)
+        elseif hireling:GetDisplayId() == BATTLEMAGE4 then
+            spell = getRankedSpell("shadowbolt", hireling, 0)
+        end
+        hireling:CastSpell(target, spell, false)
+    elseif hireling:GetEntry() == WITCHDOCTOR then
+        spell = getRankedSpell("lightningbolt", hireling, 2)
+        hireling:CastSpell(hireling:GetAITarget(0), spell, false)
     end
-    hireling:CastSpell(target, spell, false)
 end
 
 local function onHitBySpell(event, hireling, caster, spellid)
-    entry = hireling:GetEntry()
-    if entry == SELLSWORD or entry == GLADIATOR then
-        hireling:CastSpell(hireling:GetAITarget(0), reactSpells[entry], true)
-    elseif entry == BATTLEMAGE then
-        hireling:CastSpell(hireling, reactSpells[entry], true)
+    if spellid ~= 31308 then
+        entry = hireling:GetEntry()
+        if entry == SELLSWORD or entry == GLADIATOR then
+            hireling:CastSpell(hireling:GetAITarget(0), reactSpells[entry], true)
+        elseif entry == BATTLEMAGE or entry == WITCHDOCTOR then
+            hireling:CastSpell(hireling, reactSpells[entry], true)
+        end
     end
 end
 
@@ -488,6 +567,8 @@ local function onReceiveEmote(event, hireling, player, emoteid)
                 hireling:SendUnitSay("Dammit, "..player:GetName()..", I'm a Sellsword, not a doctor!", 0)
             elseif hireling:GetEntry() == BATTLEMAGE then
                 hireling:SendUnitSay("Do I look like a healer, "..player:GetName().."?", 0)
+            elseif hireling:GetEntry() == WITCHDOCTOR then
+                hireling:CastSpell(player, getRankedSpell("healingwave", hireling, 0), false)
             end
         end
     end
@@ -512,15 +593,16 @@ end
 local function brokerOnHello(event, player, hireling)
     if player:HasAura(HIRE_AURA) then
         player:GossipSetText("What can I do for you today, "..player:GetClassAsString().."?")
-        player:GossipMenuAddItem(0, "Please bring my hireling here.", 0, 10)
-        player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 11, null, "Are you sure you want to dismiss your hireling?")
+        player:GossipMenuAddItem(0, "Please bring my hireling here.", 0, 20)
+        player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 21, null, "Are you sure you want to dismiss your hireling?")
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
         player:GossipMenuAddItem(0, "I'd like to hire a Sellsword.", 0, 1, null, "The fee for this hireling is...", baseFees[SELLSWORD]*player:GetLevel())
         player:GossipMenuAddItem(0, "I'd like to hire a Battle Mage.", 0, 2, null, "The fee for this hireling is...", baseFees[BATTLEMAGE]*player:GetLevel())
+        player:GossipMenuAddItem(0, "I'd like to hire a Witch Doctor.", 0, 3, null, "The fee for this hireling is...", baseFees[WITCHDOCTOR]*player:GetLevel())
         if raidMaps[player:GetMapId()] then
-            player:GossipMenuAddItem(0, "I'd like to hire Thorngrim, the\nRelentless Gladiator.", 0, 3, null, "The fee for this hireling is...", baseFees[GLADIATOR]*player:GetLevel())
+            player:GossipMenuAddItem(0, "I'd like to hire Thorngrim, the\nRelentless Gladiator.", 0, 11, null, "The fee for this hireling is...", baseFees[GLADIATOR]*player:GetLevel())
         end
         player:GossipMenuAddItem(0, "Never mind, I'll do it by myself.", 0, 0)
         player:GossipSendMenu(0x7FFFFFFF, hireling)
@@ -542,15 +624,20 @@ local function brokerOnSelect(event, player, hireling, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 3 then
+        spawnHireling(WITCHDOCTOR, player)
+        player:ModifyMoney(-(baseFees[WITCHDOCTOR]*player:GetLevel()))
+        player:GossipComplete()
+    end
+    if intid == 11 then
         spawnHireling(GLADIATOR, player)
         player:ModifyMoney(-(baseFees[GLADIATOR]*player:GetLevel()))
         player:GossipComplete()
     end
-    if intid == 10 then
+    if intid == 20 then
         summonHireling(player)
         player:GossipComplete()
     end
-    if intid == 11 then
+    if intid == 21 then
         dismissHireling(player)
         player:GossipComplete()
     end
@@ -588,7 +675,7 @@ local function hirelingOnSelect(event, player, hireling, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 4 then -- faq
-        player:GossipSetText(faq["intro"]..faq["follow"]..faq["wait"]..faq["flee"]..faq["macros"]..faq["outro"])
+        player:GossipSetText(faq["intro"]..faq["follow"]..faq["wait"]..faq["flee"]..faq["healme"]..faq["macros"]..faq["outro"])
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     end
     if intid == 5 then -- joke
@@ -626,6 +713,14 @@ RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
+RegisterCreatureEvent(WITCHDOCTOR, 10, onPreCombat)
+RegisterCreatureEvent(WITCHDOCTOR, 1, onEnterCombat)
+RegisterCreatureEvent(WITCHDOCTOR, 14, onHitBySpell)
+RegisterCreatureEvent(WITCHDOCTOR, 15, onSpellHitTarget)
+RegisterCreatureEvent(WITCHDOCTOR, 2, onLeaveCombat)
+RegisterCreatureEvent(WITCHDOCTOR, 8, onReceiveEmote)
+RegisterCreatureEvent(WITCHDOCTOR, 37, onRemove)
+
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
 RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
 RegisterCreatureEvent(GLADIATOR, 14, onHitBySpell)
@@ -638,6 +733,9 @@ RegisterCreatureGossipEvent(SELLSWORD, 2, hirelingOnSelect)
 
 RegisterCreatureGossipEvent(BATTLEMAGE, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(BATTLEMAGE, 2, hirelingOnSelect)
+
+RegisterCreatureGossipEvent(WITCHDOCTOR, 1, hirelingOnHello)
+RegisterCreatureGossipEvent(WITCHDOCTOR, 2, hirelingOnSelect)
 
 RegisterCreatureGossipEvent(GLADIATOR, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(GLADIATOR, 2, hirelingOnSelect)

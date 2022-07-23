@@ -18,7 +18,7 @@ SET
 @Type				:= 7,
 @TypeFlags			:= 0,
 @Class				:= 8,
-@AIName				:= "ArcherAI",
+@AIName				:= "CombatAI",
 @HealthModifier		:= 1,
 @ManaModifier		:= 1,
 @ImmuneMask			:= 76561
