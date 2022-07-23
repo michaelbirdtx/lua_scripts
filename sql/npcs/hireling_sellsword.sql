@@ -12,14 +12,14 @@ SET
 @DetectionRange		:= 60,
 @Scale				:= 1,
 @Rank				:= 0,
-@DamageModifier		:= 2.5,
+@DamageModifier		:= 2,
 @BaseAttackTime		:= 1000,
 @RangedAttackTime	:= 2000,
 @Type				:= 7,
 @TypeFlags			:= 0,
 @Class				:= 1,
 @AIName				:= "CombatAI",
-@HealthModifier		:= 2.5,
+@HealthModifier		:= 1.5,
 @ManaModifier		:= 1,
 @ImmuneMask			:= 76561
 ;

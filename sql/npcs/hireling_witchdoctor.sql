@@ -18,9 +18,9 @@ SET
 @Type				:= 7,
 @TypeFlags			:= 0,
 @Class				:= 8,
-@AIName				:= "CombatAI",
-@HealthModifier		:= 1.2,
-@ManaModifier		:= 2,
+@AIName				:= "PassiveAI",
+@HealthModifier		:= 1,
+@ManaModifier		:= 1,
 @ImmuneMask			:= 76561
 ;
 
