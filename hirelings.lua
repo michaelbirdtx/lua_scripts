@@ -16,7 +16,7 @@ local HIRE_AURA = 62109
 local PASSIVE_AURA = 31260
 local HEAL_THRESHOLD = 90
 local HEAL_REST_THRESHOLD = 95
-local HEALTH_CRITICAL_THRESHOLD = 99
+local HEALTH_CRITICAL_THRESHOLD = 20
 local RESET_EMOTE = 7 -- Eat
 
 local BROKER = 669000
@@ -142,10 +142,10 @@ local Spells = {
     [BATTLEMAGE2] = 31589, -- Slow
     [BATTLEMAGE3] = 31589, -- Slow
     [BATTLEMAGE4] = 31589, -- Slow
-    -- [WITCHDOCTOR1] = 0,
-    -- [WITCHDOCTOR2] = 0,
-    -- [WITCHDOCTOR3] = 0,
-    -- [WITCHDOCTOR4] = 0,
+    [WITCHDOCTOR1] = 0,
+    [WITCHDOCTOR2] = 0,
+    [WITCHDOCTOR3] = 0,
+    [WITCHDOCTOR4] = 0,
     [GLADIATOR1] = 11578, -- Charge
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -159,17 +159,17 @@ local defenseSpell = {
     [GLADIATOR] = 0,
 }
 
-local reactSpells = {
-    [SELLSWORD] = 62124,   -- Hand of Reckoning
-    [BATTLEMAGE] = 586,    -- Fade
-    [WITCHDOCTOR] = 0,
-    [GLADIATOR] =  8078,   -- Thunderclap
+local retaliateSpells = {
+    [SELLSWORD] = 62124, -- Hand of Reckoning
+    [BATTLEMAGE] = 2139, -- Counterspell
+    [WITCHDOCTOR] = 0,   -- Not implemented
+    [GLADIATOR] =  8078, -- Thunderclap
 }
 
 local Buffs = {
-    [SELLSWORD] = 35361,  -- Thorns
-    [BATTLEMAGE] = 12042, -- Arcane Power
-    --[WITCHDOCTOR] = 325,  -- Lightning Shield
+    [SELLSWORD] = 35361,  -- Thorns (non-ranked)
+    [BATTLEMAGE] = 12042, -- Arcane Power (non-ranked)
+    [WITCHDOCTOR] = 0,    -- (Uses ranked spell instead)
     [GLADIATOR] = 53307,  -- Thorns (Rank 8)
 }
 
@@ -181,10 +181,10 @@ local Auras = {
 }
 
 local Weapons = {
-    [SELLSWORD] = 11786,  -- Stone of the Earth
-    [BATTLEMAGE] = 31334, -- Staff of Natural Fury
+    [SELLSWORD] = 11786,   -- Stone of the Earth
+    [BATTLEMAGE] = 31334,  -- Staff of Natural Fury
     [WITCHDOCTOR] = 22799, -- Soulseeker
-    [GLADIATOR] = 47069,  -- Justicebringer
+    [GLADIATOR] = 47069,   -- Justicebringer
 }
 
 local rankedSpells = {
@@ -519,18 +519,20 @@ end
 
 local function onPlayerLeaveCombat(event, player)
     aura = player:GetAura(HIRE_AURA)
-    hireling = aura:GetCaster()
-    if hireling then
-        player:SendAreaTriggerMessage("Hireling Refreshed")
-        if hireling:GetEntry() == WITCHDOCTOR and (player:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:HealthBelowPct(HEAL_REST_THRESHOLD)) then
-            spell = getRankedSpell("chainheal", hireling, 0)
-            hireling:CastSpell(player, spell, false)
-        elseif hireling:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:GetInt32Value(UNIT_FIELD_POWER1) < hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1) then
-            hireling:PerformEmote(RESET_EMOTE)
+    if aura then
+        hireling = aura:GetCaster()
+        if hireling then
+            --player:SendAreaTriggerMessage("Hireling Refreshed")
+            if hireling:GetEntry() == WITCHDOCTOR and (player:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:HealthBelowPct(HEAL_REST_THRESHOLD)) then
+                spell = getRankedSpell("chainheal", hireling, 0)
+                hireling:CastSpell(player, spell, false)
+            elseif hireling:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:GetInt32Value(UNIT_FIELD_POWER1) < hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1) then
+                hireling:PerformEmote(RESET_EMOTE)
+            end
+            hireling:SetSheath(0)
+            hireling:SetHealth(hireling:GetMaxHealth())
+            hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
         end
-        hireling:SetSheath(0)
-        hireling:SetHealth(hireling:GetMaxHealth())
-        hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
     end
 end
 
@@ -546,17 +548,23 @@ local function onPreCombat(event, hireling, target)
 end    
 
 local function onEnterCombat(event, hireling, target)
-    --hireling:GetOwner():SendNotification("Hireling Entered Combat")
-    local player = hireling:GetOwner()
-    if hireling:GetEntry() == WITCHDOCTOR then
-        local spell = getRankedSpell("earthshield", hireling, 0)
-        hireling:CastSpell(player, spell, false)
-    else
-        local spell = Spells[hireling:GetDisplayId()]
-        hireling:CastSpell(target, spell, false)
-    end
-    if math.random(1,5) == 1 then
-        hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
+    player = hireling:GetOwner()
+    if player then
+        if hireling:GetEntry() == WITCHDOCTOR then
+            spell = getRankedSpell("earthshield", hireling, 0)
+            if player:HasAura(spell) then
+                spell = getRankedSpell("lightningbolt", hireling, 2)
+                hireling:CastSpell(target, spell, false)
+            else
+                hireling:CastSpell(player, spell, false)
+            end
+        else
+            spell = Spells[hireling:GetDisplayId()]
+            hireling:CastSpell(target, spell, false)
+        end
+        if math.random(1,5) == 1 then
+            hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
+        end
     end
 end    
 
@@ -591,11 +599,11 @@ end
 
 local function onHitBySpell(event, hireling, caster, spellid)
     if spellid ~= 31308 then
-        entry = hireling:GetEntry()
-        if entry == SELLSWORD or entry == GLADIATOR then
-            hireling:CastSpell(hireling:GetAITarget(0), reactSpells[entry], false)
-        elseif entry == BATTLEMAGE then --or entry == WITCHDOCTOR then
-            hireling:CastSpell(hireling, reactSpells[entry], false)
+        if not hireling:IsCasting() then
+            spell = retaliateSpells[hireling:GetEntry()]
+            if spell ~= 0 then
+                hireling:CastSpell(hireling:GetAITarget(0), spell, false)
+            end
         end
     end
 end
@@ -785,6 +793,7 @@ RegisterCreatureEvent(BATTLEMAGE, 1, onEnterCombat)
 RegisterCreatureEvent(BATTLEMAGE, 9, onDamageTaken)
 RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
 RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
+RegisterCreatureEvent(BATTLEMAGE, 14, onHitBySpell)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
 RegisterCreatureEvent(BATTLEMAGE, 23, onReset)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
@@ -792,6 +801,7 @@ RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 RegisterCreatureEvent(WITCHDOCTOR, 10, onPreCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 1, onEnterCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 15, onSpellHitTarget)
+RegisterCreatureEvent(BATTLEMAGE, 14, onHitBySpell)
 RegisterCreatureEvent(WITCHDOCTOR, 9, onDamageTaken)
 RegisterCreatureEvent(WITCHDOCTOR, 2, onLeaveCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 8, onReceiveEmote)
