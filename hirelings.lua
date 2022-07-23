@@ -173,13 +173,6 @@ local Buffs = {
     [GLADIATOR] = 53307,  -- Thorns (Rank 8)
 }
 
-local Auras = {
-    [SELLSWORD] = 48942,  -- Devotion Aura
-    [BATTLEMAGE] = 48942, -- Devotion Aura
-    [WITCHDOCTOR] = 0,
-    [GLADIATOR] = 48942,  -- Devotion Aura
-}
-
 local Weapons = {
     [SELLSWORD] = 11786,   -- Stone of the Earth
     [BATTLEMAGE] = 31334,  -- Staff of Natural Fury
@@ -358,7 +351,6 @@ function spawnHireling(entry, player)
         local aura = hireling:AddAura(HIRE_AURA, player)
         aura:SetMaxDuration(2147483647)
         aura:SetDuration(2147483647)
-        --hireling:AddAura(Auras[entry], hireling)
     end
 end
 
@@ -522,7 +514,6 @@ local function onPlayerLeaveCombat(event, player)
     if aura then
         hireling = aura:GetCaster()
         if hireling then
-            --player:SendAreaTriggerMessage("Hireling Refreshed")
             if hireling:GetEntry() == WITCHDOCTOR and (player:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:HealthBelowPct(HEAL_REST_THRESHOLD)) then
                 spell = getRankedSpell("chainheal", hireling, 0)
                 hireling:CastSpell(player, spell, false)
@@ -560,16 +551,13 @@ local function onEnterCombat(event, hireling, target)
             end
         else
             spell = Spells[hireling:GetDisplayId()]
-            hireling:CastSpell(target, spell, false)
+            hireling:CastSpell(target, spell, true)
         end
         if math.random(1,5) == 1 then
             hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
         end
     end
 end    
-
-local function onLeaveCombat(event, hireling)
-end
 
 local function onSpellHitTarget(event, hireling, target, spellid)
     local spell
@@ -613,15 +601,10 @@ local function onDamageTaken(event, hireling, attacker, damage)
     if spell ~= 0 and not hireling:HasAura(spell) then
         hireling:CastSpell(hireling, spell, false)
     end
-    -- if hireling:HealthBelowPct(HEALTH_CRITICAL_THRESHOLD) then
-    --     hireling:GetOwner():SendAreaTriggerMessage("Your hiring is about to die!")
-    --     hireling:PlayDistanceSound(15273, hireling:GetOwner())
-    -- end
 end
 
 local function onReceiveEmote(event, hireling, player, emoteid)
     if player:GetGUID() == hireling:GetOwnerGUID() and hireling:GetEntry() ~= GLADIATOR then
-        --player:SendBroadcastMessage("Emote Received: "..emoteid)
         if emoteid == 324 then -- followme
             if player:IsMounted() then
                 hirelingSetMounted(hireling, player)
@@ -657,9 +640,6 @@ local function onReceiveEmote(event, hireling, player, emoteid)
     elseif emoteid == 77 then -- rude
         hireling:PerformEmote(35)
     end
-end
-
-local function onReset(event, hireling)
 end
 
 local function onRemove(event, hireling)
@@ -783,19 +763,15 @@ RegisterCreatureEvent(SELLSWORD, 10, onPreCombat)
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
 RegisterCreatureEvent(SELLSWORD, 9, onDamageTaken)
 RegisterCreatureEvent(SELLSWORD, 14, onHitBySpell)
-RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
 RegisterCreatureEvent(SELLSWORD, 8, onReceiveEmote)
-RegisterCreatureEvent(SELLSWORD, 23, onReset)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
 RegisterCreatureEvent(BATTLEMAGE, 10, onPreCombat)
 RegisterCreatureEvent(BATTLEMAGE, 1, onEnterCombat)
 RegisterCreatureEvent(BATTLEMAGE, 9, onDamageTaken)
-RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
 RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
 RegisterCreatureEvent(BATTLEMAGE, 14, onHitBySpell)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
-RegisterCreatureEvent(BATTLEMAGE, 23, onReset)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
 RegisterCreatureEvent(WITCHDOCTOR, 10, onPreCombat)
@@ -803,18 +779,14 @@ RegisterCreatureEvent(WITCHDOCTOR, 1, onEnterCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 15, onSpellHitTarget)
 RegisterCreatureEvent(BATTLEMAGE, 14, onHitBySpell)
 RegisterCreatureEvent(WITCHDOCTOR, 9, onDamageTaken)
-RegisterCreatureEvent(WITCHDOCTOR, 2, onLeaveCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 8, onReceiveEmote)
-RegisterCreatureEvent(WITCHDOCTOR, 23, onReset)
 RegisterCreatureEvent(WITCHDOCTOR, 37, onRemove)
 
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
 RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
 RegisterCreatureEvent(GLADIATOR, 14, onHitBySpell)
 RegisterCreatureEvent(GLADIATOR, 9, onDamageTaken)
-RegisterCreatureEvent(GLADIATOR, 2, onLeaveCombat)
 RegisterCreatureEvent(GLADIATOR, 8, onReceiveEmote)
-RegisterCreatureEvent(GLADIATOR, 23, onReset)
 RegisterCreatureEvent(GLADIATOR, 37, onRemove)
 
 RegisterCreatureGossipEvent(SELLSWORD, 1, hirelingOnHello)
