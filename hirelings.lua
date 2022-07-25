@@ -209,6 +209,15 @@ local rankedSpells = {
     {name = 'shadowbolt', rank = '7', entry = 47808},
     {name = 'shadowbolt', rank = '8', entry = 47809},
 
+    {name = 'arcanemissiles', rank = '1', entry = 5143},
+    {name = 'arcanemissiles', rank = '2', entry = 5145},
+    {name = 'arcanemissiles', rank = '3', entry = 8417},
+    {name = 'arcanemissiles', rank = '4', entry = 10211},
+    {name = 'arcanemissiles', rank = '5', entry = 25345},
+    {name = 'arcanemissiles', rank = '6', entry = 38699},
+    {name = 'arcanemissiles', rank = '7', entry = 42843},
+    {name = 'arcanemissiles', rank = '8', entry = 42846},
+
     {name = 'lightningbolt', rank = '1', entry = 548},
     {name = 'lightningbolt', rank = '2', entry = 943},
     {name = 'lightningbolt', rank = '3', entry = 10391},
@@ -571,7 +580,7 @@ local function onSpellHitTarget(event, hireling, target, spellid)
             elseif hireling:GetDisplayId() == BATTLEMAGE2 then
                 spell = getRankedSpell("fireball", hireling, 0)
             elseif hireling:GetDisplayId() == BATTLEMAGE3 then
-                spell = getRankedSpell("lightningbolt", hireling, 0)
+                spell = getRankedSpell("arcanemissiles", hireling, 0)
             elseif hireling:GetDisplayId() == BATTLEMAGE4 then
                 spell = getRankedSpell("shadowbolt", hireling, 0)
             end
