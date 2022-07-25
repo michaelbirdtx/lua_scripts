@@ -11,7 +11,8 @@ function Set (list)
 end
 
 local FAIL_SOUND = 847
-local FOLLOW_DISTANCE = 2
+local FOLLOW_DISTANCE = 3
+local FOLLOW_ORIENTATION = 6
 local HIRE_AURA = 62109
 local PASSIVE_AURA = 31260
 local HEAL_THRESHOLD = 90
@@ -353,7 +354,7 @@ function spawnHireling(entry, player)
         hireling:SetFloatValue(70, hStats['minDamage'])
         hireling:SetFloatValue(71, hStats['maxDamage'])
         hireling:SetFlag(79, 2) -- Set trackable on minimap
-        hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+        hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
         hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
         hireling:SetSheath(0)
         hireling:SendUnitSay("Greetings, "..player:GetName()..".", 0)
@@ -408,7 +409,7 @@ function hirelingSetFollow(hireling, player)
     hireling:MoveExpire()
     hireling:MoveIdle()
     hireling:SetAggroEnabled(true)
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
     hireling:RemoveAura(PASSIVE_AURA)
 end
 
@@ -424,7 +425,7 @@ function hirelingSetMounted(hireling, player)
     hireling:MoveExpire()
     hireling:MoveIdle()
     hireling:SetAggroEnabled(false)
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
     hireling:AddAura(PASSIVE_AURA, hireling)
 end
 
@@ -433,7 +434,7 @@ function hirelingFlee(hireling, player)
     hireling:MoveExpire()
     hireling:MoveIdle()
     hireling:SetAggroEnabled(false)
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
     hireling:AddAura(PASSIVE_AURA, hireling)
     hireling:CastSpell(hireling, 11305, true)
 end
