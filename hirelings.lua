@@ -160,7 +160,7 @@ local defenseSpell = {
 }
 
 local retaliateSpells = {
-    [SELLSWORD] = 62124, -- Hand of Reckoning
+    [SELLSWORD] = 61044, -- Demoralizing Shout
     [BATTLEMAGE] = 2139, -- Counterspell
     [WITCHDOCTOR] = 0,   -- Not implemented
     [GLADIATOR] =  8078, -- Thunderclap
@@ -398,8 +398,8 @@ function hirelingSetFollow(hireling, player)
     hireling:Dismount()
     hireling:MoveExpire()
     hireling:MoveIdle()
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
     hireling:SetAggroEnabled(true)
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
     hireling:RemoveAura(PASSIVE_AURA)
 end
 
@@ -414,8 +414,8 @@ function hirelingSetMounted(hireling, player)
     hireling:Mount(Mounts[hireling:GetDisplayId()])
     hireling:MoveExpire()
     hireling:MoveIdle()
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
     hireling:SetAggroEnabled(false)
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
     hireling:AddAura(PASSIVE_AURA, hireling)
 end
 
@@ -423,8 +423,8 @@ function hirelingFlee(hireling, player)
     hireling:AttackStop()
     hireling:MoveExpire()
     hireling:MoveIdle()
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
     hireling:SetAggroEnabled(false)
+    hireling:MoveFollow(player, FOLLOW_DISTANCE, 60)
     hireling:AddAura(PASSIVE_AURA, hireling)
     hireling:CastSpell(hireling, 11305, true)
 end
@@ -523,6 +523,9 @@ local function onPlayerLeaveCombat(event, player)
             hireling:SetSheath(0)
             hireling:SetHealth(hireling:GetMaxHealth())
             hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
+            if not hireling:HasAura(PASSIVE_AURA) then
+                hirelingSetFollow(hireling, player)
+            end
         end
     end
 end
