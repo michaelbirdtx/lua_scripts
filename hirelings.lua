@@ -405,12 +405,16 @@ function dismissHireling(player)
 end
 
 function hirelingSetFollow(hireling, player)
-    hireling:Dismount()
-    hireling:MoveExpire()
-    hireling:MoveIdle()
-    hireling:SetAggroEnabled(true)
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
-    hireling:RemoveAura(PASSIVE_AURA)
+    if player:HasAura(HIRE_AURA) then
+        hireling:Dismount()
+        hireling:MoveExpire()
+        hireling:MoveIdle()
+        hireling:SetAggroEnabled(true)
+        hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
+        hireling:RemoveAura(PASSIVE_AURA)
+    else
+        hireling:DespawnOrUnsummon(0)
+    end
 end
 
 function hirelingSetStay(hireling, player)
@@ -667,6 +671,7 @@ local function brokerOnHello(event, player, hireling)
         player:GossipSetText("What can I do for you today, "..player:GetClassAsString().."?")
         player:GossipMenuAddItem(0, "Please bring my hireling here.", 0, 20)
         player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 21, null, "Are you sure you want to dismiss your hireling?")
+        player:GossipMenuAddItem(0, "I've lost my hireling. Can you help me?", 0, 22, null, "I can cancel your contract for you. If you do find your hireling, they will no longer follow you.")
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
@@ -711,6 +716,10 @@ local function brokerOnSelect(event, player, hireling, sender, intid, code)
     end
     if intid == 21 then
         dismissHireling(player)
+        player:GossipComplete()
+    end
+    if intid == 22 then
+        player:RemoveAura(HIRE_AURA)
         player:GossipComplete()
     end
 end
