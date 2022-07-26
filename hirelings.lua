@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.1.2'
+local MODULE_VERSION = '2.1.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -404,8 +404,23 @@ function dismissHireling(player)
     end
 end
 
+function CheckContract(hireling, player)
+    local aura = player:GetAura(HIRE_AURA)
+    if aura then
+        if hireling:GetGUID() ~= aura:GetCaster():GetGUID() then
+            --hireling:DespawnOrUnsummon(0)
+            return false
+        else
+            return true
+        end
+    else
+        --hireling:DespawnOrUnsummon(0)
+        return false
+    end
+end
+
 function hirelingSetFollow(hireling, player)
-    if player:HasAura(HIRE_AURA) then
+    if CheckContract(hireling, player) then
         hireling:Dismount()
         hireling:MoveExpire()
         hireling:MoveIdle()
@@ -663,7 +678,9 @@ local function onRemove(event, hireling)
     player = hireling:GetOwner()
     hireling:SendUnitSay("Fair well, "..player:GetName()..".", 0)
     hireling:PerformEmote(2) -- Bow
-    player:RemoveAura(HIRE_AURA)
+    if CheckContract(hireling, player) then
+        player:RemoveAura(HIRE_AURA)
+    end
 end
 
 local function brokerOnHello(event, player, hireling)
