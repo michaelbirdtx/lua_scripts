@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.1.6'
+local MODULE_VERSION = '2.1.7'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -692,6 +692,14 @@ local function onReceiveEmote(event, hireling, player, emoteid)
     end
 end
 
+local function onLeaveCombat(event, hireling)
+    hirelingSetFollow(hireling, hireling:GetOwner())
+end
+
+local function onReset(event, hireling)
+    hirelingSetFollow(hireling, hireling:GetOwner())
+end
+
 local function onRemove(event, hireling)
     player = hireling:GetOwner()
     hireling:SendUnitSay("Fair well, "..player:GetName()..".", 0)
@@ -821,6 +829,8 @@ RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
 RegisterCreatureEvent(SELLSWORD, 9, onDamageTaken)
 RegisterCreatureEvent(SELLSWORD, 14, onHitBySpell)
 RegisterCreatureEvent(SELLSWORD, 8, onReceiveEmote)
+RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
+RegisterCreatureEvent(SELLSWORD, 23, onReset)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
 RegisterCreatureEvent(BATTLEMAGE, 10, onPreCombat)
@@ -829,14 +839,18 @@ RegisterCreatureEvent(BATTLEMAGE, 9, onDamageTaken)
 RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
 RegisterCreatureEvent(BATTLEMAGE, 14, onHitBySpell)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
+RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
+RegisterCreatureEvent(BATTLEMAGE, 23, onReset)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
 RegisterCreatureEvent(WITCHDOCTOR, 10, onPreCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 1, onEnterCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 15, onSpellHitTarget)
-RegisterCreatureEvent(BATTLEMAGE, 14, onHitBySpell)
+RegisterCreatureEvent(WITCHDOCTOR, 14, onHitBySpell)
 RegisterCreatureEvent(WITCHDOCTOR, 9, onDamageTaken)
 RegisterCreatureEvent(WITCHDOCTOR, 8, onReceiveEmote)
+RegisterCreatureEvent(WITCHDOCTOR, 2, onLeaveCombat)
+RegisterCreatureEvent(WITCHDOCTOR, 23, onReset)
 RegisterCreatureEvent(WITCHDOCTOR, 37, onRemove)
 
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
@@ -844,6 +858,8 @@ RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
 RegisterCreatureEvent(GLADIATOR, 14, onHitBySpell)
 RegisterCreatureEvent(GLADIATOR, 9, onDamageTaken)
 RegisterCreatureEvent(GLADIATOR, 8, onReceiveEmote)
+RegisterCreatureEvent(GLADIATOR, 2, onLeaveCombat)
+RegisterCreatureEvent(GLADIATOR, 23, onReset)
 RegisterCreatureEvent(GLADIATOR, 37, onRemove)
 
 RegisterCreatureGossipEvent(SELLSWORD, 1, hirelingOnHello)
