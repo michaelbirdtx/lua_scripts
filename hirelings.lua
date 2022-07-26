@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.1.4'
+local MODULE_VERSION = '2.1.5'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -11,8 +11,6 @@ function Set (list)
 end
 
 local FAIL_SOUND = 847
-local FOLLOW_DISTANCE = 3
-local FOLLOW_ORIENTATION = 6
 local HIRE_AURA = 62109
 local PASSIVE_AURA = 31260
 local HEAL_THRESHOLD = 90
@@ -61,6 +59,20 @@ local baseFees = {
     [BATTLEMAGE] = 18,
     [WITCHDOCTOR] = 21,
     [GLADIATOR] = 1000,
+}
+
+local followDistance = {
+    [SELLSWORD] = 3,
+    [BATTLEMAGE] = 1.2,
+    [WITCHDOCTOR] = 2,
+    [GLADIATOR] = 3,
+}
+
+local followOrientation = {
+    [SELLSWORD] = 6,
+    [BATTLEMAGE] = 5,
+    [WITCHDOCTOR] = 4,
+    [GLADIATOR] = 6,
 }
 
 local modMinLevelBoost = {
@@ -354,7 +366,7 @@ function spawnHireling(entry, player)
         hireling:SetFloatValue(70, hStats['minDamage'])
         hireling:SetFloatValue(71, hStats['maxDamage'])
         hireling:SetFlag(79, 2) -- Set trackable on minimap
-        hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
+        hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
         hireling:SetEquipmentSlots(Weapons[entry], 0, 0)
         hireling:SetSheath(0)
         hireling:SendUnitSay("Greetings, "..player:GetName()..".", 0)
@@ -425,7 +437,7 @@ function hirelingSetFollow(hireling, player)
         hireling:MoveExpire()
         hireling:MoveIdle()
         hireling:SetAggroEnabled(true)
-        hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
+        hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
         hireling:RemoveAura(PASSIVE_AURA)
     else
         hireling:DespawnOrUnsummon(0)
@@ -444,7 +456,7 @@ function hirelingSetMounted(hireling, player)
     hireling:MoveExpire()
     hireling:MoveIdle()
     hireling:SetAggroEnabled(false)
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
+    hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
     hireling:AddAura(PASSIVE_AURA, hireling)
 end
 
@@ -453,7 +465,7 @@ function hirelingFlee(hireling, player)
     hireling:MoveExpire()
     hireling:MoveIdle()
     hireling:SetAggroEnabled(false)
-    hireling:MoveFollow(player, FOLLOW_DISTANCE, FOLLOW_ORIENTATION)
+    hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
     hireling:AddAura(PASSIVE_AURA, hireling)
     hireling:CastSpell(hireling, 11305, true)
 end
