@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.1.5'
+local MODULE_VERSION = '2.1.6'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -563,7 +563,9 @@ local function onPlayerLeaveCombat(event, player)
             end
             hireling:SetSheath(0)
             hireling:SetHealth(hireling:GetMaxHealth())
-            hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
+            if hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1) > 0 then
+                hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
+            end
             if not hireling:HasAura(PASSIVE_AURA) then
                 hirelingSetFollow(hireling, player)
             end
