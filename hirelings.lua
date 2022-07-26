@@ -568,7 +568,6 @@ local function onPlayerLeaveCombat(event, player)
             end
             if not hireling:HasAura(PASSIVE_AURA) then
                 hirelingSetFollow(hireling, player)
-                player:SendBroadcastMessage("Hireling is following.")
             end
         end
     end
