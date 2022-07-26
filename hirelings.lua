@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.1.3'
+local MODULE_VERSION = '2.1.4'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -573,20 +573,24 @@ end
 local function onEnterCombat(event, hireling, target)
     player = hireling:GetOwner()
     if player then
-        if hireling:GetEntry() == WITCHDOCTOR then
-            spell = getRankedSpell("earthshield", hireling, 0)
-            if player:HasAura(spell) then
-                spell = getRankedSpell("lightningbolt", hireling, 2)
-                hireling:CastSpell(target, spell, false)
+        if CheckContract(hireling, player) then
+            if hireling:GetEntry() == WITCHDOCTOR then
+                spell = getRankedSpell("earthshield", hireling, 0)
+                if player:HasAura(spell) then
+                    spell = getRankedSpell("lightningbolt", hireling, 2)
+                    hireling:CastSpell(target, spell, false)
+                else
+                    hireling:CastSpell(player, spell, false)
+                end
             else
-                hireling:CastSpell(player, spell, false)
+                spell = Spells[hireling:GetDisplayId()]
+                hireling:CastSpell(target, spell, true)
+            end
+            if math.random(1,5) == 1 then
+                hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
             end
         else
-            spell = Spells[hireling:GetDisplayId()]
-            hireling:CastSpell(target, spell, true)
-        end
-        if math.random(1,5) == 1 then
-            hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
+            hireling:DespawnOrUnsummon()
         end
     end
 end    
