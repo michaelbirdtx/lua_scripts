@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.1.8'
+local MODULE_VERSION = '2.1.9'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -50,6 +50,7 @@ local faq = {
     ["wait"] = "\n\n/wait\n    I will stay where I am and not attack anything until you tell me otherwise.",
     ["flee"] = "\n\n/flee\n    I will stop my attack and follow you, not starting any new attacks until you tell me otherwise.",
     ["healme"] = "\n\n/healme\n    I will cast a healing spell on you, if I have one.",
+    ["wave"] = "\n\n/wave\n    If I'm nearby but can't get to your position, wave at me and I will teleport to you, unless I'm in the middle of a fight.",
     ["macros"] = "\n\nYou can also use these commands in macros. Here's a sample macro:\n\n    /tar Battle Mage\n    /tar Sellsword\n    /follow\n    /targetlasttarget\n\nThis will target your hireling (of either type), issue the /follow command, and then retarget your previous target, if any.",
     ["outro"] = "\n\nP.S.: When I have been instructed not to attack anything, I will have a pulsing blue circle around me, thanks to that clever and handsome Wizard, Mykal.\n\n",
 }
@@ -385,7 +386,7 @@ function summonHireling(player)
                 x, y, z, o = player:GetLocation()
                 hireling:NearTeleport( x, y, z, o )
                 hireling:CastSpell(hireling, 75128, true) -- Teleport effect
-                hirelingSetFollow(hireling, player)
+                HirelingSetFollow(hireling, player)
             else
                 player:SendBroadcastMessage("Your hireling is too far away to be summoned.")
                 player:PlayDirectSound(FAIL_SOUND)
@@ -419,19 +420,23 @@ end
 function CheckContract(hireling, player)
     local aura = player:GetAura(HIRE_AURA)
     if aura then
+        -- player:SendBroadcastMessage("Check contract - hireling guid: "..tostring(hireling:GetGUID()))
+        -- player:SendBroadcastMessage("Check contract -  caster guid: "..tostring(aura:GetCaster():GetGUID()))
         if hireling:GetGUID() ~= aura:GetCaster():GetGUID() then
-            --hireling:DespawnOrUnsummon(0)
+            player:SendBroadcastMessage("You no longer have a contract with that hireling.")
             return false
         else
+            --player:SendBroadcastMessage("Contract true")
             return true
         end
     else
         --hireling:DespawnOrUnsummon(0)
+        player:SendBroadcastMessage("You don't have a contract with a hireling.")
         return false
     end
 end
 
-function hirelingSetFollow(hireling, player)
+function HirelingSetFollow(hireling, player)
     if CheckContract(hireling, player) then
         hireling:Dismount()
         hireling:MoveExpire()
@@ -568,7 +573,7 @@ local function onPlayerLeaveCombat(event, player)
                 hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
             end
             if not hireling:HasAura(PASSIVE_AURA) then
-                hirelingSetFollow(hireling, player)
+                HirelingSetFollow(hireling, player)
             end
         end
     end
@@ -660,7 +665,7 @@ local function onReceiveEmote(event, hireling, player, emoteid)
             if player:IsMounted() then
                 hirelingSetMounted(hireling, player)
             else
-                hirelingSetFollow(hireling, player)
+                HirelingSetFollow(hireling, player)
             end
         elseif emoteid == 325 then -- wait
             hirelingSetStay(hireling, player)
@@ -680,13 +685,15 @@ local function onReceiveEmote(event, hireling, player, emoteid)
             elseif hireling:GetEntry() == WITCHDOCTOR then
                 hireling:CastSpell(player, getRankedSpell("healingwave", hireling, 0), false)
             end
+        elseif emoteid == 101 and not hireling:IsInCombat() then
+            summonHireling(player) -- wave to summon
         end
     end
     if emoteid == 34 then -- dance
         hireling:PerformEmote(10)
     elseif emoteid == 5 then -- applaud
         hireling:PerformEmote(2)
-    elseif (emoteid == 58 or emoteid == 78 or emoteid == 101) then -- kiss, salute, wave
+    elseif emoteid == 58 or emoteid == 78 then -- kiss, salute
         hireling:PerformEmote(66)
     elseif emoteid == 77 then -- rude
         hireling:PerformEmote(35)
@@ -694,16 +701,23 @@ local function onReceiveEmote(event, hireling, player, emoteid)
 end
 
 local function onLeaveCombat(event, hireling)
-    hirelingSetFollow(hireling, hireling:GetOwner())
+    HirelingSetFollow(hireling, hireling:GetOwner())
 end
 
 local function onReset(event, hireling)
-    hirelingSetFollow(hireling, hireling:GetOwner())
+    HirelingSetFollow(hireling, hireling:GetOwner())
+end
+
+local function onDeath(event, hireling, killer)
+    hireling:SendUnitSay("I die... with... honor...", 0)
+    hireling:DespawnOrUnsummon(0)
 end
 
 local function onRemove(event, hireling)
     player = hireling:GetOwner()
-    hireling:SendUnitSay("Fair well, "..player:GetName()..".", 0)
+    if not hireling:IsDead() then
+        hireling:SendUnitSay("Fair well, "..player:GetName()..".", 0)
+    end
     hireling:PerformEmote(2) -- Bow
     if CheckContract(hireling, player) then
         player:RemoveAura(HIRE_AURA)
@@ -788,7 +802,7 @@ end
 
 local function hirelingOnSelect(event, player, hireling, sender, intid, code)
     if intid == 1 then -- follow
-        hirelingSetFollow(hireling, player)
+        HirelingSetFollow(hireling, player)
         player:GossipComplete()
     end
     if intid == 2 then -- stay
@@ -800,7 +814,7 @@ local function hirelingOnSelect(event, player, hireling, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 4 then -- faq
-        player:GossipSetText(faq["intro"]..faq["follow"]..faq["wait"]..faq["flee"]..faq["healme"]..faq["macros"]..faq["outro"])
+        player:GossipSetText(faq["intro"]..faq["follow"]..faq["wait"]..faq["flee"]..faq["healme"]..faq["wave"]..faq["macros"]..faq["outro"])
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     end
     if intid == 5 then -- joke
@@ -832,6 +846,7 @@ RegisterCreatureEvent(SELLSWORD, 14, onHitBySpell)
 RegisterCreatureEvent(SELLSWORD, 8, onReceiveEmote)
 RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
 RegisterCreatureEvent(SELLSWORD, 23, onReset)
+RegisterCreatureEvent(SELLSWORD, 4, onDeath)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
 RegisterCreatureEvent(BATTLEMAGE, 10, onPreCombat)
