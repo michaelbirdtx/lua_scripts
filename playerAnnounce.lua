@@ -36,7 +36,8 @@ local function listPlayers(player)
             " ("..v:GetAccountName()..") "..
             "[Level "..v:GetLevel()..
             " "..v:GetClassAsString().." - "..
-            getTeamName(v).."]|r")
+            getTeamName(v).." - "..
+            v:GetMap():GetName().."]|r")
     end
 end
 
