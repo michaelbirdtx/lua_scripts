@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.2'
+local MODULE_VERSION = '2.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -147,11 +147,18 @@ local mounts = {
     [GLADIATOR4] = 0,
 }
 
+local initSpell = {
+    [SELLSWORD] = 33096, -- Threaten
+    [BATTLEMAGE] = 0,
+    [WITCHDOCTOR] = 8362, -- Renew (non-ranked)
+    [GLADIATOR] = 33096, -- Threaten
+}
+
 local spells = {
-    [SELLSWORD1] = 33096, -- Threaten --355, -- Taunt
+    [SELLSWORD1] = 64382, -- Shattering Throw 33096, -- Threaten --355, -- Taunt
     [SELLSWORD2] = 11578, -- Charge
     [SELLSWORD3] = 4336, -- Jump Jets
-    [SELLSWORD4] = 64382, -- Shattering Throw
+    [SELLSWORD4] = 36554, -- Shadow Step
     [BATTLEMAGE1] = 31589, -- Slow
     [BATTLEMAGE2] = 31589, -- Slow
     [BATTLEMAGE3] = 31589, -- Slow
@@ -438,12 +445,13 @@ end
 
 function HirelingSetFollow(hireling, player)
     if CheckContract(hireling, player) then
+        hireling:SetRooted(false)
         hireling:Dismount()
         hireling:MoveExpire()
         hireling:MoveIdle()
         hireling:SetAggroEnabled(true)
         hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
-        hireling:RemoveAura(PASSIVE_AURA)
+        hireling:RemoveAura(PASSIVE_AURA)        
     else
         hireling:DespawnOrUnsummon(0)
     end
@@ -457,6 +465,7 @@ function HirelingSetStay(hireling, player)
 end
 
 function HirelingSetMounted(hireling, player)
+    hireling:SetRooted(false)
     hireling:Mount(mounts[hireling:GetDisplayId()])
     hireling:MoveExpire()
     hireling:MoveIdle()
@@ -466,6 +475,7 @@ function HirelingSetMounted(hireling, player)
 end
 
 function HirelingFlee(hireling, player)
+    hireling:SetRooted(false)
     hireling:AttackStop()
     hireling:MoveExpire()
     hireling:MoveIdle()
@@ -564,6 +574,24 @@ local function onPlayerDeath(event, killer, player)
     player:RemoveAura(HIRE_AURA)
 end
 
+local function onPlayerEnterCombat(event, player, enemy)
+    local aura = player:GetAura(HIRE_AURA)
+    if aura then
+        local hireling = aura:GetCaster()
+        if hireling:GetEntry() ~= WITCHDOCTOR then
+            hireling:AttackStart(enemy)
+        end
+        local spell = initSpell[hireling:GetEntry()]
+        if spell ~= 0 then
+            if hireling:GetEntry() == WITCHDOCTOR then
+                hireling:CastSpell(player, spell, true)
+            else
+                hireling:CastSpell(enemy, TAUNT_SPELL, true)
+            end
+        end
+    end
+end
+
 local function onPlayerLeaveCombat(event, player)
     local aura = player:GetAura(HIRE_AURA)
     if aura then
@@ -612,6 +640,7 @@ local function onEnterCombat(event, hireling, target)
                 else
                     hireling:CastSpell(player, spell, false)
                 end
+                --hireling:SetRooted(true)
             else
                 spell = spells[hireling:GetDisplayId()]
                 hireling:CastSpell(target, spell, true)
@@ -623,7 +652,11 @@ local function onEnterCombat(event, hireling, target)
             hireling:DespawnOrUnsummon()
         end
     end
-end    
+end
+
+-- local function onPlayerAttacked(event, creature, unit)
+--     print("Owner attacked!")
+-- end
 
 local function onSpellHitTarget(event, hireling, target, spellid)
     local spell
@@ -640,9 +673,13 @@ local function onSpellHitTarget(event, hireling, target, spellid)
             end
             hireling:CastSpell(target, spell, false)
         elseif hireling:GetEntry() == WITCHDOCTOR then
-            if hireling:GetOwner():HealthBelowPct(HEAL_THRESHOLD) or hireling:HealthBelowPct(HEAL_THRESHOLD) then
+            hireling:SetRooted(true)
+            if hireling:GetOwner():HealthBelowPct(HEAL_THRESHOLD) then
                 spell = getRankedSpell("chainheal", hireling, 0)
                 hireling:CastSpell(hireling:GetOwner(), spell, false)
+            elseif hireling:HealthBelowPct(HEAL_THRESHOLD - 20) then
+                spell = getRankedSpell("healingwave", hireling, 0)
+                hireling:CastSpell(hireling, spell, false)
             else
                 spell = getRankedSpell("lightningbolt", hireling, 2)
                 hireling:CastSpell(hireling:GetAITarget(0), spell, false)
@@ -652,7 +689,7 @@ local function onSpellHitTarget(event, hireling, target, spellid)
 end
 
 local function onHitBySpell(event, hireling, caster, spellid)
-    if spellid ~= 31308 then
+    if spellid ~= 31308 and caster:GetGUID() ~= hireling:GetOwnerGUID() then
         if not hireling:IsCasting() then
             local spell = retaliatespells[hireling:GetEntry()]
             if spell ~= 0 then
@@ -697,7 +734,7 @@ local function onReceiveEmote(event, hireling, player, emoteid)
             elseif hireling:GetEntry() == BATTLEMAGE then
                 hireling:SendUnitSay("Do I look like a healer, "..player:GetName().."?", 0)
             elseif hireling:GetEntry() == WITCHDOCTOR then
-                hireling:CastSpell(player, getRankedSpell("healingwave", hireling, 0), false)
+                hireling:CastSpell(player, getRankedSpell("chainheal", hireling, 0), false)
             end
         elseif emoteid == 101 and not hireling:IsInCombat() then
             SummonHireling(player) -- wave to summon
@@ -715,10 +752,16 @@ local function onReceiveEmote(event, hireling, player, emoteid)
 end
 
 local function onLeaveCombat(event, hireling)
+    if hireling:GetEntry() == WITCHDOCTOR and (hireling:GetOwner():HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:HealthBelowPct(HEAL_REST_THRESHOLD)) then
+        local spell = getRankedSpell("chainheal", hireling, 0)
+        hireling:CastSpell(player, spell, false)
+    end
+    hireling:SetRooted(false)
     HirelingSetFollow(hireling, hireling:GetOwner())
 end
 
 local function onReset(event, hireling)
+    hireling:SetRooted(false)
     HirelingSetFollow(hireling, hireling:GetOwner())
 end
 
@@ -851,6 +894,7 @@ RegisterServerEvent(14, onServerStartup)
 RegisterPlayerEvent(18, onChatMessage)
 RegisterPlayerEvent(6, onPlayerDeath)
 RegisterPlayerEvent(8, onPlayerDeath)
+RegisterPlayerEvent(33, onPlayerEnterCombat)
 RegisterPlayerEvent(34, onPlayerLeaveCombat)
 
 RegisterCreatureEvent(SELLSWORD, 10, onPreCombat)
