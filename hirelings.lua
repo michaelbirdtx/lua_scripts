@@ -586,7 +586,7 @@ local function onPlayerEnterCombat(event, player, enemy)
             if hireling:GetEntry() == WITCHDOCTOR then
                 hireling:CastSpell(player, spell, true)
             else
-                hireling:CastSpell(enemy, TAUNT_SPELL, true)
+                hireling:CastSpell(enemy, spell, true)
             end
         end
     end
