@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.3'
+local MODULE_VERSION = '2.3.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -70,7 +70,7 @@ local followDistance = {
 }
 
 local followOrientation = {
-    [SELLSWORD] = 6,
+    [SELLSWORD] = 5.7,
     [BATTLEMAGE] = 5,
     [WITCHDOCTOR] = 4,
     [GLADIATOR] = 6,
