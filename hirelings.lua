@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.3.6'
+local MODULE_VERSION = '2.3.7'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -461,45 +461,54 @@ function HasSpecialist(player)
 end
 
 function HirelingSetFollow(hireling, player)
-    if CheckContract(hireling, player) then
-        hireling:SetRooted(false)
-        hireling:Dismount()
-        hireling:MoveExpire()
-        hireling:MoveIdle()
-        hireling:SetAggroEnabled(true)
-        hireling:RemoveAura(PASSIVE_AURA)
-        hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
-    else
-        hireling:DespawnOrUnsummon(0)
+    if not hireling:IsDead() then
+        if CheckContract(hireling, player) then
+            hireling:SetAggroEnabled(true)
+            hireling:RemoveAura(PASSIVE_AURA)
+            hireling:SetRooted(false)
+            hireling:Dismount()
+            hireling:MoveExpire()
+            hireling:MoveIdle()
+            hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
+            player:SendBroadcastMessage("Follow")
+        else
+            hireling:DespawnOrUnsummon(0)
+        end
     end
 end
 
 function HirelingSetStay(hireling, player)
-    hireling:MoveExpire()
-    hireling:MoveIdle()
-    hireling:SetAggroEnabled(false)
-    hireling:AddAura(PASSIVE_AURA, hireling)
+    if not hireling:IsDead() then
+        hireling:MoveExpire()
+        hireling:MoveIdle()
+        hireling:SetAggroEnabled(false)
+        hireling:AddAura(PASSIVE_AURA, hireling)
+    end
 end
 
 function HirelingSetMounted(hireling, player)
-    hireling:SetRooted(false)
-    hireling:Mount(mounts[hireling:GetDisplayId()])
-    hireling:MoveExpire()
-    hireling:MoveIdle()
-    hireling:SetAggroEnabled(false)
-    hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
-    hireling:AddAura(PASSIVE_AURA, hireling)
+    if not hireling:IsDead() then
+        hireling:SetRooted(false)
+        hireling:Mount(mounts[hireling:GetDisplayId()])
+        hireling:MoveExpire()
+        hireling:MoveIdle()
+        hireling:SetAggroEnabled(false)
+        hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
+        hireling:AddAura(PASSIVE_AURA, hireling)
+    end
 end
 
-function HirelingFlee(hireling, player)
-    hireling:SetRooted(false)
-    hireling:AttackStop()
-    hireling:MoveExpire()
-    hireling:MoveIdle()
-    hireling:SetAggroEnabled(false)
-    hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
-    hireling:AddAura(PASSIVE_AURA, hireling)
-    hireling:CastSpell(hireling, 11305, true)
+function HirelingSetFlee(hireling, player)
+    if not hireling:IsDead() then
+        hireling:SetRooted(false)
+        hireling:AttackStop()
+        hireling:MoveExpire()
+        hireling:MoveIdle()
+        hireling:SetAggroEnabled(false)
+        hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
+        hireling:AddAura(PASSIVE_AURA, hireling)
+        hireling:CastSpell(hireling, 11305, true)
+    end
 end
 
 local function onChatMessage(event, player, msg, _, lang)
@@ -594,6 +603,7 @@ local function onPlayerDeath(event, killer, player)
 end
 
 local function onPlayerEnterCombat(event, player, enemy)
+    player:SendBroadcastMessage("Combat start")
     local aura = player:GetAura(HIRE_AURA)
     if aura then
         local hireling = aura:GetCaster()
@@ -614,6 +624,7 @@ local function onPlayerEnterCombat(event, player, enemy)
 end
 
 local function onPlayerLeaveCombat(event, player)
+    player:SendBroadcastMessage("Combat end")    
     local aura = player:GetAura(HIRE_AURA)
     if aura then
         local hireling = aura:GetCaster()
@@ -675,10 +686,6 @@ local function onEnterCombat(event, hireling, target)
     end
 end
 
--- local function onPlayerAttacked(event, creature, unit)
---     print("Owner attacked!")
--- end
-
 local function onSpellHitTarget(event, hireling, target, spellid)
     local spell
     if hireling:IsInCombat() then
@@ -732,7 +739,7 @@ local function onDamageTaken(event, hireling, attacker, damage)
 end
 
 local function onReceiveEmote(event, hireling, player, emoteid)
-    if player:GetGUID() == hireling:GetOwnerGUID() then --and hireling:GetEntry() ~= GLADIATOR then
+    if player:GetGUID() == hireling:GetOwnerGUID() then
         if emoteid == 324 then -- followme
             if player:IsMounted() then
                 HirelingSetMounted(hireling, player)
@@ -744,7 +751,7 @@ local function onReceiveEmote(event, hireling, player, emoteid)
         elseif emoteid == 19 then -- bye
             DismissHireling(player)
         elseif emoteid == 306 then -- flee
-            HirelingFlee(hireling, player)
+            HirelingSetFlee(hireling, player)
         elseif emoteid == 21 then -- cheer
             hireling:PerformEmote(4)
         elseif emoteid == 264 then -- train
@@ -778,19 +785,12 @@ local function onLeaveCombat(event, hireling)
         hireling:CastSpell(player, spell, false)
     end
     hireling:SetRooted(false)
-    HirelingSetFollow(hireling, hireling:GetOwner())
-end
-
-local function onReset(event, hireling)
-    hireling:SetRooted(false)
-    HirelingSetFollow(hireling, hireling:GetOwner())
 end
 
 local function onDeath(event, hireling, killer)
     hireling:GetOwner():SendNotification("Your hireling has perished.")
     hireling:PlayDirectSound(2544, hireling:GetOwner())
     hireling:SendUnitSay("I die... with... honor...", 0)
-    --hireling:DespawnOrUnsummon(0)
 end
 
 local function onRemove(event, hireling)
@@ -938,7 +938,6 @@ RegisterCreatureEvent(SELLSWORD, 9, onDamageTaken)
 RegisterCreatureEvent(SELLSWORD, 14, onHitBySpell)
 RegisterCreatureEvent(SELLSWORD, 8, onReceiveEmote)
 RegisterCreatureEvent(SELLSWORD, 2, onLeaveCombat)
-RegisterCreatureEvent(SELLSWORD, 23, onReset)
 RegisterCreatureEvent(SELLSWORD, 4, onDeath)
 RegisterCreatureEvent(SELLSWORD, 37, onRemove)
 
@@ -949,7 +948,6 @@ RegisterCreatureEvent(BATTLEMAGE, 15, onSpellHitTarget)
 RegisterCreatureEvent(BATTLEMAGE, 14, onHitBySpell)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
 RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
-RegisterCreatureEvent(BATTLEMAGE, 23, onReset)
 RegisterCreatureEvent(BATTLEMAGE, 4, onDeath)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
@@ -960,7 +958,6 @@ RegisterCreatureEvent(WITCHDOCTOR, 14, onHitBySpell)
 RegisterCreatureEvent(WITCHDOCTOR, 9, onDamageTaken)
 RegisterCreatureEvent(WITCHDOCTOR, 8, onReceiveEmote)
 RegisterCreatureEvent(WITCHDOCTOR, 2, onLeaveCombat)
-RegisterCreatureEvent(WITCHDOCTOR, 23, onReset)
 RegisterCreatureEvent(WITCHDOCTOR, 4, onDeath)
 RegisterCreatureEvent(WITCHDOCTOR, 37, onRemove)
 
@@ -970,7 +967,6 @@ RegisterCreatureEvent(GLADIATOR, 14, onHitBySpell)
 RegisterCreatureEvent(GLADIATOR, 9, onDamageTaken)
 RegisterCreatureEvent(GLADIATOR, 8, onReceiveEmote)
 RegisterCreatureEvent(GLADIATOR, 2, onLeaveCombat)
-RegisterCreatureEvent(GLADIATOR, 23, onReset)
 RegisterCreatureEvent(GLADIATOR, 4, onDeath)
 RegisterCreatureEvent(GLADIATOR, 37, onRemove)
 
