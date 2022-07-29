@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.3.4'
+local MODULE_VERSION = '2.3.6'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -467,8 +467,8 @@ function HirelingSetFollow(hireling, player)
         hireling:MoveExpire()
         hireling:MoveIdle()
         hireling:SetAggroEnabled(true)
+        hireling:RemoveAura(PASSIVE_AURA)
         hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
-        hireling:RemoveAura(PASSIVE_AURA)        
     else
         hireling:DespawnOrUnsummon(0)
     end
@@ -787,16 +787,18 @@ local function onReset(event, hireling)
 end
 
 local function onDeath(event, hireling, killer)
+    hireling:GetOwner():SendNotification("Your hireling has perished.")
+    hireling:PlayDirectSound(2544, hireling:GetOwner())
     hireling:SendUnitSay("I die... with... honor...", 0)
-    hireling:DespawnOrUnsummon(0)
+    --hireling:DespawnOrUnsummon(0)
 end
 
 local function onRemove(event, hireling)
     local player = hireling:GetOwner()
     if not hireling:IsDead() then
         hireling:SendUnitSay("Fair well, "..player:GetName()..".", 0)
+        hireling:PerformEmote(2) -- Bow
     end
-    hireling:PerformEmote(2) -- Bow
     if CheckContract(hireling, player) then
         player:RemoveAura(HIRE_AURA)
     end
@@ -948,6 +950,7 @@ RegisterCreatureEvent(BATTLEMAGE, 14, onHitBySpell)
 RegisterCreatureEvent(BATTLEMAGE, 8, onReceiveEmote)
 RegisterCreatureEvent(BATTLEMAGE, 2, onLeaveCombat)
 RegisterCreatureEvent(BATTLEMAGE, 23, onReset)
+RegisterCreatureEvent(BATTLEMAGE, 4, onDeath)
 RegisterCreatureEvent(BATTLEMAGE, 37, onRemove)
 
 RegisterCreatureEvent(WITCHDOCTOR, 10, onPreCombat)
@@ -958,6 +961,7 @@ RegisterCreatureEvent(WITCHDOCTOR, 9, onDamageTaken)
 RegisterCreatureEvent(WITCHDOCTOR, 8, onReceiveEmote)
 RegisterCreatureEvent(WITCHDOCTOR, 2, onLeaveCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 23, onReset)
+RegisterCreatureEvent(WITCHDOCTOR, 4, onDeath)
 RegisterCreatureEvent(WITCHDOCTOR, 37, onRemove)
 
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
@@ -967,6 +971,7 @@ RegisterCreatureEvent(GLADIATOR, 9, onDamageTaken)
 RegisterCreatureEvent(GLADIATOR, 8, onReceiveEmote)
 RegisterCreatureEvent(GLADIATOR, 2, onLeaveCombat)
 RegisterCreatureEvent(GLADIATOR, 23, onReset)
+RegisterCreatureEvent(GLADIATOR, 4, onDeath)
 RegisterCreatureEvent(GLADIATOR, 37, onRemove)
 
 RegisterCreatureGossipEvent(SELLSWORD, 1, hirelingOnHello)
