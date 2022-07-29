@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.3.7'
+local MODULE_VERSION = '2.3.8'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -470,7 +470,6 @@ function HirelingSetFollow(hireling, player)
             hireling:MoveExpire()
             hireling:MoveIdle()
             hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
-            player:SendBroadcastMessage("Follow")
         else
             hireling:DespawnOrUnsummon(0)
         end
@@ -603,7 +602,6 @@ local function onPlayerDeath(event, killer, player)
 end
 
 local function onPlayerEnterCombat(event, player, enemy)
-    player:SendBroadcastMessage("Combat start")
     local aura = player:GetAura(HIRE_AURA)
     if aura then
         local hireling = aura:GetCaster()
@@ -624,7 +622,6 @@ local function onPlayerEnterCombat(event, player, enemy)
 end
 
 local function onPlayerLeaveCombat(event, player)
-    player:SendBroadcastMessage("Combat end")    
     local aura = player:GetAura(HIRE_AURA)
     if aura then
         local hireling = aura:GetCaster()
