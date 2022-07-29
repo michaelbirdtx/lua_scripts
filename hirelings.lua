@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.3.3'
+local MODULE_VERSION = '2.3.4'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -873,8 +873,11 @@ local function hirelingOnHello(event, player, hireling)
             player:GossipMenuAddItem(0, "Mount up and follow me, it's time to move. (Passive)", 0, 3)
             player:GossipMenuAddItem(0, "What commands do you understand?", 0, 4)
             player:GossipMenuAddItem(0, "Do you know any good jokes?", 0, 5)
+            if hireling:GetDisplayId() == SELLSWORD2 then
+                player:GossipMenuAddItem(0, "May I have some ale, please?", 0, 9)
+            end
         end
-        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 6, null, "Are you sure you want to dismiss this hireling?")
+        player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 10, null, "Are you sure you want to dismiss this hireling?")
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nI'm with a client right now, but you can visit any Hireling Broker to get some help!")
@@ -904,7 +907,12 @@ local function hirelingOnSelect(event, player, hireling, sender, intid, code)
         player:GossipSetText("Have you heard that one before?")
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     end
-    if intid == 6 then -- dismiss
+    if intid == 9 then -- ale
+        player:AddItem(2686) -- Thunder Ale
+        hireling:SendUnitSay("Enjoy!",0)
+        player:GossipComplete()
+    end
+    if intid == 10 then -- dismiss
         DismissHireling(player)
     end
 end
