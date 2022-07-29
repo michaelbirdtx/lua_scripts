@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.3.2'
+local MODULE_VERSION = '2.3.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -597,15 +597,17 @@ local function onPlayerEnterCombat(event, player, enemy)
     local aura = player:GetAura(HIRE_AURA)
     if aura then
         local hireling = aura:GetCaster()
-        if hireling:GetEntry() ~= WITCHDOCTOR then
-            hireling:AttackStart(enemy)
-        end
-        local spell = initSpell[hireling:GetEntry()]
-        if spell ~= 0 then
-            if hireling:GetEntry() == WITCHDOCTOR then
-                hireling:CastSpell(player, spell, true)
-            else
-                hireling:CastSpell(enemy, spell, true)
+        if hireling:CanAggro() then
+            if hireling:GetEntry() ~= WITCHDOCTOR then
+                hireling:AttackStart(enemy)
+            end
+            local spell = initSpell[hireling:GetEntry()]
+            if spell ~= 0 then
+                if hireling:GetEntry() == WITCHDOCTOR then
+                    hireling:CastSpell(player, spell, true)
+                else
+                    hireling:CastSpell(enemy, spell, true)
+                end
             end
         end
     end
