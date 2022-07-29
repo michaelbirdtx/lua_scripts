@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.3.1'
+local MODULE_VERSION = '2.3.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -443,6 +443,23 @@ function CheckContract(hireling, player)
     end
 end
 
+function HasSpecialist(player)
+    if player:IsInGroup() then
+        local groupPlayers = player:GetGroup():GetMembers()
+        for k, v in pairs(groupPlayers) do
+            --player:SendBroadcastMessage(v:GetName())
+            if v:HasAura(HIRE_AURA) then
+                if v:GetAura(HIRE_AURA):GetCaster():GetEntry() == GLADIATOR then
+                    --player:SendBroadcastMessage(v:GetName().." has Gladiator")
+                    return true
+                end
+            end
+        end
+    else
+        return false    
+    end
+end
+
 function HirelingSetFollow(hireling, player)
     if CheckContract(hireling, player) then
         hireling:SetRooted(false)
@@ -559,6 +576,8 @@ local function onChatMessage(event, player, msg, _, lang)
             local hireling = aura:GetCaster()
             hireling:PerformEmote(emote)
             return false
+        elseif (msg:find('#hire checkgroup') == 1) then
+            local check = HasSpecialist(player)
         else
             player:SendBroadcastMessage("Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire summon\n#hire dismiss\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self\n#hire emote")
             return false
@@ -821,8 +840,12 @@ local function brokerOnSelect(event, player, hireling, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 11 then
-        SpawnHireling(GLADIATOR, player)
-        player:ModifyMoney(-(baseFees[GLADIATOR]*player:GetLevel()))
+        if not HasSpecialist(player) then
+            SpawnHireling(GLADIATOR, player)
+            player:ModifyMoney(-(baseFees[GLADIATOR]*player:GetLevel()))
+        else
+            player:SendBroadcastMessage("Thorngrim is already in your party.")
+        end
         player:GossipComplete()
     end
     if intid == 20 then
