@@ -732,7 +732,7 @@ local function onDamageTaken(event, hireling, attacker, damage)
 end
 
 local function onReceiveEmote(event, hireling, player, emoteid)
-    if player:GetGUID() == hireling:GetOwnerGUID() and hireling:GetEntry() ~= GLADIATOR then
+    if player:GetGUID() == hireling:GetOwnerGUID() then --and hireling:GetEntry() ~= GLADIATOR then
         if emoteid == 324 then -- followme
             if player:IsMounted() then
                 HirelingSetMounted(hireling, player)
@@ -752,7 +752,7 @@ local function onReceiveEmote(event, hireling, player, emoteid)
         elseif emoteid == 326 then --healme
             if hireling:GetEntry() == SELLSWORD then
                 hireling:SendUnitSay("Dammit, "..player:GetName()..", I'm a Sellsword, not a doctor!", 0)
-            elseif hireling:GetEntry() == BATTLEMAGE then
+            elseif hireling:GetEntry() == BATTLEMAGE or hireling:GetEntry() == GLADIATOR then
                 hireling:SendUnitSay("Do I look like a healer, "..player:GetName().."?", 0)
             elseif hireling:GetEntry() == WITCHDOCTOR then
                 hireling:CastSpell(player, getRankedSpell("chainheal", hireling, 0), false)
@@ -870,10 +870,10 @@ local function hirelingOnHello(event, player, hireling)
     if player:GetGUID() == hireling:GetOwnerGUID() then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
-        if hireling:GetEntry() ~= GLADIATOR then
-            player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
-            player:GossipMenuAddItem(0, "Mount up and follow me, it's time to move. (Passive)", 0, 3)
-            player:GossipMenuAddItem(0, "What commands do you understand?", 0, 4)
+        player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
+        player:GossipMenuAddItem(0, "Mount up and follow me, it's time to move. (Passive)", 0, 3)
+        player:GossipMenuAddItem(0, "What commands do you understand?", 0, 4)
+            if hireling:GetEntry() ~= GLADIATOR then
             player:GossipMenuAddItem(0, "Do you know any good jokes?", 0, 5)
             if hireling:GetDisplayId() == SELLSWORD2 then
                 player:GossipMenuAddItem(0, "May I have some ale, please?", 0, 9)
