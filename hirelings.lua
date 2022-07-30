@@ -626,19 +626,21 @@ local function onPlayerLeaveCombat(event, player)
     if aura then
         local hireling = aura:GetCaster()
         if hireling then
-            if hireling:GetEntry() == WITCHDOCTOR and (player:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:HealthBelowPct(HEAL_REST_THRESHOLD)) then
-                local spell = getRankedSpell("chainheal", hireling, 0)
-                hireling:CastSpell(player, spell, false)
-            elseif hireling:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:GetInt32Value(UNIT_FIELD_POWER1) < hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1) then
-                hireling:PerformEmote(RESET_EMOTE)
-            end
-            hireling:SetSheath(0)
-            hireling:SetHealth(hireling:GetMaxHealth())
-            if hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1) > 0 then
-                hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
-            end
-            if not hireling:HasAura(PASSIVE_AURA) then
-                HirelingSetFollow(hireling, player)
+            if not hireling:IsDead() then
+                if hireling:GetEntry() == WITCHDOCTOR and (player:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:HealthBelowPct(HEAL_REST_THRESHOLD)) then
+                    local spell = getRankedSpell("chainheal", hireling, 0)
+                    hireling:CastSpell(player, spell, false)
+                elseif hireling:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:GetInt32Value(UNIT_FIELD_POWER1) < hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1) then
+                    hireling:PerformEmote(RESET_EMOTE)
+                end
+                hireling:SetSheath(0)
+                hireling:SetHealth(hireling:GetMaxHealth())
+                if hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1) > 0 then
+                    hireling:SetInt32Value(UNIT_FIELD_POWER1, hireling:GetInt32Value(UNIT_FIELD_MAXPOWER1)) -- Set mana to max
+                end
+                if not hireling:HasAura(PASSIVE_AURA) then
+                    HirelingSetFollow(hireling, player)
+                end
             end
         end
     end
