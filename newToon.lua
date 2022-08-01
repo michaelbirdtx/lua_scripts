@@ -276,17 +276,16 @@ local function findGear(class, item, team)
 end
 
 local function grantSkills(player, class)
-    print("["..MODULE_NAME.."]: Grant Skills to "..player:GetName())
     for i, v in ipairs(Skills) do
         if v.class==class or v.class==0 then
-            player:LearnSpell(v.entry)
-            print("["..MODULE_NAME.."]: "..player:GetName().." learned "..v.entry)
+            if not player:HasSpell(v.entry) then
+                player:LearnSpell(v.entry)
+            end
         end
     end
 end
 
 local function grantMounts(player, race)
-    print("["..MODULE_NAME.."]: Grant Mounts to "..player:GetName())
 
     -- Riding Skills
     player:CastSpell(player, 33389, true) -- Apprentice Riding
@@ -298,8 +297,9 @@ local function grantMounts(player, race)
     -- Mounts
     for i, v in ipairs(Mounts) do
         if v.race==race or v.race==0 then
-            player:LearnSpell(v.entry)
-            print("["..MODULE_NAME.."]: "..player:GetName().." learned "..v.entry.." (mount)")
+            if not player:HasSpell(v.entry) then
+                player:LearnSpell(v.entry)
+            end
         end
     end
 
