@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.7.3'
+local MODULE_VERSION = '1.7.4'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -62,19 +62,18 @@ local Spells = {
     -- All Classes (0)
 
     {class = 0, level = 10, type = 0, entry = 64731}, -- Sea Turtle
-    {class = 0, level = 20, type = 1, entry = 63624}, -- Dual Talent Specialization
     {class = 0, level = 20, type = 3, entry = 43},    -- Duelist
-    {class = 0, level = 20, type = 1, entry = 33389}, -- Apprentice Riding
+    {class = 0, level = 20, type = 1, entry = 33388}, -- Apprentice Riding
     {class = 0, level = 20, type = 0, entry = 65917}, -- Magic Rooster
     {class = 0, level = 30, type = 0, entry = 34896}, -- Cobalt War Talbuk
     {class = 0, level = 40, type = 0, entry = 75614}, -- Celestial Steed
-    {class = 0, level = 40, type = 1, entry = 33392}, -- Journeyman Riding
+    {class = 0, level = 40, type = 1, entry = 33391}, -- Journeyman Riding
     {class = 0, level = 50, type = 0, entry = 55531}, -- Mechano-Hog
-    {class = 0, level = 60, type = 1, entry = 34092}, -- Expert Riding
+    {class = 0, level = 60, type = 1, entry = 34090}, -- Expert Riding
     {class = 0, level = 60, type = 0, entry = 48025}, -- Headless Horseman's Mount
     {class = 0, level = 68, type = 0, entry = 54197}, -- Cold Weather Flying
     {class = 0, level = 70, type = 0, entry = 71342}, -- Big Love Rocket
-    {class = 0, level = 70, type = 1, entry = 34093}, -- Artisan Riding
+    {class = 0, level = 70, type = 1, entry = 34091}, -- Artisan Riding
     {class = 0, level = 80, type = 0, entry = 72286}, -- Invincible
     {class = 0, level = 80, type = 0, entry = 75973}, -- X-53 Touring Rocket
 
@@ -494,7 +493,9 @@ local function checkSpells(class, level, player)
     for i, v in ipairs(Spells) do
         if ((v.class==class or v.class==0) and v.level<=level) then
             if (v.type==0) then
-                player:LearnSpell(v.entry)
+                if (not player:HasSpell(v.entry)) then
+                    player:LearnSpell(v.entry)
+                end
             elseif (v.type==1) then
                 player:CastSpell(player, v.entry, true)
             elseif (v.type==2 and player:HasItem(v.entry)==false) then
