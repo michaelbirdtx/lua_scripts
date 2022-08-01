@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.7.4'
+local MODULE_VERSION = '1.7.5'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -503,7 +503,6 @@ local function checkSpells(class, level, player)
             elseif (v.type==3) then
                 player:SetKnownTitle(v.entry)
             end
-            print("["..MODULE_NAME.."]: "..player:GetName()..": Level: "..level.." Class: "..v.class.." Spell: "..v.entry)
         end
     end
 end
@@ -512,14 +511,11 @@ local function checkRank(level, player)
     local guild = player:GetGuild()
     if(guild) then
         local rank = player:GetGuildRank()
-        print("CheckRank entered for "..player:GetName()..", Rank: "..rank.." in Guild: "..guild:GetName())
         if level>=20 and level<40 and rank>3 then
             guild:SetMemberRank(player,3)
-            print("Player "..player:GetName().." Rank Changed to: "..player:GetGuildRank())
         end
         if level>=40 and level<60 and rank>2 then
             guild:SetMemberRank(player,2)
-            print("Player "..player:GetName().." Rank Changed to: "..player:GetGuildRank())
         end
     end
 end
@@ -535,7 +531,6 @@ local function levelCheck(event, player, oldLevel)
     local emailStationery = 61
     local emailFrom = 0
     if (level==20 or level==40 or level==60) and class~=6 then
-        print("["..MODULE_NAME.."]: "..name..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
         local randomPet = math.random(1,#Pets)
@@ -569,7 +564,6 @@ local function levelCheck(event, player, oldLevel)
         )
     end
     if level==80 then
-        print("["..MODULE_NAME.."]: "..player:GetName()..": Level: "..level.." Class: "..class)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
         player:SetKnownTitle(142) -- the Undying
