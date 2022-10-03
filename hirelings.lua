@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.4.3'
+local MODULE_VERSION = '2.4.4'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -54,6 +54,8 @@ local faq = {
     ["macros"] = "\n\nYou can also use these commands in macros. Here's a sample macro:\n\n    /tar Battle Mage\n    /tar Sellsword\n    /follow\n    /targetlasttarget\n\nThis will target your hireling (of either type), issue the /follow command, and then retarget your previous target, if any.",
     ["outro"] = "\n\nP.S.: When I have been instructed not to attack anything, I will have a pulsing blue circle around me, thanks to that clever and handsome Wizard, Mykal.\n\n",
 }
+
+local hireRef = "Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire revive\n#hire summon\n#hire dismiss\n#hire abandon\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self\n#hire emote\n#hire checkgroup"
 
 local baseFees = {
     [SELLSWORD] = 12,
@@ -447,17 +449,22 @@ function DismissHireling(player)
     end
 end
 
+function AbandonHireling(player)
+    player:RemoveAura(HIRE_AURA)
+    player:SendBroadcastMessage("You have cancelled your hireling contract.")
+end
+
 function CheckContract(hireling, player)
     local aura = player:GetAura(HIRE_AURA)
     if aura then
         if hireling:GetGUID() ~= aura:GetCaster():GetGUID() then
-            player:SendBroadcastMessage("You no longer have a contract with that hireling.")
+            --player:SendBroadcastMessage("You no longer have a contract with that hireling.")
             return false
         else
             return true
         end
     else
-        player:SendBroadcastMessage("You don't have a contract with a hireling.")
+        --player:SendBroadcastMessage("You don't have a contract with a hireling.")
         return false
     end
 end
@@ -547,6 +554,11 @@ local function onChatMessage(event, player, msg, _, lang)
         elseif (msg:find('#hire dismiss') == 1) then
             DismissHireling(player)
             return false
+        elseif (msg:find('#hire abandon') == 1) then
+            -- player:RemoveAura(HIRE_AURA)
+            -- player:SendBroadcastMessage("You have cancelled your hireling contract.")
+            AbandonHireling(player)
+            return false
         elseif (msg:find('#hire loc') == 1) then
             local aura = player:GetAura(HIRE_AURA)
             local hireling = aura:GetCaster()
@@ -604,11 +616,12 @@ local function onChatMessage(event, player, msg, _, lang)
             return false
         elseif (msg:find('#hire checkgroup') == 1) then
             local check = HasSpecialist(player)
+            return false
         elseif (msg:find('#hire revive') == 1) then
             ReviveHireling(player)
             return false
         else
-            player:SendBroadcastMessage("Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire summon\n#hire dismiss\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self\n#hire emote")
+            player:SendBroadcastMessage(hireRef)
             return false
         end
     elseif msg:find('#hire') == 1 then
@@ -647,7 +660,9 @@ local function onPlayerLeaveCombat(event, player)
     if aura then
         local hireling = aura:GetCaster()
         if hireling then
-            if not hireling:IsDead() then
+            if hireling:IsDead() then
+                ReviveHireling(player)
+            else
                 if hireling:GetEntry() == WITCHDOCTOR and (player:HealthBelowPct(HEAL_REST_THRESHOLD) or hireling:HealthBelowPct(HEAL_REST_THRESHOLD)) then
                     local spell = getRankedSpell("chainheal", hireling, 0)
                     hireling:CastSpell(player, spell, false)
@@ -884,13 +899,14 @@ local function brokerOnSelect(event, player, hireling, sender, intid, code)
         player:GossipComplete()
     end
     if intid == 22 then
-        player:RemoveAura(HIRE_AURA)
+        AbandonHireling(player)
         player:GossipComplete()
     end
 end
 
 local function hirelingOnHello(event, player, hireling)
-    if player:GetGUID() == hireling:GetOwnerGUID() then
+    --if player:GetGUID() == hireling:GetOwnerGUID() then
+    if CheckContract(hireling, player) then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
         player:GossipMenuAddItem(0, "Wait here, I'll take care of this. (Passive)", 0, 2)
