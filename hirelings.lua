@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.4.1'
+local MODULE_VERSION = '2.4.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -50,7 +50,7 @@ local faq = {
     ["wait"] = "\n\n/wait\n    I will stay where I am and not attack anything until you tell me otherwise.",
     ["flee"] = "\n\n/flee\n    I will stop my attack and follow you, not starting any new attacks until you tell me otherwise.",
     ["healme"] = "\n\n/healme\n    I will cast a healing spell on you, if I have one.",
-    ["wave"] = "\n\n/wave\n    If I'm nearby but can't get to your position, wave at me and I will teleport to you, unless I'm in the middle of a fight.\n    If I'm dead, waving at me will revive me.",
+    ["wave"] = "\n\n/wave\n    If I'm nearby but can't get to your position, wave at me and I will teleport to you, unless I'm in the middle of a fight.\n    If I'm dead, waving at me will revive me, if you are not in combat.",
     ["macros"] = "\n\nYou can also use these commands in macros. Here's a sample macro:\n\n    /tar Battle Mage\n    /tar Sellsword\n    /follow\n    /targetlasttarget\n\nThis will target your hireling (of either type), issue the /follow command, and then retarget your previous target, if any.",
     ["outro"] = "\n\nP.S.: When I have been instructed not to attack anything, I will have a pulsing blue circle around me, thanks to that clever and handsome Wizard, Mykal.\n\n",
 }
@@ -417,13 +417,15 @@ function ReviveHireling(player)
     if aura then
         local hireling = aura:GetCaster()
         if hireling then
-            x, y, z, o = hireling:GetLocation()
-            hireling:Respawn()
-            InitHireling(hireling, player)
-            hireling:NearTeleport( x, y, z, o )
-            HirelingSetFollow(hireling, player)
-            hireling:SendUnitSay("I live again!", 0)
-            player:SendNotification("Your hireling has been revived.")
+            if hireling:IsDead() and not player:IsInCombat() then
+                x, y, z, o = hireling:GetLocation()
+                hireling:Respawn()
+                InitHireling(hireling, player)
+                hireling:NearTeleport( x, y, z, o )
+                HirelingSetFollow(hireling, player)
+                hireling:SendUnitSay("I live again!", 0)
+                player:SendNotification("Your hireling has been revived.")
+            end
         end
     end
 end
