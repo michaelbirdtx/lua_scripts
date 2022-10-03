@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.4'
+local MODULE_VERSION = '2.4.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -372,9 +372,9 @@ function InitHireling(hireling, player)
     if hLevel > 80 then
         hLevel = 80
     end
-    local hStats = getBaseStats(hireling)
     hireling:SetLevel(hLevel)
     hireling:SetFaction(35)
+    local hStats = getBaseStats(hireling)
     hireling:SetMaxHealth(hStats['health'])
     hireling:SetHealth(hStats['health'])
     hireling:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
