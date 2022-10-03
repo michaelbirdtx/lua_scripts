@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.3.10'
+local MODULE_VERSION = '2.4'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -50,7 +50,7 @@ local faq = {
     ["wait"] = "\n\n/wait\n    I will stay where I am and not attack anything until you tell me otherwise.",
     ["flee"] = "\n\n/flee\n    I will stop my attack and follow you, not starting any new attacks until you tell me otherwise.",
     ["healme"] = "\n\n/healme\n    I will cast a healing spell on you, if I have one.",
-    ["wave"] = "\n\n/wave\n    If I'm nearby but can't get to your position, wave at me and I will teleport to you, unless I'm in the middle of a fight.",
+    ["wave"] = "\n\n/wave\n    If I'm nearby but can't get to your position, wave at me and I will teleport to you, unless I'm in the middle of a fight.\n    If I'm dead, waving at me will revive me.",
     ["macros"] = "\n\nYou can also use these commands in macros. Here's a sample macro:\n\n    /tar Battle Mage\n    /tar Sellsword\n    /follow\n    /targetlasttarget\n\nThis will target your hireling (of either type), issue the /follow command, and then retarget your previous target, if any.",
     ["outro"] = "\n\nP.S.: When I have been instructed not to attack anything, I will have a pulsing blue circle around me, thanks to that clever and handsome Wizard, Mykal.\n\n",
 }
@@ -356,32 +356,36 @@ function SpawnHireling(entry, player)
     if player:HasAura(HIRE_AURA) then
         player:SendBroadcastMessage("Sorry, you already have a hireling.")
     else
-        local hLevel = player:GetLevel()+math.random(modMinLevelBoost[entry],modMaxLevelBoost[entry])
-        if hLevel > 80 then
-            hLevel = 80
-        end
         local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, 4294967295, 1) --player:GetPhaseMaskForSpawn())
-        hireling:SetFaction(35)
         hireling:SetCreatorGUID(player:GetGUID())
         hireling:SetOwnerGUID(player:GetGUID())
-        hireling:SetLevel(hLevel)
-        local hStats = getBaseStats(hireling)
-        hireling:SetMaxHealth(hStats['health'])
-        hireling:SetHealth(hStats['health'])
-        hireling:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
-        hireling:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
-        hireling:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
-        hireling:SetFloatValue(70, hStats['minDamage'])
-        hireling:SetFloatValue(71, hStats['maxDamage'])
-        hireling:SetFlag(79, 2) -- Set trackable on minimap
-        hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
-        hireling:SetEquipmentSlots(weapons[entry], 0, 0)
-        hireling:SetSheath(0)
+        InitHireling(hireling, player)
         hireling:SendUnitSay("Greetings, "..player:GetName()..".", 0)
         local aura = hireling:AddAura(HIRE_AURA, player)
         aura:SetMaxDuration(2147483647)
         aura:SetDuration(2147483647)
     end
+end
+
+function InitHireling(hireling, player)
+    local hLevel = player:GetLevel()+math.random(modMinLevelBoost[hireling:GetEntry()],modMaxLevelBoost[hireling:GetEntry()])
+    if hLevel > 80 then
+        hLevel = 80
+    end
+    local hStats = getBaseStats(hireling)
+    hireling:SetLevel(hLevel)
+    hireling:SetFaction(35)
+    hireling:SetMaxHealth(hStats['health'])
+    hireling:SetHealth(hStats['health'])
+    hireling:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
+    hireling:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
+    hireling:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
+    hireling:SetFloatValue(70, hStats['minDamage'])
+    hireling:SetFloatValue(71, hStats['maxDamage'])
+    hireling:SetFlag(79, 2) -- Set trackable on minimap
+    hireling:MoveFollow(player, followDistance[hireling:GetEntry()], followOrientation[hireling:GetEntry()])
+    hireling:SetEquipmentSlots(weapons[hireling:GetEntry()], 0, 0)
+    hireling:SetSheath(0)
 end
 
 function SummonHireling(player)
@@ -408,6 +412,22 @@ function SummonHireling(player)
     end
 end
 
+function ReviveHireling(player)
+    local aura = player:GetAura(HIRE_AURA)
+    if aura then
+        local hireling = aura:GetCaster()
+        if hireling then
+            x, y, z, o = hireling:GetLocation()
+            hireling:Respawn()
+            InitHireling(hireling, player)
+            hireling:NearTeleport( x, y, z, o )
+            HirelingSetFollow(hireling, player)
+            hireling:SendUnitSay("I live again!", 0)
+            player:SendNotification("Your hireling has been revived.")
+        end
+    end
+end
+
 function DismissHireling(player)
     local aura = player:GetAura(HIRE_AURA)
     if aura then
@@ -427,17 +447,13 @@ end
 function CheckContract(hireling, player)
     local aura = player:GetAura(HIRE_AURA)
     if aura then
-        -- player:SendBroadcastMessage("Check contract - hireling guid: "..tostring(hireling:GetGUID()))
-        -- player:SendBroadcastMessage("Check contract -  caster guid: "..tostring(aura:GetCaster():GetGUID()))
         if hireling:GetGUID() ~= aura:GetCaster():GetGUID() then
             player:SendBroadcastMessage("You no longer have a contract with that hireling.")
             return false
         else
-            --player:SendBroadcastMessage("Contract true")
             return true
         end
     else
-        --hireling:DespawnOrUnsummon(0)
         player:SendBroadcastMessage("You don't have a contract with a hireling.")
         return false
     end
@@ -447,10 +463,8 @@ function HasSpecialist(player)
     if player:IsInGroup() then
         local groupPlayers = player:GetGroup():GetMembers()
         for k, v in pairs(groupPlayers) do
-            --player:SendBroadcastMessage(v:GetName())
             if v:HasAura(HIRE_AURA) then
                 if v:GetAura(HIRE_AURA):GetCaster():GetEntry() == GLADIATOR then
-                    --player:SendBroadcastMessage(v:GetName().." has Gladiator")
                     return true
                 end
             end
@@ -548,6 +562,7 @@ local function onChatMessage(event, player, msg, _, lang)
             local hireling = aura:GetCaster()
             player:SendBroadcastMessage("Hireling Info:")
             player:SendBroadcastMessage("  Entry: "..hireling:GetEntry())
+            player:SendBroadcastMessage("  Owner GUID: "..tostring(hireling:GetOwnerGUID()))
             player:SendBroadcastMessage("  GUID: "..tostring(hireling:GetGUID()))
             player:SendBroadcastMessage("  DisplayID: "..hireling:GetInt32Value(UNIT_FIELD_DISPLAYID))
             player:SendBroadcastMessage("  Level: "..hireling:GetInt32Value(UNIT_FIELD_LEVEL))
@@ -586,6 +601,9 @@ local function onChatMessage(event, player, msg, _, lang)
             return false
         elseif (msg:find('#hire checkgroup') == 1) then
             local check = HasSpecialist(player)
+        elseif (msg:find('#hire revive') == 1) then
+            ReviveHireling(player)
+            return false
         else
             player:SendBroadcastMessage("Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire summon\n#hire dismiss\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self\n#hire emote")
             return false
@@ -671,7 +689,6 @@ local function onEnterCombat(event, hireling, target)
                 else
                     hireling:CastSpell(player, spell, false)
                 end
-                --hireling:SetRooted(true)
             else
                 spell = spells[hireling:GetDisplayId()]
                 hireling:CastSpell(target, spell, true)
@@ -763,8 +780,12 @@ local function onReceiveEmote(event, hireling, player, emoteid)
             elseif hireling:GetEntry() == WITCHDOCTOR then
                 hireling:CastSpell(player, getRankedSpell("chainheal", hireling, 0), false)
             end
-        elseif emoteid == 101 and not hireling:IsInCombat() then
-            SummonHireling(player) -- wave to summon
+        elseif emoteid == 101 and not hireling:IsInCombat() then -- wave
+            if hireling:IsDead() then
+                ReviveHireling(player)
+            else
+                SummonHireling(player)
+            end
         end
     end
     if emoteid == 34 then -- dance
