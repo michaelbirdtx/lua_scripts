@@ -11,7 +11,7 @@ SET
 @Faction			:= 35,
 @DetectionRange		:= 60,
 @Scale				:= 1,
-@Rank				:= 0,
+@Rank				:= 4,
 @DamageModifier		:= 1,
 @BaseAttackTime		:= 1000,
 @RangedAttackTime	:= 2000,
