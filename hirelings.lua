@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.4.2'
+local MODULE_VERSION = '2.4.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -423,6 +423,7 @@ function ReviveHireling(player)
                 InitHireling(hireling, player)
                 hireling:NearTeleport( x, y, z, o )
                 HirelingSetFollow(hireling, player)
+                hireling:CastSpell(hireling, 42704, true) -- Resurrection effect
                 hireling:SendUnitSay("I live again!", 0)
                 player:SendNotification("Your hireling has been revived.")
             end
