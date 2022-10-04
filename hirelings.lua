@@ -164,10 +164,10 @@ local mounts = {
     [WITCHDOCTOR2] = 6469, -- Mottled Red Raptor
     [WITCHDOCTOR3] = 0,
     [WITCHDOCTOR4] = 0,
-    [NECROMANCER1] = 10718,
-    [NECROMANCER2] = 28605,
-    [NECROMANCER3] = 29754,
-    [NECROMANCER4] = 10719,
+    [NECROMANCER1] = 28605, -- White Skeletal Warhorse
+    [NECROMANCER2] = 10718, -- Black Skeletal Warhorse
+    [NECROMANCER3] = 10719, -- Red Skeletal Warhorse
+    [NECROMANCER4] = 29754, -- Ochre Skeletal Warhorse
     [GLADIATOR1] = 22350, -- SWift Brewfest Ram
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -178,7 +178,7 @@ local initSpell = {
     [SELLSWORD] = 33096, -- Threaten
     [BATTLEMAGE] = 0,
     [WITCHDOCTOR] = 8362, -- Renew (non-ranked)
-    [NECROMANCER] = 0,
+    [NECROMANCER] = 56521, -- Blessing of Wisdom
     [GLADIATOR] = 33096, -- Threaten
 }
 
@@ -1094,7 +1094,6 @@ RegisterCreatureEvent(NECROMANCER, 2, onLeaveCombat)
 RegisterCreatureEvent(NECROMANCER, 4, onDeath)
 RegisterCreatureEvent(NECROMANCER, 37, onRemove)
 RegisterCreatureEvent(NECROMANCER, 3, onTargetDied)
---CREATURE_EVENT_ON_TARGET_DIED                     = 3,  // (event, creature, victim)
 
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
 RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
