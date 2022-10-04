@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.4.5'
+local MODULE_VERSION = '2.5.0'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -17,28 +17,36 @@ local HEAL_THRESHOLD = 90
 local HEAL_REST_THRESHOLD = 95
 local HEALTH_CRITICAL_THRESHOLD = 20
 local RESET_EMOTE = 7 -- Eat
+local NECROMANCER_GUARDIAN = 669030 -- Risen Foe
+local NECROMANCER_GUARDIAN_DURATION = 10000
 
 local BROKER = 669000
 
-local SELLSWORD = 669001
+local SELLSWORD  = 669001
 local SELLSWORD1 = 17214 -- Female Draenei
 local SELLSWORD2 = 3054 -- Male Dwarf
 local SELLSWORD3 = 1314 -- Male Orc
 local SELLSWORD4 = 17671 -- Female Blood Elf
 
-local BATTLEMAGE = 669002
+local BATTLEMAGE  = 669002
 local BATTLEMAGE1 = 29869 -- Female Blood Elf
 local BATTLEMAGE2 = 26073 -- Female Blood Elf
 local BATTLEMAGE3 = 28160 -- Female Gnome
 local BATTLEMAGE4 = 3876  -- Male Undead
 
-local WITCHDOCTOR = 669003
+local WITCHDOCTOR  = 669003
 local WITCHDOCTOR1 = 11764 -- Female Troll
 local WITCHDOCTOR2 = 11762 -- Male Troll
 local WITCHDOCTOR3 = 0
 local WITCHDOCTOR4 = 0
 
-local GLADIATOR = 669011
+local NECROMANCER  = 669004
+local NECROMANCER1 = 10576 -- Male Undead
+local NECROMANCER2 = 7597 -- Male Undead
+local NECROMANCER3 = 4056 -- Female Undead
+local NECROMANCER4 = 9353 -- Male Undead
+
+local GLADIATOR  = 669011
 local GLADIATOR1 = 27154
 local GLADIATOR2 = 0
 local GLADIATOR3 = 0
@@ -55,19 +63,21 @@ local faq = {
     ["outro"] = "\n\nP.S.: When I have been instructed not to attack anything, I will have a pulsing blue circle around me, thanks to that clever and handsome Wizard, Mykal.\n\n",
 }
 
-local hireRef = "Command '#hire' help:\n#hire sword\n#hire mage\n#hire gladiator\n#hire revive\n#hire summon\n#hire dismiss\n#hire abandon\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self\n#hire emote\n#hire checkgroup"
+local hireRef = "Command '#hire' help:\n#hire sword\n#hire mage\n#hire doc\n#hire necro\n#hire gladiator\n#hire revive\n#hire summon\n#hire dismiss\n#hire abandon\n#hire aura\n#hire loc\n#hire info\n#hire cast me\n#hire cast self\n#hire emote\n#hire checkgroup"
 
 local baseFees = {
     [SELLSWORD] = 12,
     [BATTLEMAGE] = 18,
     [WITCHDOCTOR] = 21,
+    [NECROMANCER] = 25,
     [GLADIATOR] = 1000,
 }
 
 local followDistance = {
     [SELLSWORD] = 3,
     [BATTLEMAGE] = 1.2,
-    [WITCHDOCTOR] = 2,
+    [WITCHDOCTOR] = 3,
+    [NECROMANCER] = 3,
     [GLADIATOR] = 3,
 }
 
@@ -75,6 +85,7 @@ local followOrientation = {
     [SELLSWORD] = 5.7,
     [BATTLEMAGE] = 5,
     [WITCHDOCTOR] = 4,
+    [NECROMANCER] = 5,
     [GLADIATOR] = 6,
 }
 
@@ -82,6 +93,7 @@ local modMinLevelBoost = {
     [SELLSWORD] =  0,
     [BATTLEMAGE] = 1,
     [WITCHDOCTOR] = 1,
+    [NECROMANCER] = 1,
     [GLADIATOR] =  3,
 }
 
@@ -89,6 +101,7 @@ local modMaxLevelBoost = {
     [SELLSWORD] =  2,
     [BATTLEMAGE] = 3,
     [WITCHDOCTOR] = 3,
+    [NECROMANCER] = 3,
     [GLADIATOR] =  6,
 }
 
@@ -105,6 +118,10 @@ local talkAttack = {
     [WITCHDOCTOR2] = 2852,
     [WITCHDOCTOR3] = 0,
     [WITCHDOCTOR4] = 0,
+    [NECROMANCER1] = 2766,
+    [NECROMANCER2] = 2766,
+    [NECROMANCER3] = 2780,
+    [NECROMANCER4] = 2766,
     [GLADIATOR1] = 2718,
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -124,6 +141,10 @@ local talkJoke = {
     [WITCHDOCTOR2] = 6404,
     [WITCHDOCTOR3] = 0,
     [WITCHDOCTOR4] = 0,
+    [NECROMANCER1] = 6422,
+    [NECROMANCER2] = 6422,
+    [NECROMANCER3] = 6413,
+    [NECROMANCER4] = 6422,
     [GLADIATOR1] = 6115,
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -143,6 +164,10 @@ local mounts = {
     [WITCHDOCTOR2] = 6469, -- Mottled Red Raptor
     [WITCHDOCTOR3] = 0,
     [WITCHDOCTOR4] = 0,
+    [NECROMANCER1] = 10718,
+    [NECROMANCER2] = 28605,
+    [NECROMANCER3] = 29754,
+    [NECROMANCER4] = 10719,
     [GLADIATOR1] = 22350, -- SWift Brewfest Ram
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -153,10 +178,11 @@ local initSpell = {
     [SELLSWORD] = 33096, -- Threaten
     [BATTLEMAGE] = 0,
     [WITCHDOCTOR] = 8362, -- Renew (non-ranked)
+    [NECROMANCER] = 0,
     [GLADIATOR] = 33096, -- Threaten
 }
 
-local spells = {
+local openingSpell = {
     [SELLSWORD1] = 64382, -- Shattering Throw 33096, -- Threaten --355, -- Taunt
     [SELLSWORD2] = 11578, -- Charge
     [SELLSWORD3] = 4336, -- Jump Jets
@@ -169,6 +195,10 @@ local spells = {
     [WITCHDOCTOR2] = 0,
     [WITCHDOCTOR3] = 0,
     [WITCHDOCTOR4] = 0,
+    [NECROMANCER1] = 18270, -- Dark Plague
+    [NECROMANCER2] = 18270, -- Dark Plague
+    [NECROMANCER3] = 18270, -- Dark Plague
+    [NECROMANCER4] = 18270, -- Dark Plague
     [GLADIATOR1] = 11578, -- Charge
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -179,27 +209,31 @@ local defenseSpell = {
     [SELLSWORD] = 0,
     [BATTLEMAGE] = 0,
     [WITCHDOCTOR] = 586, -- Fade
+    [NECROMANCER] = 0,
     [GLADIATOR] = 33096, -- Threaten
 }
 
-local retaliatespells = {
+local retaliateSpell = {
     [SELLSWORD] = 61044, -- Demoralizing Shout
     [BATTLEMAGE] = 2139, -- Counterspell
     [WITCHDOCTOR] = 0, -- Not implemented
+    [NECROMANCER] = 3436, -- Wandering Plague
     [GLADIATOR] = 8078, -- Thunderclap
 }
 
-local buffs = {
-    [SELLSWORD] = 35361,  -- Thorns (non-ranked)
-    [BATTLEMAGE] = 12042, -- Arcane Power (non-ranked)
-    [WITCHDOCTOR] = 0,    -- (Uses ranked spell instead)
-    [GLADIATOR] = 53307,  -- Thorns (Rank 8)
+local buffSpell = {
+    [SELLSWORD] = 35361,   -- Thorns (non-ranked)
+    [BATTLEMAGE] = 12042,  -- Arcane Power (non-ranked)
+    [WITCHDOCTOR] = 0,     -- (Uses ranked spell instead)
+    [NECROMANCER] = 49222, -- Bone Shield
+    [GLADIATOR] = 53307,   -- Thorns (Rank 8)
 }
 
 local weapons = {
     [SELLSWORD] = 11786,   -- Stone of the Earth
     [BATTLEMAGE] = 31334,  -- Staff of Natural Fury
     [WITCHDOCTOR] = 22799, -- Soulseeker
+    [NECROMANCER] = 22799, -- Soulseeker
     [GLADIATOR] = 47069,   -- Justicebringer
 }
 
@@ -358,7 +392,7 @@ function SpawnHireling(entry, player)
     if player:HasAura(HIRE_AURA) then
         player:SendBroadcastMessage("Sorry, you already have a hireling.")
     else
-        local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, 4294967295, 1) --player:GetPhaseMaskForSpawn())
+        local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, 4294967295, 1)
         hireling:SetCreatorGUID(player:GetGUID())
         hireling:SetOwnerGUID(player:GetGUID())
         InitHireling(hireling, player)
@@ -367,6 +401,26 @@ function SpawnHireling(entry, player)
         aura:SetMaxDuration(2147483647)
         aura:SetDuration(2147483647)
     end
+end
+
+function SpawnGuardian(entry, owner, duration)
+    local guardian = PerformIngameSpawn(1, entry, owner:GetMapId(), owner:GetInstanceId(), owner:GetX(), owner:GetY(), owner:GetZ(), owner:GetO(), false, duration, 1)
+    guardian:SetCreatorGUID(owner:GetGUID())
+    guardian:SetOwnerGUID(owner:GetGUID())
+    guardian:SetLevel(owner:GetLevel())
+    guardian:SetFaction(35)
+    local hStats = getBaseStats(guardian)
+    guardian:SetMaxHealth(hStats['health'])
+    guardian:SetHealth(hStats['health'])
+    guardian:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
+    guardian:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
+    guardian:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
+    guardian:SetFloatValue(70, hStats['minDamage'])
+    guardian:SetFloatValue(71, hStats['maxDamage'])
+    guardian:SetFlag(79, 2) -- Set trackable on minimap
+    guardian:SetInt32Value(UNIT_FIELD_FLAGS, 8)
+    guardian:MoveFollow(owner, math.random(0.5,2), math.random(0.0,6.0))
+    guardian:SetAggroEnabled(true)
 end
 
 function InitHireling(hireling, player)
@@ -458,13 +512,11 @@ function CheckContract(hireling, player)
     local aura = player:GetAura(HIRE_AURA)
     if aura then
         if hireling:GetGUID() ~= aura:GetCaster():GetGUID() then
-            --player:SendBroadcastMessage("You no longer have a contract with that hireling.")
             return false
         else
             return true
         end
     else
-        --player:SendBroadcastMessage("You don't have a contract with a hireling.")
         return false
     end
 end
@@ -545,6 +597,9 @@ local function onChatMessage(event, player, msg, _, lang)
         elseif (msg:find('#hire doc') == 1) then
             SpawnHireling(WITCHDOCTOR, player)
             return false
+        elseif (msg:find('#hire necro') == 1) then
+            SpawnHireling(NECROMANCER, player)
+            return false
         elseif (msg:find('#hire gladiator') == 1) then
             SpawnHireling(GLADIATOR, player)
             return false
@@ -555,8 +610,6 @@ local function onChatMessage(event, player, msg, _, lang)
             DismissHireling(player)
             return false
         elseif (msg:find('#hire abandon') == 1) then
-            -- player:RemoveAura(HIRE_AURA)
-            -- player:SendBroadcastMessage("You have cancelled your hireling contract.")
             AbandonHireling(player)
             return false
         elseif (msg:find('#hire loc') == 1) then
@@ -591,7 +644,7 @@ local function onChatMessage(event, player, msg, _, lang)
             local spell = string.sub(msg, 17)
             local aura = player:GetAura(HIRE_AURA)
             local hireling = aura:GetCaster()
-            hireling:CastSpell(hireling, spell, false)
+            hireling:CastSpell(hireling, spell, true)
             player:SendBroadcastMessage("Hireling Casts "..spell)
             return false
         elseif (msg:find('#hire cast targ') == 1) then
@@ -605,7 +658,7 @@ local function onChatMessage(event, player, msg, _, lang)
             local spell = string.sub(msg, 15)
             local aura = player:GetAura(HIRE_AURA)
             local hireling = aura:GetCaster()
-            hireling:CastSpell(player, spell, false)
+            hireling:CastSpell(player, spell, true)
             player:SendBroadcastMessage("Hireling Casts "..spell)
             return false
         elseif (msg:find('#hire emote') == 1) then
@@ -619,6 +672,12 @@ local function onChatMessage(event, player, msg, _, lang)
             return false
         elseif (msg:find('#hire revive') == 1) then
             ReviveHireling(player)
+            return false
+        elseif (msg:find('#hire guard') == 1) then
+            local entry = string.sub(msg, 13)
+            local aura = player:GetAura(HIRE_AURA)
+            local hireling = aura:GetCaster()
+            SpawnGuardian(entry, hireling, 10000)
             return false
         else
             player:SendBroadcastMessage(hireRef)
@@ -645,7 +704,7 @@ local function onPlayerEnterCombat(event, player, enemy)
             end
             local spell = initSpell[hireling:GetEntry()]
             if spell ~= 0 then
-                if hireling:GetEntry() == WITCHDOCTOR then
+                if hireling:GetEntry() == WITCHDOCTOR or hireling:GetEntry() == NECROMANCER then
                     hireling:CastSpell(player, spell, true)
                 else
                     hireling:CastSpell(enemy, spell, true)
@@ -682,12 +741,24 @@ local function onPlayerLeaveCombat(event, player)
     end
 end
 
+local function onPlayerKillCreature(event, killer, killed)
+    local aura = killer:GetAura(HIRE_AURA)
+    if aura then
+        local hireling = aura:GetCaster()
+        if hireling then
+            if hireling:GetEntry() == NECROMANCER then
+                SpawnGuardian(NECROMANCER_GUARDIAN, hireling, NECROMANCER_GUARDIAN_DURATION)
+            end
+        end
+    end
+end
+
 local function onPreCombat(event, hireling, target)
     local buff
     if hireling:GetEntry() == WITCHDOCTOR then
         buff = getRankedSpell("watershield", hireling, 0)
     else
-        buff = buffs[hireling:GetEntry()]
+        buff = buffSpell[hireling:GetEntry()]
     end
     if not hireling:HasAura(buff) then
         hireling:CastSpell(hireling, buff, false)
@@ -709,7 +780,7 @@ local function onEnterCombat(event, hireling, target)
                         hireling:CastSpell(player, spell, false)
                     end
                 else
-                    spell = spells[hireling:GetDisplayId()]
+                    spell = openingSpell[hireling:GetDisplayId()]
                     hireling:CastSpell(target, spell, true)
                 end
                 if math.random(1,5) == 1 then
@@ -755,7 +826,7 @@ end
 local function onHitBySpell(event, hireling, caster, spellid)
     if spellid ~= 31308 and caster:GetGUID() ~= hireling:GetOwnerGUID() then
         if not hireling:IsCasting() then
-            local spell = retaliatespells[hireling:GetEntry()]
+            local spell = retaliateSpell[hireling:GetEntry()]
             if spell ~= 0 then
                 hireling:CastSpell(hireling:GetAITarget(0), spell, false)
             end
@@ -844,6 +915,10 @@ local function onRemove(event, hireling)
     end
 end
 
+local function onTargetDied(event, creature, victim)
+    SpawnGuardian(NECROMANCER_GUARDIAN, creature, NECROMANCER_GUARDIAN_DURATION)
+end
+
 local function brokerOnHello(event, player, hireling)
     if player:HasAura(HIRE_AURA) then
         player:GossipSetText("What can I do for you today, "..player:GetClassAsString().."?")
@@ -856,6 +931,7 @@ local function brokerOnHello(event, player, hireling)
         player:GossipMenuAddItem(0, "I'd like to hire a Sellsword.", 0, 1, null, "The fee for this hireling is...", baseFees[SELLSWORD]*player:GetLevel())
         player:GossipMenuAddItem(0, "I'd like to hire a Battle Mage.", 0, 2, null, "The fee for this hireling is...", baseFees[BATTLEMAGE]*player:GetLevel())
         player:GossipMenuAddItem(0, "I'd like to hire a Witch Doctor.", 0, 3, null, "The fee for this hireling is...", baseFees[WITCHDOCTOR]*player:GetLevel())
+        player:GossipMenuAddItem(0, "I'd like to hire a Necromancer.", 0, 4, null, "The fee for this hireling is...", baseFees[NECROMANCER]*player:GetLevel())
         if raidMaps[player:GetMapId()] then
             player:GossipMenuAddItem(0, "I'd like to hire Thorngrim, the\nRelentless Gladiator.", 0, 11, null, "The fee for this hireling is...", baseFees[GLADIATOR]*player:GetLevel())
         end
@@ -881,6 +957,11 @@ local function brokerOnSelect(event, player, hireling, sender, intid, code)
     if intid == 3 then
         SpawnHireling(WITCHDOCTOR, player)
         player:ModifyMoney(-(baseFees[WITCHDOCTOR]*player:GetLevel()))
+        player:GossipComplete()
+    end
+    if intid == 4 then
+        SpawnHireling(NECROMANCER, player)
+        player:ModifyMoney(-(baseFees[NECROMANCER]*player:GetLevel()))
         player:GossipComplete()
     end
     if intid == 11 then
@@ -971,6 +1052,7 @@ RegisterPlayerEvent(6, onPlayerDeath)
 RegisterPlayerEvent(8, onPlayerDeath)
 RegisterPlayerEvent(33, onPlayerEnterCombat)
 RegisterPlayerEvent(34, onPlayerLeaveCombat)
+RegisterPlayerEvent(7, onPlayerKillCreature)
 
 RegisterCreatureEvent(SELLSWORD, 10, onPreCombat)
 RegisterCreatureEvent(SELLSWORD, 1, onEnterCombat)
@@ -1001,6 +1083,19 @@ RegisterCreatureEvent(WITCHDOCTOR, 2, onLeaveCombat)
 RegisterCreatureEvent(WITCHDOCTOR, 4, onDeath)
 RegisterCreatureEvent(WITCHDOCTOR, 37, onRemove)
 
+RegisterCreatureEvent(NECROMANCER, 10, onPreCombat)
+RegisterCreatureEvent(NECROMANCER, 1, onEnterCombat)
+RegisterCreatureEvent(NECROMANCER, 9, onDamageTaken)
+RegisterCreatureEvent(NECROMANCER, 15, onSpellHitTarget)
+RegisterCreatureEvent(NECROMANCER, 14, onHitBySpell)
+RegisterCreatureEvent(NECROMANCER, 9, onDamageTaken)
+RegisterCreatureEvent(NECROMANCER, 8, onReceiveEmote)
+RegisterCreatureEvent(NECROMANCER, 2, onLeaveCombat)
+RegisterCreatureEvent(NECROMANCER, 4, onDeath)
+RegisterCreatureEvent(NECROMANCER, 37, onRemove)
+RegisterCreatureEvent(NECROMANCER, 3, onTargetDied)
+--CREATURE_EVENT_ON_TARGET_DIED                     = 3,  // (event, creature, victim)
+
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
 RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
 RegisterCreatureEvent(GLADIATOR, 14, onHitBySpell)
@@ -1018,6 +1113,9 @@ RegisterCreatureGossipEvent(BATTLEMAGE, 2, hirelingOnSelect)
 
 RegisterCreatureGossipEvent(WITCHDOCTOR, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(WITCHDOCTOR, 2, hirelingOnSelect)
+
+RegisterCreatureGossipEvent(NECROMANCER, 1, hirelingOnHello)
+RegisterCreatureGossipEvent(NECROMANCER, 2, hirelingOnSelect)
 
 RegisterCreatureGossipEvent(GLADIATOR, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(GLADIATOR, 2, hirelingOnSelect)
