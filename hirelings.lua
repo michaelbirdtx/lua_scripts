@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.4.4'
+local MODULE_VERSION = '2.4.5'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -699,20 +699,22 @@ local function onEnterCombat(event, hireling, target)
     local spell
     if player then
         if CheckContract(hireling, player) then
-            if hireling:GetEntry() == WITCHDOCTOR then
-                spell = getRankedSpell("earthshield", hireling, 0)
-                if player:HasAura(spell) then
-                    spell = getRankedSpell("lightningbolt", hireling, 2)
-                    hireling:CastSpell(target, spell, false)
+            if hireling:CanAggro() then
+                if hireling:GetEntry() == WITCHDOCTOR then
+                    spell = getRankedSpell("earthshield", hireling, 0)
+                    if player:HasAura(spell) then
+                        spell = getRankedSpell("lightningbolt", hireling, 2)
+                        hireling:CastSpell(target, spell, false)
+                    else
+                        hireling:CastSpell(player, spell, false)
+                    end
                 else
-                    hireling:CastSpell(player, spell, false)
+                    spell = spells[hireling:GetDisplayId()]
+                    hireling:CastSpell(target, spell, true)
                 end
-            else
-                spell = spells[hireling:GetDisplayId()]
-                hireling:CastSpell(target, spell, true)
-            end
-            if math.random(1,5) == 1 then
-                hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
+                if math.random(1,5) == 1 then
+                    hireling:PlayDistanceSound(talkAttack[hireling:GetDisplayId()], player)
+                end
             end
         else
             hireling:DespawnOrUnsummon()
@@ -905,7 +907,6 @@ local function brokerOnSelect(event, player, hireling, sender, intid, code)
 end
 
 local function hirelingOnHello(event, player, hireling)
-    --if player:GetGUID() == hireling:GetOwnerGUID() then
     if CheckContract(hireling, player) then
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nWhat can I do for you?")
         player:GossipMenuAddItem(0, "Follow me, there's killing to be done.", 0, 1)
