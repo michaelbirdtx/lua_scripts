@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.5.0'
+local MODULE_VERSION = '2.5.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -418,7 +418,6 @@ function SpawnGuardian(entry, owner, duration)
     guardian:SetFloatValue(70, hStats['minDamage'])
     guardian:SetFloatValue(71, hStats['maxDamage'])
     guardian:SetFlag(79, 2) -- Set trackable on minimap
-    guardian:SetInt32Value(UNIT_FIELD_FLAGS, 8)
     guardian:MoveFollow(owner, math.random(0.5,2), math.random(0.0,6.0))
     guardian:SetAggroEnabled(true)
 end
