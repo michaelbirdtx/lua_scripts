@@ -19,7 +19,6 @@ local HEAL_REST_THRESHOLD = 95
 local HEALTH_CRITICAL_THRESHOLD = 20
 local RESET_EMOTE = 7 -- Eat
 local NECROMANCER_GUARDIAN = 669030 -- Risen Foe
-local NECROMANCER_GUARDIAN_DURATION = 4294967295
 
 local BROKER = 669000
 
@@ -52,8 +51,6 @@ local GLADIATOR1 = 27154
 local GLADIATOR2 = 0
 local GLADIATOR3 = 0
 local GLADIATOR4 = 0
-
-local RISENFOE = 669030
 
 local faq = {
     ["intro"] = "Here are some commands you can give me (you must target me first):",
@@ -177,15 +174,15 @@ local mounts = {
     [GLADIATOR4] = 0,
 }
 
-local initSpell = {
+local initSpell = { --onPlayerEnterCombat
     [SELLSWORD] = 33096, -- Threaten
     [BATTLEMAGE] = 0,
     [WITCHDOCTOR] = 8362, -- Renew (non-ranked)
-    [NECROMANCER] = 0, --56521, -- Blessing of Wisdom
+    [NECROMANCER] = 0,
     [GLADIATOR] = 33096, -- Threaten
 }
 
-local openingSpell = {
+local openingSpell = { -- onEnterCombat
     [SELLSWORD1] = 64382, -- Shattering Throw 33096, -- Threaten --355, -- Taunt
     [SELLSWORD2] = 11578, -- Charge
     [SELLSWORD3] = 4336, -- Jump Jets
@@ -208,15 +205,15 @@ local openingSpell = {
     [GLADIATOR4] = 0,
 }
 
-local defenseSpell = {
+local defenseSpell = { -- onDamageTaken
     [SELLSWORD] = 0,
     [BATTLEMAGE] = 0,
     [WITCHDOCTOR] = 586, -- Fade
-    [NECROMANCER] = 0,
+    [NECROMANCER] = 34355, -- Poison Shield
     [GLADIATOR] = 33096, -- Threaten
 }
 
-local retaliateSpell = {
+local retaliateSpell = { -- onHitBySpell
     [SELLSWORD] = 61044, -- Demoralizing Shout
     [BATTLEMAGE] = 2139, -- Counterspell
     [WITCHDOCTOR] = 0, -- Not implemented
@@ -224,7 +221,7 @@ local retaliateSpell = {
     [GLADIATOR] = 8078, -- Thunderclap
 }
 
-local buffSpell = {
+local buffSpell = { -- onPreCombat
     [SELLSWORD] = 35361,   -- Thorns (non-ranked)
     [BATTLEMAGE] = 12042,  -- Arcane Power (non-ranked)
     [WITCHDOCTOR] = 0,     -- (Uses ranked spell instead)
@@ -411,7 +408,6 @@ function SpawnGuardian(entry, owner, duration)
         local guardian = PerformIngameSpawn(1, entry, owner:GetMapId(), owner:GetInstanceId(), owner:GetX(), owner:GetY(), owner:GetZ(), owner:GetO(), false, duration, 1)
         guardian:SetCreatorGUID(owner:GetGUID())
         guardian:SetOwnerGUID(owner:GetGUID())
-        --guardian:SetScale(0.75)
         guardian:SetLevel(owner:GetLevel())
         guardian:SetFaction(35)
         local hStats = getBaseStats(guardian)
@@ -548,7 +544,24 @@ function HasGuardian(owner, entry)
             return true
         end
     end
-    return false
+end
+
+function GetGuardian(owner, entry)
+    local objects = owner:GetNearObjects(300, 0, entry, 2, 1)
+    for k, v in pairs(objects) do
+        if v:GetOwnerGUID() == owner:GetGUID() then
+            return v
+        end
+    end
+end
+
+function RemoveGuardians(owner, entry)
+    local objects = owner:GetNearObjects(300, 0, entry, 2, 1)
+    for k, v in pairs(objects) do
+        if v:GetOwnerGUID() == owner:GetGUID() then
+            v:DespawnOrUnsummon()
+        end
+    end
 end
 
 function HirelingSetFollow(hireling, player)
@@ -690,8 +703,6 @@ local function onChatMessage(event, player, msg, _, lang)
             return false
         elseif (msg:find('#hire guard') == 1) then
             local entry = string.sub(msg, 13)
-            --local aura = player:GetAura(HIRE_AURA)
-            --local hireling = aura:GetCaster()
             SpawnGuardian(entry, player, 0)
             return false
         elseif (msg:find('#hire nearby') == 1) then
@@ -769,7 +780,7 @@ local function onPlayerKillCreature(event, killer, killed)
         local hireling = aura:GetCaster()
         if hireling then
             if hireling:GetEntry() == NECROMANCER then
-                SpawnGuardian(NECROMANCER_GUARDIAN, hireling, NECROMANCER_GUARDIAN_DURATION)
+                SpawnGuardian(NECROMANCER_GUARDIAN, hireling, 0)
             end
         end
     end
@@ -892,6 +903,8 @@ local function onReceiveEmote(event, hireling, player, emoteid)
                 hireling:SendUnitSay("Do I look like a healer, "..player:GetName().."?", 0)
             elseif hireling:GetEntry() == WITCHDOCTOR then
                 hireling:CastSpell(player, getRankedSpell("chainheal", hireling, 0), false)
+            elseif hireling:GetEntry() == NECROMANCER then
+                hireling:SendUnitSay("Ask me again after you're dead.", 0)
             end
         elseif emoteid == 101 and not hireling:IsInCombat() then -- wave
             if hireling:IsDead() then
@@ -920,21 +933,11 @@ local function onLeaveCombat(event, hireling)
     hireling:SetRooted(false)
 end
 
--- local function onGuardianLeaveCombat(event, guardian)
---     local aura = guardian:AddAura(HIRE_AURA, guardian:GetOwner())
---     aura:SetMaxDuration(2147483647)
---     aura:SetDuration(2147483647)
--- end
-
 local function onDeath(event, hireling, killer)
     hireling:GetOwner():SendNotification("Your hireling has perished.")
     hireling:PlayDirectSound(2544, hireling:GetOwner())
     hireling:SendUnitSay("I die... with... honor...", 0)
 end
-
--- local function onGuardianDeath(event, guardian, killer)
---     guardian:GetOwner():RemoveAura(HIRE_AURA)
--- end
 
 local function onRemove(event, hireling)
     local player = hireling:GetOwner()
@@ -944,6 +947,9 @@ local function onRemove(event, hireling)
     end
     if CheckContract(hireling, player) then
         player:RemoveAura(HIRE_AURA)
+    end
+    if hireling:GetEntry() == NECROMANCER then
+        RemoveGuardians(hireling, NECROMANCER_GUARDIAN)
     end
 end
 
@@ -1130,9 +1136,6 @@ RegisterCreatureEvent(GLADIATOR, 8, onReceiveEmote)
 RegisterCreatureEvent(GLADIATOR, 2, onLeaveCombat)
 RegisterCreatureEvent(GLADIATOR, 4, onDeath)
 RegisterCreatureEvent(GLADIATOR, 37, onRemove)
-
--- RegisterCreatureEvent(RISENFOE, 2, onGuardianLeaveCombat)
--- RegisterCreatureEvent(RISENFOE, 4, onGuardianDeath)
 
 RegisterCreatureGossipEvent(SELLSWORD, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(SELLSWORD, 2, hirelingOnSelect)
