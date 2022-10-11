@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.5.1'
+local MODULE_VERSION = '2.5.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -11,6 +11,7 @@ function Set (list)
 end
 
 local FAIL_SOUND = 847
+local HIRE_AURA = 19746
 local HIRE_AURA = 62109
 local PASSIVE_AURA = 31260
 local HEAL_THRESHOLD = 90
@@ -18,7 +19,7 @@ local HEAL_REST_THRESHOLD = 95
 local HEALTH_CRITICAL_THRESHOLD = 20
 local RESET_EMOTE = 7 -- Eat
 local NECROMANCER_GUARDIAN = 669030 -- Risen Foe
-local NECROMANCER_GUARDIAN_DURATION = 10000
+local NECROMANCER_GUARDIAN_DURATION = 4294967295
 
 local BROKER = 669000
 
@@ -51,6 +52,8 @@ local GLADIATOR1 = 27154
 local GLADIATOR2 = 0
 local GLADIATOR3 = 0
 local GLADIATOR4 = 0
+
+local RISENFOE = 669030
 
 local faq = {
     ["intro"] = "Here are some commands you can give me (you must target me first):",
@@ -178,7 +181,7 @@ local initSpell = {
     [SELLSWORD] = 33096, -- Threaten
     [BATTLEMAGE] = 0,
     [WITCHDOCTOR] = 8362, -- Renew (non-ranked)
-    [NECROMANCER] = 56521, -- Blessing of Wisdom
+    [NECROMANCER] = 0, --56521, -- Blessing of Wisdom
     [GLADIATOR] = 33096, -- Threaten
 }
 
@@ -404,23 +407,25 @@ function SpawnHireling(entry, player)
 end
 
 function SpawnGuardian(entry, owner, duration)
-    local guardian = PerformIngameSpawn(1, entry, owner:GetMapId(), owner:GetInstanceId(), owner:GetX(), owner:GetY(), owner:GetZ(), owner:GetO(), false, duration, 1)
-    guardian:SetCreatorGUID(owner:GetGUID())
-    guardian:SetOwnerGUID(owner:GetGUID())
-    guardian:SetScale(0.75)
-    guardian:SetLevel(owner:GetLevel())
-    guardian:SetFaction(35)
-    local hStats = getBaseStats(guardian)
-    guardian:SetMaxHealth(hStats['health'])
-    guardian:SetHealth(hStats['health'])
-    guardian:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
-    guardian:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
-    guardian:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
-    guardian:SetFloatValue(70, hStats['minDamage'])
-    guardian:SetFloatValue(71, hStats['maxDamage'])
-    guardian:SetFlag(79, 2) -- Set trackable on minimap
-    guardian:MoveFollow(owner, math.random(0.5,2), math.random(0.0,6.0))
-    guardian:SetAggroEnabled(true)
+    if not HasGuardian(owner, entry) then
+        local guardian = PerformIngameSpawn(1, entry, owner:GetMapId(), owner:GetInstanceId(), owner:GetX(), owner:GetY(), owner:GetZ(), owner:GetO(), false, duration, 1)
+        guardian:SetCreatorGUID(owner:GetGUID())
+        guardian:SetOwnerGUID(owner:GetGUID())
+        --guardian:SetScale(0.75)
+        guardian:SetLevel(owner:GetLevel())
+        guardian:SetFaction(35)
+        local hStats = getBaseStats(guardian)
+        guardian:SetMaxHealth(hStats['health'])
+        guardian:SetHealth(hStats['health'])
+        guardian:SetInt32Value(UNIT_FIELD_MAXPOWER1, hStats['mana']) -- Set max mana
+        guardian:SetInt32Value(UNIT_FIELD_POWER1, hStats['mana']) -- Set current mana
+        guardian:SetInt32Value(UNIT_FIELD_ATTACK_POWER, hStats['attackPower'])
+        guardian:SetFloatValue(70, hStats['minDamage'])
+        guardian:SetFloatValue(71, hStats['maxDamage'])
+        guardian:SetFlag(79, 2) -- Set trackable on minimap
+        guardian:MoveFollow(owner, 3, 5.7)
+        guardian:SetAggroEnabled(true)
+    end
 end
 
 function InitHireling(hireling, player)
@@ -534,6 +539,16 @@ function HasSpecialist(player)
     else
         return false    
     end
+end
+
+function HasGuardian(owner, entry)
+    local objects = owner:GetNearObjects(300, 0, entry, 2, 1)
+    for k, v in pairs(objects) do
+        if v:GetOwnerGUID() == owner:GetGUID() then
+            return true
+        end
+    end
+    return false
 end
 
 function HirelingSetFollow(hireling, player)
@@ -675,9 +690,16 @@ local function onChatMessage(event, player, msg, _, lang)
             return false
         elseif (msg:find('#hire guard') == 1) then
             local entry = string.sub(msg, 13)
-            local aura = player:GetAura(HIRE_AURA)
-            local hireling = aura:GetCaster()
-            SpawnGuardian(entry, hireling, 10000)
+            --local aura = player:GetAura(HIRE_AURA)
+            --local hireling = aura:GetCaster()
+            SpawnGuardian(entry, player, 0)
+            return false
+        elseif (msg:find('#hire nearby') == 1) then
+            local entry = string.sub(msg, 14)
+            local objects = player:GetNearObjects(300, 0, entry, 2, 1)
+            for k, v in pairs(objects) do
+                player:SendBroadcastMessage("Unit: "..v:GetName()..", Owner: "..v:GetOwner():GetName())
+            end
             return false
         else
             player:SendBroadcastMessage(hireRef)
@@ -898,11 +920,21 @@ local function onLeaveCombat(event, hireling)
     hireling:SetRooted(false)
 end
 
+-- local function onGuardianLeaveCombat(event, guardian)
+--     local aura = guardian:AddAura(HIRE_AURA, guardian:GetOwner())
+--     aura:SetMaxDuration(2147483647)
+--     aura:SetDuration(2147483647)
+-- end
+
 local function onDeath(event, hireling, killer)
     hireling:GetOwner():SendNotification("Your hireling has perished.")
     hireling:PlayDirectSound(2544, hireling:GetOwner())
     hireling:SendUnitSay("I die... with... honor...", 0)
 end
+
+-- local function onGuardianDeath(event, guardian, killer)
+--     guardian:GetOwner():RemoveAura(HIRE_AURA)
+-- end
 
 local function onRemove(event, hireling)
     local player = hireling:GetOwner()
@@ -913,10 +945,6 @@ local function onRemove(event, hireling)
     if CheckContract(hireling, player) then
         player:RemoveAura(HIRE_AURA)
     end
-end
-
-local function onTargetDied(event, creature, victim)
-    SpawnGuardian(NECROMANCER_GUARDIAN, creature, NECROMANCER_GUARDIAN_DURATION)
 end
 
 local function brokerOnHello(event, player, hireling)
@@ -1093,7 +1121,6 @@ RegisterCreatureEvent(NECROMANCER, 8, onReceiveEmote)
 RegisterCreatureEvent(NECROMANCER, 2, onLeaveCombat)
 RegisterCreatureEvent(NECROMANCER, 4, onDeath)
 RegisterCreatureEvent(NECROMANCER, 37, onRemove)
-RegisterCreatureEvent(NECROMANCER, 3, onTargetDied)
 
 RegisterCreatureEvent(GLADIATOR, 10, onPreCombat)
 RegisterCreatureEvent(GLADIATOR, 1, onEnterCombat)
@@ -1103,6 +1130,9 @@ RegisterCreatureEvent(GLADIATOR, 8, onReceiveEmote)
 RegisterCreatureEvent(GLADIATOR, 2, onLeaveCombat)
 RegisterCreatureEvent(GLADIATOR, 4, onDeath)
 RegisterCreatureEvent(GLADIATOR, 37, onRemove)
+
+-- RegisterCreatureEvent(RISENFOE, 2, onGuardianLeaveCombat)
+-- RegisterCreatureEvent(RISENFOE, 4, onGuardianDeath)
 
 RegisterCreatureGossipEvent(SELLSWORD, 1, hirelingOnHello)
 RegisterCreatureGossipEvent(SELLSWORD, 2, hirelingOnSelect)

@@ -12,7 +12,7 @@ SET
 @NPCFlag			:= 0,
 @DetectionRange		:= 60,
 @Scale				:= 1,
-@Rank				:= 2,
+@Rank				:= 0,
 @DamageModifier		:= 1,
 @BaseAttackTime		:= 2000,
 @RangedAttackTime	:= 2000,
