@@ -775,12 +775,14 @@ local function onPlayerLeaveCombat(event, player)
 end
 
 local function onPlayerKillCreature(event, killer, killed)
-    local aura = killer:GetAura(HIRE_AURA)
-    if aura then
-        local hireling = aura:GetCaster()
-        if hireling then
-            if hireling:GetEntry() == NECROMANCER then
-                SpawnGuardian(NECROMANCER_GUARDIAN, hireling, 0)
+    if killed:GetCreatureFamily() == 0 then
+        local aura = killer:GetAura(HIRE_AURA)
+        if aura then
+            local hireling = aura:GetCaster()
+            if hireling then
+                if hireling:GetEntry() == NECROMANCER then
+                    SpawnGuardian(NECROMANCER_GUARDIAN, hireling, 0)
+                end
             end
         end
     end
