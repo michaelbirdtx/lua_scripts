@@ -195,10 +195,10 @@ local openingSpell = { -- onEnterCombat
     [WITCHDOCTOR2] = 0,
     [WITCHDOCTOR3] = 0,
     [WITCHDOCTOR4] = 0,
-    [NECROMANCER1] = 18270, -- Dark Plague
-    [NECROMANCER2] = 18270, -- Dark Plague
-    [NECROMANCER3] = 18270, -- Dark Plague
-    [NECROMANCER4] = 18270, -- Dark Plague
+    [NECROMANCER1] = 64153, --18270, -- Dark Plague
+    [NECROMANCER2] = 64153, --18270, -- Dark Plague
+    [NECROMANCER3] = 64153, --18270, -- Dark Plague
+    [NECROMANCER4] = 64153, --18270, -- Dark Plague
     [GLADIATOR1] = 11578, -- Charge
     [GLADIATOR2] = 0,
     [GLADIATOR3] = 0,
@@ -455,6 +455,12 @@ function SummonHireling(player)
                 hireling:NearTeleport( x, y, z, o )
                 hireling:CastSpell(hireling, 75128, true) -- Teleport effect
                 HirelingSetFollow(hireling, player)
+                if hireling:GetEntry() == NECROMANCER then
+                    guardian = GetGuardian(hireling, NECROMANCER_GUARDIAN)
+                    if guardian then
+                        guardian:NearTeleport( x, y, z, o )
+                    end
+                end
             else
                 player:SendBroadcastMessage("Your hireling is too far away to be summoned.")
                 player:PlayDirectSound(FAIL_SOUND)
