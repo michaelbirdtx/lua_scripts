@@ -353,6 +353,8 @@ local function firstLogin(event, player)
         1,
         41605, -- Instastone!
         1,
+        25750, -- Magic Slate
+        1,
         foodEntry,
         1000
     )
