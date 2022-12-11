@@ -33,7 +33,6 @@ local function onChatMessage(event, player, msg, _, lang)
     if (msg:find('#magicmusic') == 1) and player:GetGMRank() > 0 then
         local randomSong = math.random(1,#Songs)
         player:PlayDirectSound(Songs[randomSong], player)
-        print("Playing song #"..randomSong)
         return false
     end
 end
@@ -48,7 +47,6 @@ local function onHelloMagicSlate(event, player, object)
 end
 
 local function onSelectMagicSlate(event, player, object, sender, intid, code, menu_id)
-    print("intid: "..intid)
     player:GossipComplete()
     if intid == 1 then
         player:SendShowBank(player)
