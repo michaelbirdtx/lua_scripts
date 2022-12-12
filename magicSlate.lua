@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna magicSlate"
-local MODULE_VERSION = '1.0.0'
+local MODULE_VERSION = '1.0.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -54,6 +54,7 @@ local function onHelloMagicSlate(event, player, object)
     player:GossipMenuAddItem(4, "\"...listen to some music.\"", 1, 3)
     player:GossipMenuAddItem(2, "\"...order some more of The Stuff!\"", 1, 4)
     player:GossipSendMenu(0x7FFFFFFF, player, SLATE_ENTRY)
+    player:PlayDirectSound(12889, player)
 end
 
 local function onSelectMagicSlate(event, player, object, sender, intid, code, menu_id)

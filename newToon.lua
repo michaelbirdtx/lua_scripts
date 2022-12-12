@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna newToon"
-local MODULE_VERSION = '1.5.3'
+local MODULE_VERSION = '1.5.4'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
