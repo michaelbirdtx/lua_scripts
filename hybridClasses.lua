@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hybridClasses"
-local MODULE_VERSION = '1.0.1'
+local MODULE_VERSION = '1.0.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -98,5 +98,5 @@ ENGINE=InnoDB;
 ]])
 
 RegisterPlayerEvent(4, onLogout)
-RegisterPlayerEvent(12, onGainXP)
+--RegisterPlayerEvent(12, onGainXP)
 RegisterPlayerEvent(13, onLevelUp)
