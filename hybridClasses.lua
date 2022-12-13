@@ -4,15 +4,22 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
+XP_MODIFIER = 2
+
 -- Hybrid Class IDs
 BATTLEMAGE = 801
 HIGHWAYMAN = 401
 
 local Spells = {
     {class = 401, level = 10, type = 0, entry = 75},    -- Auto Shot
-    {class = 401, level = 10, type = 0, entry = 3045},  -- Rapid Fire
-    {class = 401, level = 20, type = 0, entry = 781},   -- Disengage
+    {class = 401, level = 10, type = 0, entry = 19434}, -- Aimed Shot 1
+    {class = 401, level = 10, type = 2, entry = 44093}, -- Gun
+    {class = 401, level = 20, type = 0, entry = 20900}, -- Aimed Shot 2
     {class = 401, level = 20, type = 0, entry = 2643},  -- Multishot
+    {class = 401, level = 30, type = 0, entry = 20901}, -- Aimed Shot 3
+    {class = 401, level = 30, type = 0, entry = 781},   -- Disengage
+    {class = 401, level = 40, type = 0, entry = 20902}, -- Aimed Shot 4
+    {class = 401, level = 40, type = 0, entry = 3045},  -- Rapid Fire
     {class = 801, level = 10, type = 0, entry = 674},   -- Dual Wield
     {class = 801, level = 10, type = 0, entry = 31994}, -- Shoulder Charge
     {class = 801, level = 10, type = 0, entry = 59607}, -- Heroic Strike
@@ -55,6 +62,13 @@ local function getHybridClass(player)
     end
 end
 
+local function onGainXP(event, player, amount, victim)
+    print(player:GetName().." gained "..tostring(amount).." XP")
+    if getHybridClass(player) > 0 then        
+        return amount * XP_MODIFIER
+    end
+end
+
 local function onLevelUp(event, player, oldLevel)
     local hybridClass = getHybridClass(player)
     if hybridClass > 0 then
@@ -81,4 +95,5 @@ ENGINE=InnoDB;
 ]])
 
 RegisterPlayerEvent(4, onLogout)
+RegisterPlayerEvent(12, onGainXP)
 RegisterPlayerEvent(13, onLevelUp)
