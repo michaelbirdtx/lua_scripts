@@ -65,7 +65,8 @@ end
 local function onGainXP(event, player, amount, victim)
     local hybridClass = getHybridClass(player)
     print(player:GetName().." gained "..tostring(amount).." XP for Hybrid Class: "..hybridClass)
-    if hybridClass ~= 0 then        
+    if hybridClass ~= 0 then
+        print("XP doubled to "..tostring(amount*XP_MODIFIER))
         return amount * XP_MODIFIER
     else
         return amount
@@ -98,5 +99,5 @@ ENGINE=InnoDB;
 ]])
 
 RegisterPlayerEvent(4, onLogout)
---RegisterPlayerEvent(12, onGainXP)
+RegisterPlayerEvent(12, onGainXP)
 RegisterPlayerEvent(13, onLevelUp)
