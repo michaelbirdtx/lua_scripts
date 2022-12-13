@@ -18,23 +18,9 @@ local Spells = {
     {class = 801, level = 10, type = 0, entry = 59607}, -- Heroic Strike
     {class = 801, level = 10, type = 2, entry = 42945}, -- Weapon 1
     {class = 801, level = 10, type = 2, entry = 44096}, -- Weapon 2
-    {class = 801, level = 20, type = 0, entry = 8078},  -- Thunderclap
+    {class = 801, level = 20, type = 0, entry = 56909}, -- Cleave (weak)
+    {class = 801, level = 30, type = 0, entry = 8078},  -- Thunderclap
     {class = 801, level = 40, type = 0, entry = 55866}, -- Thunderblade
-}
-
-local healthMod = {
-    [BATTLEMAGE] = 2,
-    [HIGHWAYMAN] = 1,
-}
-
-local powerMod = {
-    [BATTLEMAGE] = 0.5,
-    [HIGHWAYMAN] = 0.8,
-}
-
-local powerType = {
-    [BATTLEMAGE] = 0,
-    [HIGHWAYMAN] = 3,
 }
 
 local function checkSpells(class, player)
@@ -69,31 +55,17 @@ local function getHybridClass(player)
     end
 end
 
-local function adjustStats(player)
-    hybridClass = getHybridClass(player)
-    if hybridClass > 0 then
-        local maxHP = player:GetMaxHealth()
-        player:SetMaxHealth(maxHP * healthMod[hybridClass])
-        --player:SetHealth(maxHP * healthMod[hybridClass])
-        local maxPower = player:GetMaxPower(powerType[hybridClass])
-        player:SetMaxPower(powerType[hybridClass], maxPower * powerMod[hybridClass])
-        --player:SetPower(0, maxMana * manaMod[hybridClass])
-    end
-end
-
-local function onLogin(event, player)
-    adjustStats(player)
-end
-
-local function onResurrect(event, player)
-    --adjustStats(player)
-end
-
 local function onLevelUp(event, player, oldLevel)
     local hybridClass = getHybridClass(player)
     if hybridClass > 0 then
         checkSpells(hybridClass, player)
-        adjustStats(player)
+    end
+end
+
+local function onLogout(event, player)
+    -- Check for Dual Wield, delete from table to avoid SQL error on logout
+    if getHybridClass(player) == 801 then
+        CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 118")
     end
 end
 
@@ -108,6 +80,5 @@ COLLATE='latin1_swedish_ci'
 ENGINE=InnoDB;
 ]])
 
-RegisterPlayerEvent(3, onLogin)
+RegisterPlayerEvent(4, onLogout)
 RegisterPlayerEvent(13, onLevelUp)
-RegisterPlayerEvent(36, onResurrect)
