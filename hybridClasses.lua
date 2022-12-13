@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hybridClasses"
-local MODULE_VERSION = '1.0.0'
+local MODULE_VERSION = '1.0.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -66,6 +66,8 @@ local function onGainXP(event, player, amount, victim)
     print(player:GetName().." gained "..tostring(amount).." XP")
     if getHybridClass(player) > 0 then        
         return amount * XP_MODIFIER
+    else
+        return amount
     end
 end
 
