@@ -6,8 +6,13 @@ print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 -- Hybrid Class IDs
 BATTLEMAGE = 801
+HIGHWAYMAN = 401
 
 local Spells = {
+    {class = 401, level = 10, type = 0, entry = 75},    -- Auto Shot
+    {class = 401, level = 10, type = 0, entry = 3045},  -- Rapid Fire
+    {class = 401, level = 20, type = 0, entry = 781},   -- Disengage
+    {class = 401, level = 20, type = 0, entry = 2643},  -- Multishot
     {class = 801, level = 10, type = 0, entry = 674},   -- Dual Wield
     {class = 801, level = 10, type = 0, entry = 31994}, -- Shoulder Charge
     {class = 801, level = 10, type = 0, entry = 59607}, -- Heroic Strike
@@ -19,10 +24,17 @@ local Spells = {
 
 local healthMod = {
     [BATTLEMAGE] = 2,
+    [HIGHWAYMAN] = 1,
 }
 
-local manaMod = {
+local powerMod = {
     [BATTLEMAGE] = 0.5,
+    [HIGHWAYMAN] = 0.8,
+}
+
+local powerType = {
+    [BATTLEMAGE] = 0,
+    [HIGHWAYMAN] = 3,
 }
 
 local function checkSpells(class, player)
@@ -63,8 +75,8 @@ local function adjustStats(player)
         local maxHP = player:GetMaxHealth()
         player:SetMaxHealth(maxHP * healthMod[hybridClass])
         --player:SetHealth(maxHP * healthMod[hybridClass])
-        local maxMana = player:GetMaxPower(0)
-        player:SetMaxPower(0, maxMana * manaMod[hybridClass])
+        local maxPower = player:GetMaxPower(powerType[hybridClass])
+        player:SetMaxPower(powerType[hybridClass], maxPower * powerMod[hybridClass])
         --player:SetPower(0, maxMana * manaMod[hybridClass])
     end
 end
