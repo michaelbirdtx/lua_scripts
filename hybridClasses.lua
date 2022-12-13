@@ -63,8 +63,9 @@ local function getHybridClass(player)
 end
 
 local function onGainXP(event, player, amount, victim)
-    print(player:GetName().." gained "..tostring(amount).." XP")
-    if getHybridClass(player) > 0 then        
+    local hybridClass = getHybridClass(player)
+    print(player:GetName().." gained "..tostring(amount).." XP for Hybrid Class: "..hybridClass)
+    if hybridClass > 0 then        
         return amount * XP_MODIFIER
     else
         return amount
