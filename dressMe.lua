@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna dressMe"
-local MODULE_VERSION = '1.3.3'
+local MODULE_VERSION = '1.3.4'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -55,6 +55,7 @@ local function GetFakeEntry(item)
 end
 
 local function LoadPlayer(player)
+    print("["..MODULE_NAME.."]: Loaded "..player:GetName())
     local playerGUID = player:GetGUIDLow()
     entryMap[playerGUID] = {}
     local result = CharDBQuery("SELECT GUID, FakeEntry FROM eluna_transmog WHERE Owner = "..playerGUID)
