@@ -4,7 +4,7 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
-XP_MODIFIER = 2
+XP_MODIFIER = 4
 
 -- Hybrid Class IDs
 BATTLEMAGE = 801
@@ -63,19 +63,19 @@ local function getHybridClass(player)
 end
 
 local function onGainXP(event, player, amount, victim)
-    local hybridClass = getHybridClass(player)
-    print(player:GetName().." gained "..tostring(amount).." XP for Hybrid Class: "..hybridClass)
-    if hybridClass ~= 0 then
-        print("XP doubled to "..tostring(amount*XP_MODIFIER))
+    -- local hybridClass = getHybridClass(player)
+    -- print(player:GetName().." gained "..tostring(amount).." XP for Hybrid Class: "..hybridClass)
+    if getHybridClass(player) ~= 0 then
+        print("XP adjusted to "..tostring(amount*XP_MODIFIER))
         return amount * XP_MODIFIER
-    else
-        return amount
+    --else
+        --return amount
     end
 end
 
 local function onLevelUp(event, player, oldLevel)
-    local hybridClass = getHybridClass(player)
-    if hybridClass ~= 0 then
+    --local hybridClass = getHybridClass(player)
+    if getHybridClass(player) ~= 0 then
         checkSpells(hybridClass, player)
     end
 end
