@@ -5,14 +5,15 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 -- Configuration
-MIN_ADOPTION_LEVEL = 1
-XP_MODIFIER = 4
+local MIN_ADOPTION_LEVEL = 1 -- The level at which characters can become a Hybrid
+local START_LEVEL = 10 -- The level to which characters will be reset when they become Hybrids
+local XP_MODIFIER = 5 -- Multiplier for Hybrid bonus XP
 
 -- Hybrid Class IDs
-BATTLEMAGE = 801
-HIGHWAYMAN = 401
+local BATTLEMAGE = 801
+local HIGHWAYMAN = 401
 
-local Spells = {
+local spells = {
     {class = 401, level = 10, type = 0, entry = 75},    -- Auto Shot
     {class = 401, level = 10, type = 0, entry = 19434}, -- Aimed Shot 1
     {class = 401, level = 10, type = 2, entry = 44093}, -- Gun
@@ -34,7 +35,7 @@ local Spells = {
 
 local function checkSpells(class, player)
     level = player:GetLevel()
-    for i, v in ipairs(Spells) do
+    for i, v in ipairs(spells) do
         if v.class==class and v.level<=level then
             if v.type==0 then
                 if not player:HasSpell(v.entry) then
@@ -55,8 +56,17 @@ local function checkSpells(class, player)
     end
 end
 
+local function dbInsertHybridClass(player, hybridClass)
+    if GetHybridClass(player) == 0 then
+        CharDBExecute("INSERT INTO eluna_hybrid_classes(guid,class) VALUES("..tostring(player:GetGUID())..","..hybridClass..");")
+        return true
+    else
+        return false
+    end
+end
+
 function GetHybridClass(player)
-    local Query = CharDBQuery("select class from eluna_hybrid_classes where guid = "..tostring(player:GetGUID()).." limit 1;")
+    local Query = CharDBQuery("SELECT class FROM eluna_hybrid_classes WHERE guid = "..tostring(player:GetGUID()).." LIMIT 1;")
     if Query then
         return Query:GetUInt32(0)
     else
@@ -64,20 +74,60 @@ function GetHybridClass(player)
     end
 end
 
+function GrantHybridClass(player, hybridClass)
+    if GetHybridClass(player) ~= 0 then
+        player:SendBroadcastMessage("You are already a Hybrid.")
+        return false
+    end
+    if player:GetLevel() < MIN_ADOPTION_LEVEL then
+        player:SendBroadcastMessage("You are too inexperienced to become a Hybrid.")
+        return false
+    end
+    if hybridClass == BATTLEMAGE then
+        if player:GetClass() ~= 8 then
+            player:SendBroadcastMessage("Only a Mage can become a Battlemage.")
+            return false
+        end
+    end
+    if hybridClass == HIGHWAYMAN then
+        if player:GetClass() ~= 4 then
+            player:SendBroadcastMessage("Only a Rogue can become a Highwayman.")
+            return false
+        end
+    end
+    local result = dbInsertHybridClass(player, hybridClass)
+    if result then
+        UnlearnSkills(player, START_LEVEL, player:GetLevel())
+        player:SetLevel(2)
+        player:SetLevel(START_LEVEL)
+        checkSpells(hybridClass, player)
+    end
+end
+
+local function onChatMessage(event, player, msg, _, lang)
+    if (msg:find("#grant battlemage") == 1) and player:GetGMRank() > 0 then
+        if GrantHybridClass(player, BATTLEMAGE) then
+            player:SendBroadcastMessage("You are now a Battlemage!")
+        end
+        return false
+    end
+    if (msg:find("#grant highwayman") == 1) and player:GetGMRank() > 0 then
+        if GrantHybridClass(player, HIGHWAYMAN) then
+            player:SendBroadcastMessage("You are now a Highwayman!")
+        end
+        return false
+    end
+end
+
 local function onGainXP(event, player, amount, victim)
-    local hybridClass = GetHybridClass(player)
-    print(player:GetName().." gained "..tostring(amount).." XP for Hybrid Class: "..hybridClass)
-    if hybridClass ~= 0 then
-    --if GetHybridClass(player) ~= 0 then
+    print(player:GetName().." gained "..tostring(amount).." XP for Hybrid Class: "..tostring(hybridClass))
+    if GetHybridClass(player) ~= 0 then
         print("XP adjusted to "..tostring(amount*XP_MODIFIER))
         return amount * XP_MODIFIER
-    --else
-        --return amount
     end
 end
 
 local function onLevelUp(event, player, oldLevel)
-    --local hybridClass = GetHybridClass(player)
     if GetHybridClass(player) ~= 0 then
         checkSpells(hybridClass, player)
     end
@@ -104,3 +154,4 @@ ENGINE=InnoDB;
 RegisterPlayerEvent(4, onLogout)
 RegisterPlayerEvent(12, onGainXP)
 RegisterPlayerEvent(13, onLevelUp)
+RegisterPlayerEvent(18, onChatMessage)
