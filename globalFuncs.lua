@@ -16,8 +16,29 @@ CLASS_MAGE = 8
 CLASS_WARLOCK = 9
 CLASS_DRUID = 11
 
+-- Equipment Slot IDs
+EQUIPMENT_SLOT_HEAD         = 0
+EQUIPMENT_SLOT_NECK         = 1
+EQUIPMENT_SLOT_SHOULDERS    = 2
+EQUIPMENT_SLOT_BODY         = 3
+EQUIPMENT_SLOT_CHEST        = 4
+EQUIPMENT_SLOT_WAIST        = 5
+EQUIPMENT_SLOT_LEGS         = 6
+EQUIPMENT_SLOT_FEET         = 7
+EQUIPMENT_SLOT_WRISTS       = 8
+EQUIPMENT_SLOT_HANDS        = 9
+EQUIPMENT_SLOT_FINGER1      = 10
+EQUIPMENT_SLOT_FINGER2      = 11
+EQUIPMENT_SLOT_TRINKET1     = 12
+EQUIPMENT_SLOT_TRINKET2     = 13
+EQUIPMENT_SLOT_BACK         = 14
+EQUIPMENT_SLOT_MAINHAND     = 15
+EQUIPMENT_SLOT_OFFHAND      = 16
+EQUIPMENT_SLOT_RANGED       = 17
+EQUIPMENT_SLOT_TABARD       = 18
+
 -- Class Skills
-local SKILL = {
+local CLASS_SPELLS = {
     [CLASS_WARRIOR] = {
         [1] = {6673, 264, 5011, 15590, 266, 200, 227, 2567, 199, 1180},
         [4] = {100, 772},
@@ -509,13 +530,13 @@ local SKILL = {
     }
 }
 
-function UnlearnSkills(player, fromLevel, toLevel)
+function UnlearnClassSpells(player, fromLevel, toLevel)
     local class = player:GetClass()
-    local skills = SKILL[class]
-    if skills then
+    local spells = CLASS_SPELLS[class]
+    if spells then
         for i = fromLevel, toLevel do
-            local levelSkills = skills[i] or {}
-            for _, v in pairs(levelSkills) do
+            local levelSpells = spells[i] or {}
+            for _, v in pairs(levelSpells) do
                 if player:HasSpell(v) then
                     player:RemoveSpell(v)
                 end

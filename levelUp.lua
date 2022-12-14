@@ -68,7 +68,6 @@ local Spells = {
     {class = 0, level = 30, type = 0, entry = 34896}, -- Cobalt War Talbuk
     {class = 0, level = 40, type = 0, entry = 75614}, -- Celestial Steed
     {class = 0, level = 40, type = 1, entry = 33391}, -- Journeyman Riding
-    {class = 0, level = 50, type = 0, entry = 55531}, -- Mechano-Hog
     {class = 0, level = 60, type = 1, entry = 34090}, -- Expert Riding
     {class = 0, level = 60, type = 0, entry = 48025}, -- Headless Horseman's Mount
     {class = 0, level = 68, type = 0, entry = 54197}, -- Cold Weather Flying
