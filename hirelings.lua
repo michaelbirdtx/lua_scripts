@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hirelings"
-local MODULE_VERSION = '2.5.4'
+local MODULE_VERSION = '2.5.5'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -391,6 +391,8 @@ end
 function SpawnHireling(entry, player)
     if player:HasAura(HIRE_AURA) then
         player:SendBroadcastMessage("Sorry, you already have a hireling.")
+    elseif GetHybridClass(player) ~= 0 then
+        player:SendBroadcastMessage("Sorry, hirelings are not available to Hybrids.")
     else
         local hireling = PerformIngameSpawn(1, entry, player:GetMapId(), player:GetInstanceId(), player:GetX(), player:GetY(), player:GetZ(), player:GetO(), false, 4294967295, 1)
         hireling:SetCreatorGUID(player:GetGUID())
@@ -968,6 +970,9 @@ local function brokerOnHello(event, player, hireling)
         player:GossipMenuAddItem(0, "Please dismiss my hireling.", 0, 21, null, "Are you sure you want to dismiss your hireling?")
         player:GossipMenuAddItem(0, "I've lost my hireling. Can you help me?", 0, 22, null, "I can cancel your contract for you. If you do find your hireling, they will no longer follow you.")
         player:GossipSendMenu(0x7FFFFFFF, hireling)
+    elseif GetHybridClass(player) ~= 0 then
+        player:GossipSetText("Sorry, hirelings are not available to Hybrids.\n\nYou should be working for us!")
+        player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nAre you in need of assistance? Our hirelings will fight alongside you until death, or until they get bored.")
         player:GossipMenuAddItem(0, "I'd like to hire a Sellsword.", 0, 1, null, "The fee for this hireling is...", baseFees[SELLSWORD]*player:GetLevel())
@@ -1043,6 +1048,9 @@ local function hirelingOnHello(event, player, hireling)
             end
         end
         player:GossipMenuAddItem(0, "You have completed your work here. I release you from your contract.", 0, 10, null, "Are you sure you want to dismiss this hireling?")
+        player:GossipSendMenu(0x7FFFFFFF, hireling)
+    elseif GetHybridClass(player) ~= 0 then
+        player:GossipSetText("You should talk to a Hireling Broker, they're always looking to hire new Hybrids!")
         player:GossipSendMenu(0x7FFFFFFF, hireling)
     else
         player:GossipSetText("Greetings, "..player:GetClassAsString()..".\n\nI'm with a client right now, but you can visit any Hireling Broker to get some help!")

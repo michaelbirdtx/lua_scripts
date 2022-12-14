@@ -4,6 +4,8 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
+-- Configuration
+MIN_ADOPTION_LEVEL = 1
 XP_MODIFIER = 4
 
 -- Hybrid Class IDs
@@ -53,7 +55,7 @@ local function checkSpells(class, player)
     end
 end
 
-local function getHybridClass(player)
+function GetHybridClass(player)
     local Query = CharDBQuery("select class from eluna_hybrid_classes where guid = "..tostring(player:GetGUID()).." limit 1;")
     if Query then
         return Query:GetUInt32(0)
@@ -63,10 +65,11 @@ local function getHybridClass(player)
 end
 
 local function onGainXP(event, player, amount, victim)
-    -- local hybridClass = getHybridClass(player)
-    -- print(player:GetName().." gained "..tostring(amount).." XP for Hybrid Class: "..hybridClass)
-    if getHybridClass(player) ~= 0 then
-        --print("XP adjusted to "..tostring(amount*XP_MODIFIER))
+    local hybridClass = GetHybridClass(player)
+    print(player:GetName().." gained "..tostring(amount).." XP for Hybrid Class: "..hybridClass)
+    if hybridClass ~= 0 then
+    --if GetHybridClass(player) ~= 0 then
+        print("XP adjusted to "..tostring(amount*XP_MODIFIER))
         return amount * XP_MODIFIER
     --else
         --return amount
@@ -74,15 +77,15 @@ local function onGainXP(event, player, amount, victim)
 end
 
 local function onLevelUp(event, player, oldLevel)
-    --local hybridClass = getHybridClass(player)
-    if getHybridClass(player) ~= 0 then
+    --local hybridClass = GetHybridClass(player)
+    if GetHybridClass(player) ~= 0 then
         checkSpells(hybridClass, player)
     end
 end
 
 local function onLogout(event, player)
     -- Check for Dual Wield, delete from table to avoid SQL error on logout
-    if getHybridClass(player) == 801 then
+    if GetHybridClass(player) == 801 then
         CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 118")
     end
 end
