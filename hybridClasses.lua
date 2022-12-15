@@ -5,7 +5,7 @@ local MODULE_AUTHOR = "Mpromptu Gaming"
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 
 -- Configuration
-local MIN_ADOPTION_LEVEL = 80 -- The level at which characters can become a Hybrid
+local MIN_ADOPTION_LEVEL = 1 -- The level at which characters can become a Hybrid
 local START_LEVEL = 10 -- The level to which characters will be reset when they become Hybrids
 local XP_MODIFIER = 5 -- Multiplier for Hybrid bonus XP
 
@@ -50,8 +50,10 @@ local gear = {
 }
 
 local spells = {
+    -- Highwayman
     {class = 401, level = 10, type = 0, entry = 75},    -- Auto Shot
     {class = 401, level = 10, type = 0, entry = 19434}, -- Aimed Shot 1
+    {class = 401, level = 10, type = 0, entry = 19506}, -- Trueshot Aura
     {class = 401, level = 10, type = 0, entry = 55531}, -- Mechano-Hog
     {class = 401, level = 20, type = 0, entry = 20900}, -- Aimed Shot 2
     {class = 401, level = 20, type = 0, entry = 2643},  -- Multishot
@@ -63,13 +65,29 @@ local spells = {
     {class = 401, level = 50, type = 0, entry = 20903}, -- Aimed Shot 5
     {class = 401, level = 60, type = 0, entry = 20904}, -- Aimed Shot 6
     {class = 401, level = 70, type = 0, entry = 27065}, -- Aimed Shot 7
+    -- Battlemage
     {class = 801, level = 10, type = 0, entry = 73313}, -- Crimson Deathcharger
     {class = 801, level = 10, type = 0, entry = 674},   -- Dual Wield
+    {class = 801, level = 10, type = 0, entry = 7302},  -- Ice Armor 1
+    {class = 801, level = 10, type = 0, entry = 1243},  -- Power Word: Fortitude 1
     {class = 801, level = 10, type = 0, entry = 31994}, -- Shoulder Charge
     {class = 801, level = 10, type = 0, entry = 59607}, -- Heroic Strike
     {class = 801, level = 20, type = 0, entry = 56909}, -- Cleave (weak)
+    {class = 801, level = 20, type = 0, entry = 7320},  -- Ice Armor 2
+    {class = 801, level = 20, type = 0, entry = 1244},  -- Power Word: Fortitude 2
+    {class = 801, level = 30, type = 0, entry = 10219}, -- Ice Armor 3
+    {class = 801, level = 30, type = 0, entry = 1245},  -- Power Word: Fortitude 3
     {class = 801, level = 30, type = 0, entry = 8078},  -- Thunderclap
+    {class = 801, level = 40, type = 0, entry = 10220}, -- Ice Armor 4
+    {class = 801, level = 40, type = 0, entry = 2791},  -- Power Word: Fortitude 4
     {class = 801, level = 40, type = 0, entry = 55866}, -- Thunderblade
+    {class = 801, level = 50, type = 0, entry = 16170}, -- Bloodlust
+    {class = 801, level = 50, type = 0, entry = 27124}, -- Ice Armor 5
+    {class = 801, level = 50, type = 0, entry = 10937}, -- Power Word: Fortitude 5
+    {class = 801, level = 60, type = 0, entry = 43008}, -- Ice Armor 6
+    {class = 801, level = 60, type = 0, entry = 10938}, -- Power Word: Fortitude 6
+    {class = 801, level = 70, type = 0, entry = 25389}, -- Power Word: Fortitude 7
+    {class = 801, level = 80, type = 0, entry = 48161}, -- Power Word: Fortitude 8
 }
 
 local function checkSpells(player, hybridClass)
