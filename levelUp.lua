@@ -34,35 +34,35 @@ local Pets = {
     [20] = 35504, -- Phoenix Hatchling
 }
 
-local Titles = {
-    [1]  = 143,   -- Jenkins
-    [2]  = 155,   -- the Noble
-    [3]  = 134,   -- the Merrymaker
-    [4]  =  22,   -- Legionnaire
-    [5]  = 125,   -- Loremaster
-    [6]  = 172,   -- the Patient
-    [7]  =  27,   -- Warlord
-    [8]  =   4,   -- Master Sergeant
-    [9]  =  76,   -- Flame Keeper
-    [10] =  11,   -- Commander
-    [11] = 174,   -- Bane of the Fallen King
-    [12] =  47,   -- Conqueror
-    [13] =  72,   -- Battlemaster
-    [14] = 145,   -- the Insane
-    [15] =   9,   -- Knight-Champion
-    [16] =  77,   -- the Exalted
-    [17] = 141,   -- the Immortal
-    [18] = 124,   -- the Hallowed
-    [19] =  83,   -- Salty
-    [20] =  77,   -- the Exalted
-}
+-- local Titles = {
+--     [1]  = 143,   -- Jenkins
+--     [2]  = 155,   -- the Noble
+--     [3]  = 134,   -- the Merrymaker
+--     [4]  =  22,   -- Legionnaire
+--     [5]  = 125,   -- Loremaster
+--     [6]  = 172,   -- the Patient
+--     [7]  =  27,   -- Warlord
+--     [8]  =   4,   -- Master Sergeant
+--     [9]  =  76,   -- Flame Keeper
+--     [10] =  11,   -- Commander
+--     [11] = 174,   -- Bane of the Fallen King
+--     [12] =  47,   -- Conqueror
+--     [13] =  72,   -- Battlemaster
+--     [14] = 145,   -- the Insane
+--     [15] =   9,   -- Knight-Champion
+--     [16] =  77,   -- the Exalted
+--     [17] = 141,   -- the Immortal
+--     [18] = 124,   -- the Hallowed
+--     [19] =  83,   -- Salty
+--     [20] =  77,   -- the Exalted
+-- }
 
 local Spells = {
 
     -- All Classes (0)
 
     {class = 0, level = 10, type = 0, entry = 64731}, -- Sea Turtle
-    {class = 0, level = 20, type = 3, entry = 43},    -- Duelist
+    --{class = 0, level = 20, type = 3, entry = 43},    -- Duelist
     {class = 0, level = 20, type = 1, entry = 33388}, -- Apprentice Riding
     {class = 0, level = 20, type = 0, entry = 65917}, -- Magic Rooster
     {class = 0, level = 30, type = 0, entry = 34896}, -- Cobalt War Talbuk
@@ -533,8 +533,6 @@ local function levelCheck(event, player, oldLevel)
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
         local randomPet = math.random(1,#Pets)
-        local randomTitle = math.random(1,#Titles)
-        player:SetKnownTitle(Titles[randomTitle])
         SendMail(
             emailSubject,
             emailBody,
@@ -565,7 +563,7 @@ local function levelCheck(event, player, oldLevel)
     if level==80 then
         player:SendNotification("Congrats on Level "..level.."!")
         player:PlayDirectSound(8572)
-        player:SetKnownTitle(142) -- the Undying
+        --player:SetKnownTitle(142) -- the Undying
         SendMail(
             emailSubject,
             emailBody,

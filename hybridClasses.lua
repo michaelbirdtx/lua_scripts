@@ -52,7 +52,7 @@ local gear = {
 local spells = {
     {class = 401, level = 10, type = 0, entry = 75},    -- Auto Shot
     {class = 401, level = 10, type = 0, entry = 19434}, -- Aimed Shot 1
-    {class = 401, level = 10, type = 0, entry = 55531}, -- Mechano-Hog    
+    {class = 401, level = 10, type = 0, entry = 55531}, -- Mechano-Hog
     {class = 401, level = 20, type = 0, entry = 20900}, -- Aimed Shot 2
     {class = 401, level = 20, type = 0, entry = 2643},  -- Multishot
     {class = 401, level = 30, type = 0, entry = 20901}, -- Aimed Shot 3
@@ -63,6 +63,7 @@ local spells = {
     {class = 401, level = 50, type = 0, entry = 20903}, -- Aimed Shot 5
     {class = 401, level = 60, type = 0, entry = 20904}, -- Aimed Shot 6
     {class = 401, level = 70, type = 0, entry = 27065}, -- Aimed Shot 7
+    {class = 801, level = 10, type = 0, entry = 73313}, -- Crimson Deathcharger
     {class = 801, level = 10, type = 0, entry = 674},   -- Dual Wield
     {class = 801, level = 10, type = 0, entry = 31994}, -- Shoulder Charge
     {class = 801, level = 10, type = 0, entry = 59607}, -- Heroic Strike
