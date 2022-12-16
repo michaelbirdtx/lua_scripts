@@ -56,15 +56,18 @@ local spells = {
     {class = 401, level = 10, type = 0, entry = 19506}, -- Trueshot Aura
     {class = 401, level = 10, type = 0, entry = 55531}, -- Mechano-Hog
     {class = 401, level = 20, type = 0, entry = 20900}, -- Aimed Shot 2
-    {class = 401, level = 20, type = 0, entry = 2643},  -- Multishot
+    {class = 401, level = 20, type = 0, entry = 52889}, -- Envenomed Shot
     {class = 401, level = 30, type = 0, entry = 20901}, -- Aimed Shot 3
-    {class = 401, level = 30, type = 0, entry = 781},   -- Disengage
+    {class = 401, level = 30, type = 0, entry = 15495}, -- Explosive Shot
     {class = 401, level = 30, type = 0, entry = 19883}, -- Track Humanoids
     {class = 401, level = 40, type = 0, entry = 20902}, -- Aimed Shot 4
-    {class = 401, level = 40, type = 0, entry = 3045},  -- Rapid Fire
+    {class = 401, level = 40, type = 0, entry = 53301}, -- Explosive Shot 1
     {class = 401, level = 50, type = 0, entry = 20903}, -- Aimed Shot 5
+    {class = 401, level = 60, type = 0, entry = 60051}, -- Explosive Shot 2
     {class = 401, level = 60, type = 0, entry = 20904}, -- Aimed Shot 6
+    {class = 401, level = 70, type = 0, entry = 60052}, -- Explosive Shot 3
     {class = 401, level = 70, type = 0, entry = 27065}, -- Aimed Shot 7
+    {class = 401, level = 80, type = 0, entry = 60053}, -- Explosive Shot 4
     -- Battlemage
     {class = 801, level = 10, type = 0, entry = 73313}, -- Crimson Deathcharger
     {class = 801, level = 10, type = 0, entry = 674},   -- Dual Wield
@@ -180,6 +183,7 @@ function GrantHybridClass(player, hybridClass)
         end
         checkSpells(player, hybridClass)
         setEquipment(player, hybridClass)
+        print("["..MODULE_NAME.."]: "..player:GetName().." has been granted a Hybrid Class.")
     end
 end
 
