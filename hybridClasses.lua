@@ -51,23 +51,25 @@ local gear = {
 
 local spells = {
     -- Highwayman
-    {class = 401, level = 10, type = 0, entry = 75},    -- Auto Shot
     {class = 401, level = 10, type = 0, entry = 19434}, -- Aimed Shot 1
-    {class = 401, level = 10, type = 0, entry = 19506}, -- Trueshot Aura
+    {class = 401, level = 10, type = 0, entry = 75},    -- Auto Shot
     {class = 401, level = 10, type = 0, entry = 55531}, -- Mechano-Hog
+    {class = 401, level = 10, type = 3, entry = 45},    -- Title: Challenger
     {class = 401, level = 20, type = 0, entry = 20900}, -- Aimed Shot 2
-    {class = 401, level = 20, type = 0, entry = 52889}, -- Envenomed Shot
+    {class = 401, level = 20, type = 0, entry = 19506}, -- Trueshot Aura
     {class = 401, level = 30, type = 0, entry = 20901}, -- Aimed Shot 3
-    {class = 401, level = 30, type = 0, entry = 15495}, -- Explosive Shot
     {class = 401, level = 30, type = 0, entry = 19883}, -- Track Humanoids
     {class = 401, level = 40, type = 0, entry = 20902}, -- Aimed Shot 4
     {class = 401, level = 40, type = 0, entry = 53301}, -- Explosive Shot 1
+    {class = 401, level = 40, type = 3, entry = 44},    -- Title: Rival
     {class = 401, level = 50, type = 0, entry = 20903}, -- Aimed Shot 5
-    {class = 401, level = 60, type = 0, entry = 60051}, -- Explosive Shot 2
+    {class = 401, level = 50, type = 0, entry = 60051}, -- Explosive Shot 2
     {class = 401, level = 60, type = 0, entry = 20904}, -- Aimed Shot 6
-    {class = 401, level = 70, type = 0, entry = 60052}, -- Explosive Shot 3
+    {class = 401, level = 60, type = 0, entry = 60052}, -- Explosive Shot 3
+    {class = 401, level = 60, type = 3, entry = 163},   -- Title: Vanquisher
     {class = 401, level = 70, type = 0, entry = 27065}, -- Aimed Shot 7
-    {class = 401, level = 80, type = 0, entry = 60053}, -- Explosive Shot 4
+    {class = 401, level = 70, type = 0, entry = 60053}, -- Explosive Shot 4
+    {class = 401, level = 80, type = 3, entry = 27},    -- Title: Warlord
     -- Battlemage
     {class = 801, level = 10, type = 0, entry = 73313}, -- Crimson Deathcharger
     {class = 801, level = 10, type = 0, entry = 674},   -- Dual Wield
@@ -75,6 +77,7 @@ local spells = {
     {class = 801, level = 10, type = 0, entry = 1243},  -- Power Word: Fortitude 1
     {class = 801, level = 10, type = 0, entry = 31994}, -- Shoulder Charge
     {class = 801, level = 10, type = 0, entry = 59607}, -- Heroic Strike
+    {class = 801, level = 10, type = 3, entry = 45},    -- Title: Challenger
     {class = 801, level = 20, type = 0, entry = 56909}, -- Cleave (weak)
     {class = 801, level = 20, type = 0, entry = 7320},  -- Ice Armor 2
     {class = 801, level = 20, type = 0, entry = 1244},  -- Power Word: Fortitude 2
@@ -84,13 +87,16 @@ local spells = {
     {class = 801, level = 40, type = 0, entry = 10220}, -- Ice Armor 4
     {class = 801, level = 40, type = 0, entry = 2791},  -- Power Word: Fortitude 4
     {class = 801, level = 40, type = 0, entry = 55866}, -- Thunderblade
+    {class = 801, level = 40, type = 3, entry = 44},    -- Title: Rival
     {class = 801, level = 50, type = 0, entry = 16170}, -- Bloodlust
     {class = 801, level = 50, type = 0, entry = 27124}, -- Ice Armor 5
     {class = 801, level = 50, type = 0, entry = 10937}, -- Power Word: Fortitude 5
     {class = 801, level = 60, type = 0, entry = 43008}, -- Ice Armor 6
     {class = 801, level = 60, type = 0, entry = 10938}, -- Power Word: Fortitude 6
+    {class = 801, level = 60, type = 3, entry = 163},   -- Title: Vanquisher
     {class = 801, level = 70, type = 0, entry = 25389}, -- Power Word: Fortitude 7
     {class = 801, level = 80, type = 0, entry = 48161}, -- Power Word: Fortitude 8
+    {class = 801, level = 80, type = 3, entry = 27},    -- Title: Warlord
 }
 
 local function checkSpells(player, hybridClass)
@@ -140,6 +146,8 @@ local function setEquipment(player, hybridClass)
     end
     if hybridClass == HIGHWAYMAN then
         player:AddItem(2519, 1000)
+        player:AddItem(6947, 20)
+        player:AddItem(2892, 20)
     end
 end
 
@@ -183,7 +191,8 @@ function GrantHybridClass(player, hybridClass)
         end
         checkSpells(player, hybridClass)
         setEquipment(player, hybridClass)
-        print("["..MODULE_NAME.."]: "..player:GetName().." has been granted a Hybrid Class.")
+        print("["..MODULE_NAME.."]: "..player:GetName().." has been granted Hybrid status.")
+        player:PlayDirectSound(8960, player)
     end
 end
 
