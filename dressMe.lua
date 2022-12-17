@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna dressMe"
-local MODULE_VERSION = '1.3.4'
+local MODULE_VERSION = '1.3.5'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -139,7 +139,12 @@ end
 
 local function onChatMessage(event, player, msg, _, lang)
     if (msg:find('#transmog') == 1 and #msg == 9) then
-        player:SendBroadcastMessage("Command '#transmog' help:\n#transmog nude\n#transmog hide [slot] (slots: head, shoulders, chest, waist, legs, feet, wrists, hands, back")
+        player:SendBroadcastMessage("Command '#transmog' help:\n#transmog apply\n#transmog nude\n#transmog hide [slot] (slots: head, shoulders, chest, waist, legs, feet, wrists, hands, back")
+        return false
+    elseif (msg:find('#transmog apply') == 1) then
+        player:PlayDirectSound(3337)
+        ProcessCopper(player)
+        LoadPlayer(player)
         return false
     elseif (msg:find('#transmog reset') == 1) then
         player:PlayDirectSound(3337)
@@ -172,6 +177,7 @@ local function onChatMessage(event, player, msg, _, lang)
 end
 
 local function onLogin(event, player)
+    ProcessCopper(player)
     LoadPlayer(player)
 end
 
