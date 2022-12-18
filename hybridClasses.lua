@@ -7,7 +7,7 @@ print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 -- Configuration
 local MIN_ADOPTION_LEVEL = 1 -- The level at which characters can become a Hybrid
 local START_LEVEL = 10 -- The level to which characters will be reset when they become Hybrids
-local XP_MODIFIER = 5 -- Multiplier for Hybrid bonus XP
+local XP_MODIFIER = 4 -- Multiplier for Hybrid bonus XP
 
 -- Hybrid Class IDs
 local BATTLEMAGE = 801
