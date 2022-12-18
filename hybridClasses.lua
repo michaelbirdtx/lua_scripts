@@ -60,6 +60,8 @@ local spells = {
     {class = 401, level = 20, type = 0, entry = 20900, name = "Aimed Shot (2)"},
     {class = 401, level = 20, type = 0, entry = 19506, name = "Trueshot Aura"},
     {class = 401, level = 30, type = 0, entry = 20901, name = "Aimed Shot (3)"},
+    {class = 401, level = 30, type = 0, entry = 61508, name = "Disengage"},
+    {class = 401, level = 30, type = 0, entry = 79187, name = "Multi-Shadow Shot"},
     {class = 401, level = 30, type = 0, entry = 19883, name = "Track Humanoids"},
     {class = 401, level = 40, type = 0, entry = 20902, name = "Aimed Shot (4)"},
     {class = 401, level = 40, type = 0, entry = 53301, name = "Explosive Shot (1)"},
