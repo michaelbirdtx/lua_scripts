@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna globalFuncs"
-local MODULE_VERSION = '1.0.0'
+local MODULE_VERSION = '1.1.0'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -529,6 +529,21 @@ local CLASS_SPELLS = {
         [80] = {48441, 48447, 48451, 48463, 48467, 48469, 48470, 48568, 48572, 49800, 50464, 50763}
     }
 }
+
+function LearnClassSpells(player, fromLevel, toLevel)
+    local class = player:GetClass()
+    local spells = CLASS_SPELLS[class]
+    if spells then
+        for i = fromLevel, toLevel do
+            local levelSpells = spells[i] or {}
+            for _, v in pairs(levelSpells) do
+                if not player:HasSpell(v) then
+                    player:LearnSpell(v)
+                end
+            end
+        end
+    end
+end
 
 function UnlearnClassSpells(player, fromLevel, toLevel)
     local class = player:GetClass()
