@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hybridClasses"
-local MODULE_VERSION = '1.2.0'
+local MODULE_VERSION = '1.2.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -58,14 +58,16 @@ local spells = {
     {class = 401, level = 10, type = 0, entry = 19431, name = "Lethal Shots"},
     {class = 401, level = 10, type = 0, entry = 19490, name = "Mortal Shots"},
     {class = 401, level = 10, type = 0, entry = 55531, name = "Mechano-Hog"},
+    {class = 401, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
+    {class = 401, level = 10, type = 0, entry = 19506, name = "Trueshot Aura"},
     {class = 401, level = 10, type = 3, entry = 45,    name = "Challenger"},
     -- Level 20
     {class = 401, level = 20, type = 0, entry = 20900, name = "Aimed Shot (2)"},
-    {class = 401, level = 20, type = 0, entry = 19506, name = "Trueshot Aura"},
+    {class = 401, level = 20, type = 0, entry = 79187, name = "Multi-Shadow Shot"},
     -- Level 30
     {class = 401, level = 30, type = 0, entry = 20901, name = "Aimed Shot (3)"},
     {class = 401, level = 30, type = 0, entry = 61508, name = "Disengage"},
-    {class = 401, level = 30, type = 0, entry = 79187, name = "Multi-Shadow Shot"},
+    {class = 401, level = 30, type = 0, entry = 52889, name = "Envenomed Shot"},
     {class = 401, level = 30, type = 0, entry = 19883, name = "Track Humanoids"},
     -- Level 40
     {class = 401, level = 40, type = 0, entry = 20902, name = "Aimed Shot (4)"},
@@ -95,6 +97,7 @@ local spells = {
     {class = 801, level = 10, type = 0, entry = 674,   name = "Dual Wield"},
     {class = 801, level = 10, type = 0, entry = 13852, name = "Dual Wield Specialization (Damage)"},
     {class = 801, level = 10, type = 0, entry = 30819, name = "Dual Wield Specialization (Hit Rating)"},
+    {class = 801, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
     {class = 801, level = 10, type = 0, entry = 16542, name = "One-Handed Weapon Specialization"},        
     {class = 801, level = 10, type = 0, entry = 29592, name = "Precision"},
     {class = 801, level = 10, type = 0, entry = 31994, name = "Shoulder Charge"},
