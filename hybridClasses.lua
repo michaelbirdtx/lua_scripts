@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hybridClasses"
-local MODULE_VERSION = '1.1.1'
+local MODULE_VERSION = '1.2.0'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -8,6 +8,7 @@ print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 local MIN_ADOPTION_LEVEL = 1 -- The level at which characters can become a Hybrid
 local START_LEVEL = 10 -- The level to which characters will be reset when they become Hybrids
 local XP_MODIFIER = 4 -- Multiplier for Hybrid bonus XP
+local XP_MODIFIER_INSTANCE = 1 -- Multiplier for Hybrid bonus XP inside an instance
 
 -- Hybrid Class IDs
 local BATTLEMAGE = 801
@@ -51,56 +52,73 @@ local gear = {
 
 local spells = {
     -- Highwayman
+    -- Level 10
     {class = 401, level = 10, type = 0, entry = 19434, name = "Aimed Shot (1)"},
     {class = 401, level = 10, type = 0, entry = 75,    name = "Auto Shot"},
     {class = 401, level = 10, type = 0, entry = 19431, name = "Lethal Shots"},
     {class = 401, level = 10, type = 0, entry = 19490, name = "Mortal Shots"},
     {class = 401, level = 10, type = 0, entry = 55531, name = "Mechano-Hog"},
     {class = 401, level = 10, type = 3, entry = 45,    name = "Challenger"},
+    -- Level 20
     {class = 401, level = 20, type = 0, entry = 20900, name = "Aimed Shot (2)"},
     {class = 401, level = 20, type = 0, entry = 19506, name = "Trueshot Aura"},
+    -- Level 30
     {class = 401, level = 30, type = 0, entry = 20901, name = "Aimed Shot (3)"},
     {class = 401, level = 30, type = 0, entry = 61508, name = "Disengage"},
     {class = 401, level = 30, type = 0, entry = 79187, name = "Multi-Shadow Shot"},
     {class = 401, level = 30, type = 0, entry = 19883, name = "Track Humanoids"},
+    -- Level 40
     {class = 401, level = 40, type = 0, entry = 20902, name = "Aimed Shot (4)"},
     {class = 401, level = 40, type = 0, entry = 53301, name = "Explosive Shot (1)"},
     {class = 401, level = 40, type = 3, entry = 44,    name = "Rival"},
+    -- Level 50
     {class = 401, level = 50, type = 0, entry = 20903, name = "Aimed Shot (5)"},
     {class = 401, level = 50, type = 0, entry = 60051, name = "Explosive Shot (2)"},
+    -- Level 60
     {class = 401, level = 60, type = 0, entry = 20904, name = "Aimed Shot (6)"},
     {class = 401, level = 60, type = 0, entry = 60052, name = "Explosive Shot (3)"},
     {class = 401, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
+    -- Level 70
     {class = 401, level = 70, type = 0, entry = 27065, name = "Aimed Shot (7)"},
     {class = 401, level = 70, type = 0, entry = 60053, name = "Explosive Shot (4)"},
+    -- Leel 80
     {class = 401, level = 80, type = 3, entry = 27,    name = "Warlord"},
+
     -- Battlemage
+    -- Level 10
+    {class = 801, level = 10, type = 0, entry = 12753, name = "Anticipation"},        
     {class = 801, level = 10, type = 0, entry = 50573, name = "Arcane Cleave"},
+    {class = 801, level = 10, type = 0, entry = 61222, name = "Armored to the Teeth"},
+    {class = 801, level = 10, type = 0, entry = 16492, name = "Blood Craze"},
     {class = 801, level = 10, type = 0, entry = 73313, name = "Crimson Deathcharger"},
+    {class = 801, level = 10, type = 0, entry = 12856, name = "Cruelty"},
     {class = 801, level = 10, type = 0, entry = 674,   name = "Dual Wield"},
-    {class = 801, level = 10, type = 0, entry = 7302,  name = "Ice Armor (1)"},
-    {class = 801, level = 10, type = 0, entry = 1243,  name = "Power Word: Fortitude (1)"},
+    {class = 801, level = 10, type = 0, entry = 13852, name = "Dual Wield Specialization (Damage)"},
+    {class = 801, level = 10, type = 0, entry = 30819, name = "Dual Wield Specialization (Hit Rating)"},
+    {class = 801, level = 10, type = 0, entry = 16542, name = "One-Handed Weapon Specialization"},        
+    {class = 801, level = 10, type = 0, entry = 29592, name = "Precision"},
     {class = 801, level = 10, type = 0, entry = 31994, name = "Shoulder Charge"},
-    {class = 801, level = 10, type = 0, entry = 12764, name = "Toughness (Armor)"},
+    {class = 801, level = 10, type = 0, entry = 46865, name = "Strength of Arms"},
+    {class = 801, level = 10, type = 0, entry = 12815, name = "Sword Specialization (Extra Attack)"},
+    {class = 801, level = 10, type = 0, entry = 12764, name = "Toughness (Armor 1)"},
+    {class = 801, level = 10, type = 0, entry = 20147, name = "Toughness (Armor 2)"},
+    {class = 801, level = 10, type = 0, entry = 49789, name = "Toughness (Armor 3)"},
     {class = 801, level = 10, type = 0, entry = 16309, name = "Toughness (Stamina)"},
+    {class = 801, level = 10, type = 0, entry = 29144, name = "Vitality"},        
     {class = 801, level = 10, type = 3, entry = 45,    name = "Challenger"},
-    {class = 801, level = 20, type = 0, entry = 7320,  name = "Ice Armor (2)"},
-    {class = 801, level = 20, type = 0, entry = 1244,  name = "Power Word: Fortitude (2)"},
+    -- Level 20
     {class = 801, level = 20, type = 0, entry = 8078,  name = "Thunderclap"},
+    -- Level 30
     {class = 801, level = 30, type = 0, entry = 16170, name = "Bloodlust"},
-    {class = 801, level = 30, type = 0, entry = 10219, name = "Ice Armor (3)"},
-    {class = 801, level = 30, type = 0, entry = 1245,  name = "Power Word: Fortitude (3)"},
-    {class = 801, level = 40, type = 0, entry = 10220, name = "Ice Armor 4"},
-    {class = 801, level = 40, type = 0, entry = 2791,  name = "Power Word: Fortitude (4)"},
+    -- Level 40
     {class = 801, level = 40, type = 0, entry = 55866, name = "Thunderblade"},
     {class = 801, level = 40, type = 3, entry = 44,    name = "Rival"},
-    {class = 801, level = 50, type = 0, entry = 27124, name = "Ice Armor (5)"},
-    {class = 801, level = 50, type = 0, entry = 10937, name = "Power Word: Fortitude (5)"},
-    {class = 801, level = 60, type = 0, entry = 43008, name = "Ice Armor (6)"},
-    {class = 801, level = 60, type = 0, entry = 10938, name = "Power Word: Fortitude (6)"},
+    -- Level 50
+    {class = 801, level = 50, type = 0, entry = 65947, name = "Bladestorm"},
+    -- Level 60
     {class = 801, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
-    {class = 801, level = 70, type = 0, entry = 25389, name = "Power Word: Fortitude (7)"},
-    {class = 801, level = 80, type = 0, entry = 48161, name = "Power Word: Fortitude (8)"},
+    -- Level 70
+    -- Level 80
     {class = 801, level = 80, type = 3, entry = 27,    name = "Warlord"},
 }
 
@@ -190,9 +208,8 @@ function GrantHybridClass(player, hybridClass)
     end
     local result = dbInsertHybridClass(player, hybridClass)
     if result then
-        if player:GetLevel() > START_LEVEL then
-            UnlearnClassSpells(player, START_LEVEL+1, 80)
-        end
+        UnlearnClassSpells(player, START_LEVEL+1, 80)
+        LearnClassSpells(player, 0, START_LEVEL)
         if player:GetLevel() ~= START_LEVEL then
             player:SetLevel(START_LEVEL)
         end
@@ -220,11 +237,24 @@ local function onChatMessage(event, player, msg, _, lang)
         setEquipment(player, GetHybridClass(player))
         return false
     end
+    if (msg:find("#hybrid unflag") == 1) and player:GetGMRank() > 0 then
+        CharDBExecute("DELETE FROM eluna_hybrid_classes WHERE guid = "..tostring(player:GetGUID()))
+        player:SendBroadcastMessage("Your Hybrid status has been removed.")
+        return false
+    end
+    if (msg:find("#instance") == 1) and player:GetGMRank() > 0 then
+        player:SendBroadcastMessage("Instance: "..tostring(player:GetInstanceId()))
+        return false
+    end
 end
 
 local function onGainXP(event, player, amount, victim)
     if GetHybridClass(player) ~= 0 then
-        return amount * XP_MODIFIER
+        if player:GetInstanceId() == 0 then
+            return amount * XP_MODIFIER
+        else
+            return amount * XP_MODIFIER_INSTANCE
+        end
     end
 end
 
