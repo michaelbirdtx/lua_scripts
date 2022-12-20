@@ -53,38 +53,38 @@ local gear = {
 local spells = {
     -- Highwayman
     -- Level 10
-    {class = 401, level = 10, type = 0, entry = 19434, name = "Aimed Shot (1)"},
     {class = 401, level = 10, type = 0, entry = 75,    name = "Auto Shot"},
     {class = 401, level = 10, type = 0, entry = 4900,  name = "Gun Mastery"},
     {class = 401, level = 10, type = 0, entry = 19431, name = "Lethal Shots"},
     {class = 401, level = 10, type = 0, entry = 19490, name = "Mortal Shots"},
     {class = 401, level = 10, type = 0, entry = 55531, name = "Mechano-Hog"},
     {class = 401, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
+    {class = 401, level = 10, type = 0, entry = 8806,  name = "Poisoned Shot"},
     {class = 401, level = 10, type = 0, entry = 19506, name = "Trueshot Aura"},
     {class = 401, level = 10, type = 3, entry = 45,    name = "Challenger"},
     -- Level 20
-    {class = 401, level = 20, type = 0, entry = 20900, name = "Aimed Shot (2)"},
-    {class = 401, level = 20, type = 0, entry = 8806, name = "Poisoned Shot"},
+    {class = 401, level = 20, type = 0, entry = 19434, name = "Aimed Shot (1)"},
     -- Level 30
-    {class = 401, level = 30, type = 0, entry = 20901, name = "Aimed Shot (3)"},
+    {class = 401, level = 30, type = 0, entry = 20900, name = "Aimed Shot (2)"},
     {class = 401, level = 30, type = 0, entry = 61508, name = "Disengage"},
     {class = 401, level = 30, type = 0, entry = 79187, name = "Multi-Shadow Shot"},
     {class = 401, level = 30, type = 0, entry = 19883, name = "Track Humanoids"},
     -- Level 40
-    {class = 401, level = 40, type = 0, entry = 20902, name = "Aimed Shot (4)"},
+    {class = 401, level = 40, type = 0, entry = 20901, name = "Aimed Shot (3)"},
     {class = 401, level = 40, type = 0, entry = 53301, name = "Explosive Shot (1)"},
     {class = 401, level = 40, type = 3, entry = 44,    name = "Rival"},
     -- Level 50
-    {class = 401, level = 50, type = 0, entry = 20903, name = "Aimed Shot (5)"},
+    {class = 401, level = 50, type = 0, entry = 20902, name = "Aimed Shot (4)"},
     {class = 401, level = 50, type = 0, entry = 60051, name = "Explosive Shot (2)"},
     -- Level 60
-    {class = 401, level = 60, type = 0, entry = 20904, name = "Aimed Shot (6)"},
+    {class = 401, level = 60, type = 0, entry = 20903, name = "Aimed Shot (5)"},
     {class = 401, level = 60, type = 0, entry = 60052, name = "Explosive Shot (3)"},
     {class = 401, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
     -- Level 70
-    {class = 401, level = 70, type = 0, entry = 27065, name = "Aimed Shot (7)"},
+    {class = 401, level = 70, type = 0, entry = 20904, name = "Aimed Shot (6)"},
     {class = 401, level = 70, type = 0, entry = 60053, name = "Explosive Shot (4)"},
     -- Leel 80
+    {class = 401, level = 80, type = 0, entry = 27065, name = "Aimed Shot (7)"},
     {class = 401, level = 80, type = 3, entry = 27,    name = "Warlord"},
 
     -- Battlemage
