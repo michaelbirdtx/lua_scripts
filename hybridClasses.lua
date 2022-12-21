@@ -14,6 +14,16 @@ local XP_MODIFIER_INSTANCE = 1 -- Multiplier for Hybrid bonus XP inside an insta
 local BATTLEMAGE = 801
 local HIGHWAYMAN = 401
 
+-- Gossip text
+local BATTLEMAGE_INTRO_TEXT = "Congratulations, you are now a Battlemage!\n\n"..
+    "Your new Hybrid Class combines all the abilities of a Mage, with several new abilities that make you a formidable\nmelee fighter."..
+    "Your Stamina and Armor have been increased, and you will be able to dual-wield one-handed weapons.\n\n"..
+    "You also start with two new abilities: Shoulder Charge and Arcane Cleave. Shoulder Charge allows you to rush an opponent and stun them with your impact."..
+    "Arcane Cleave allows you to strike multiple opponents with a single blow.\n\n"..
+    "To speed you in your quests, cast Mount Speed+ to enjoy a super-fast riding experience!\n\n"..
+    "In addition to these abilities, you will gain additional skills as you level up. And level up you will, as your XP will accrue much faster as a Hybrid Class.\n\n"..
+    "Now, go forth, and become legend!"
+
 local gear = {
     -- Battlemage (801)
     {class = 801, entry = 42985, pos = EQUIPMENT_SLOT_SHOULDERS}, -- Tattered Dreadmist Mantle
@@ -221,6 +231,25 @@ function GrantHybridClass(player, hybridClass)
         setEquipment(player, hybridClass)
         print("["..MODULE_NAME.."]: "..player:GetName().." has been granted Hybrid status.")
         player:PlayDirectSound(8960, player)
+        player:SendAddonMessage("HybridClassHelper", "Grant "..tostring(hybridClass), 7, player)
+        HybridSetTransmog(player)
+    end
+end
+
+function HybridSetTransmog(player)
+    hybridClass = GetHybridClass(player)
+    if hybridClass == BATTLEMAGE then
+        player:SendUnitSay("#transmog nude", 0)
+        player:SendUnitSay("#transmog 04 25822", 0)
+        player:SendUnitSay("#transmog 05 10404", 0)
+        player:SendUnitSay("#transmog 06 14045", 0)
+        player:SendUnitSay("#transmog 07 43839", 0)
+    elseif hybridClass == HIGHWAYMAN then
+        player:SendUnitSay("#transmog nude", 0)
+        player:SendUnitSay("#transmog 04 7950", 0)
+        player:SendUnitSay("#transmog 06 7949", 0)
+        player:SendUnitSay("#transmog 07 18424", 0)
+        player:SendUnitSay("#transmog 09 1944", 0)
     end
 end
 
@@ -244,6 +273,15 @@ local function onChatMessage(event, player, msg, _, lang)
     if (msg:find("#hybrid unflag") == 1) and player:GetGMRank() > 0 then
         CharDBExecute("DELETE FROM eluna_hybrid_classes WHERE guid = "..tostring(player:GetGUID()))
         player:SendBroadcastMessage("Your Hybrid status has been removed.")
+        return false
+    end
+    if (msg:find("#hybrid bar") == 1) and player:GetGMRank() > 0 then
+        player:SendAddonMessage("HybridClassHelper", "Grant "..tostring(GetHybridClass(player)), 0x07, player)
+        player:SendBroadcastMessage("Action Bar reset.")
+        return false
+    end
+    if (msg:find("#hybrid mog") == 1) and player:GetGMRank() > 0 then
+        HybridSetTransmog(player)
         return false
     end
     if (msg:find("#instance") == 1) and player:GetGMRank() > 0 then

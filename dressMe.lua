@@ -139,12 +139,18 @@ end
 
 local function onChatMessage(event, player, msg, _, lang)
     if (msg:find('#transmog') == 1 and #msg == 9) then
-        player:SendBroadcastMessage("Command '#transmog' help:\n#transmog apply\n#transmog nude\n#transmog hide [slot] (slots: head, shoulders, chest, waist, legs, feet, wrists, hands, back")
+        player:SendBroadcastMessage("Command '#transmog' help:\n#transmog apply\n#transmog hybrid\n#transmog nude\n#transmog hide [slot] (slots: head, shoulders, chest, waist, legs, feet, wrists, hands, back")
         return false
     elseif (msg:find('#transmog apply') == 1) then
         player:PlayDirectSound(3337)
         ProcessCopper(player)
         LoadPlayer(player)
+        return false
+    elseif (msg:find('#transmog hybrid') == 1) then
+        HybridSetTransmog(player)
+        -- player:PlayDirectSound(3337)
+        -- ProcessCopper(player)
+        -- LoadPlayer(player)
         return false
     elseif (msg:find('#transmog reset') == 1) then
         player:PlayDirectSound(3337)
