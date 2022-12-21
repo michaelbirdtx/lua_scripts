@@ -232,12 +232,12 @@ function GrantHybridClass(player, hybridClass)
         print("["..MODULE_NAME.."]: "..player:GetName().." has been granted Hybrid status.")
         player:PlayDirectSound(8960, player)
         player:SendAddonMessage("HybridClassHelper", "Grant "..tostring(hybridClass), 7, player)
-        HybridSetTransmog(player)
+        HybridSetTransmog(player, hybridClass)
     end
 end
 
-function HybridSetTransmog(player)
-    hybridClass = GetHybridClass(player)
+function HybridSetTransmog(player, hybridClass)
+    --hybridClass = GetHybridClass(player)
     if hybridClass == BATTLEMAGE then
         player:SendUnitSay("#transmog nude", 0)
         player:SendUnitSay("#transmog 04 25822", 0)
@@ -281,7 +281,8 @@ local function onChatMessage(event, player, msg, _, lang)
         return false
     end
     if (msg:find("#hybrid mog") == 1) and player:GetGMRank() > 0 then
-        HybridSetTransmog(player)
+        local hybridClass = GetHybridClass(player)
+        HybridSetTransmog(player, hybridClass)
         return false
     end
     if (msg:find("#instance") == 1) and player:GetGMRank() > 0 then
@@ -314,6 +315,10 @@ local function onLogout(event, player)
     end
 end
 
+local function onDelete(event, guid)
+    CharDBExecute("DELETE FROM eluna_hybrid_classes WHERE guid = "..tostring(guid))
+end
+
 CharDBQuery([[
 CREATE TABLE IF NOT EXISTS `eluna_hybrid_classes` (
 `guid` INT(10) UNSIGNED NOT NULL COMMENT 'Character GUID',
@@ -329,3 +334,4 @@ RegisterPlayerEvent(4, onLogout)
 RegisterPlayerEvent(12, onGainXP)
 RegisterPlayerEvent(13, onLevelUp)
 RegisterPlayerEvent(18, onChatMessage)
+RegisterPlayerEvent(2, onDelete)
