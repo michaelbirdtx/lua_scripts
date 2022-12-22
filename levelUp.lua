@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna levelUp"
-local MODULE_VERSION = '1.7.5'
+local MODULE_VERSION = '1.7.6'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -34,46 +34,28 @@ local Pets = {
     [20] = 35504, -- Phoenix Hatchling
 }
 
--- local Titles = {
---     [1]  = 143,   -- Jenkins
---     [2]  = 155,   -- the Noble
---     [3]  = 134,   -- the Merrymaker
---     [4]  =  22,   -- Legionnaire
---     [5]  = 125,   -- Loremaster
---     [6]  = 172,   -- the Patient
---     [7]  =  27,   -- Warlord
---     [8]  =   4,   -- Master Sergeant
---     [9]  =  76,   -- Flame Keeper
---     [10] =  11,   -- Commander
---     [11] = 174,   -- Bane of the Fallen King
---     [12] =  47,   -- Conqueror
---     [13] =  72,   -- Battlemaster
---     [14] = 145,   -- the Insane
---     [15] =   9,   -- Knight-Champion
---     [16] =  77,   -- the Exalted
---     [17] = 141,   -- the Immortal
---     [18] = 124,   -- the Hallowed
---     [19] =  83,   -- Salty
---     [20] =  77,   -- the Exalted
--- }
-
 local Spells = {
 
     -- All Classes (0)
-
     {class = 0, level = 10, type = 0, entry = 64731}, -- Sea Turtle
-    --{class = 0, level = 20, type = 3, entry = 43},    -- Duelist
+    {class = 0, level = 20, type = 3, entry = 2},     -- Corporal
     {class = 0, level = 20, type = 1, entry = 33388}, -- Apprentice Riding
     {class = 0, level = 20, type = 0, entry = 65917}, -- Magic Rooster
     {class = 0, level = 30, type = 0, entry = 34896}, -- Cobalt War Talbuk
+    {class = 0, level = 30, type = 3, entry = 3},     -- Sergeant
     {class = 0, level = 40, type = 0, entry = 75614}, -- Celestial Steed
     {class = 0, level = 40, type = 1, entry = 33391}, -- Journeyman Riding
+    {class = 0, level = 40, type = 3, entry = 4},     -- Master Sergeant
+    {class = 0, level = 50, type = 3, entry = 5},     -- Sergeant Major
     {class = 0, level = 60, type = 1, entry = 34090}, -- Expert Riding
     {class = 0, level = 60, type = 0, entry = 48025}, -- Headless Horseman's Mount
+    {class = 0, level = 60, type = 3, entry = 6},     -- Knight
     {class = 0, level = 68, type = 0, entry = 54197}, -- Cold Weather Flying
-    {class = 0, level = 70, type = 0, entry = 71342}, -- Big Love Rocket
     {class = 0, level = 70, type = 1, entry = 34091}, -- Artisan Riding
+    {class = 0, level = 70, type = 0, entry = 71342}, -- Big Love Rocket
+    {class = 0, level = 70, type = 3, entry = 7},     -- Knight-Lieutenant
     {class = 0, level = 80, type = 0, entry = 72286}, -- Invincible
+    {class = 0, level = 80, type = 3, entry = 8},     -- Knight-Captain
     {class = 0, level = 80, type = 0, entry = 75973}, -- X-53 Touring Rocket
 
     -- Warrior (1)
