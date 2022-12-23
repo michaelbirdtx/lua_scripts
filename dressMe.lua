@@ -149,9 +149,6 @@ local function onChatMessage(event, player, msg, _, lang)
     elseif (msg:find('#transmog hybrid') == 1) then
         local hybridClass = GetHybridClass(player)
         HybridSetTransmog(player, hybridClass)
-        -- player:PlayDirectSound(3337)
-        -- ProcessCopper(player)
-        -- LoadPlayer(player)
         return false
     elseif (msg:find('#transmog reset') == 1) then
         player:PlayDirectSound(3337)

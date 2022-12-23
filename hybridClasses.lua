@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hybridClasses"
-local MODULE_VERSION = '1.2.2'
+local MODULE_VERSION = '1.3.0'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -13,6 +13,7 @@ local XP_MODIFIER_INSTANCE = 1 -- Multiplier for Hybrid bonus XP inside an insta
 -- Hybrid Class IDs
 local BATTLEMAGE = 801
 local HIGHWAYMAN = 401
+local SHADOWWARRIOR = 101
 
 -- Gossip text
 local BATTLEMAGE_INTRO_TEXT = "Congratulations, you are now a Battlemage!\n\n"..
@@ -58,45 +59,14 @@ local gear = {
     {class = 401, entry = 42991, pos = EQUIPMENT_SLOT_TRINKET1},  -- Swift Hand of Justice
     {class = 401, entry = 44098, pos = EQUIPMENT_SLOT_TRINKET2},  -- Inherited Insignia of the Alliance
     {class = 401, entry = 44097, pos = EQUIPMENT_SLOT_TRINKET2},  -- Inherited Insignia of the Horde
+
+    -- Shadow Warrior (101)
+    {class = 101, entry =  3427, pos = EQUIPMENT_SLOT_BODY},  -- Stylish Black Shirt
+    {class = 101, entry = 42945, pos = EQUIPMENT_SLOT_MAINHAND},  -- Venerable Dal'Rend's Sacred Charge
+    {class = 101, entry = 44096, pos = EQUIPMENT_SLOT_OFFHAND},   -- Battleworn Thrash Blade
 }
 
 local spells = {
-    -- Highwayman
-    -- Level 10
-    {class = 401, level = 10, type = 0, entry = 75,    name = "Auto Shot"},
-    {class = 401, level = 10, type = 0, entry = 4900,  name = "Gun Mastery"},
-    {class = 401, level = 10, type = 0, entry = 19431, name = "Lethal Shots"},
-    {class = 401, level = 10, type = 0, entry = 19490, name = "Mortal Shots"},
-    {class = 401, level = 10, type = 0, entry = 55531, name = "Mechano-Hog"},
-    {class = 401, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
-    {class = 401, level = 10, type = 0, entry = 8806,  name = "Poisoned Shot"},
-    {class = 401, level = 10, type = 0, entry = 19506, name = "Trueshot Aura"},
-    {class = 401, level = 10, type = 3, entry = 45,    name = "Challenger"},
-    -- Level 20
-    {class = 401, level = 20, type = 0, entry = 19434, name = "Aimed Shot (1)"},
-    -- Level 30
-    {class = 401, level = 30, type = 0, entry = 20900, name = "Aimed Shot (2)"},
-    {class = 401, level = 30, type = 0, entry = 61508, name = "Disengage"},
-    {class = 401, level = 30, type = 0, entry = 79187, name = "Multi-Shadow Shot"},
-    {class = 401, level = 30, type = 0, entry = 19883, name = "Track Humanoids"},
-    -- Level 40
-    {class = 401, level = 40, type = 0, entry = 20901, name = "Aimed Shot (3)"},
-    {class = 401, level = 40, type = 0, entry = 53301, name = "Explosive Shot (1)"},
-    {class = 401, level = 40, type = 3, entry = 44,    name = "Rival"},
-    -- Level 50
-    {class = 401, level = 50, type = 0, entry = 20902, name = "Aimed Shot (4)"},
-    {class = 401, level = 50, type = 0, entry = 60051, name = "Explosive Shot (2)"},
-    -- Level 60
-    {class = 401, level = 60, type = 0, entry = 20903, name = "Aimed Shot (5)"},
-    {class = 401, level = 60, type = 0, entry = 60052, name = "Explosive Shot (3)"},
-    {class = 401, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
-    -- Level 70
-    {class = 401, level = 70, type = 0, entry = 20904, name = "Aimed Shot (6)"},
-    {class = 401, level = 70, type = 0, entry = 60053, name = "Explosive Shot (4)"},
-    -- Leel 80
-    {class = 401, level = 80, type = 0, entry = 27065, name = "Aimed Shot (7)"},
-    {class = 401, level = 80, type = 3, entry = 27,    name = "Warlord"},
-
     -- Battlemage
     -- Level 10
     {class = 801, level = 10, type = 0, entry = 12753, name = "Anticipation"},        
@@ -134,6 +104,65 @@ local spells = {
     -- Level 70
     -- Level 80
     {class = 801, level = 80, type = 3, entry = 27,    name = "Warlord"},
+
+    -- Highwayman
+    -- Level 10
+    {class = 401, level = 10, type = 0, entry = 75,    name = "Auto Shot"},
+    {class = 401, level = 10, type = 0, entry = 4900,  name = "Gun Mastery"},
+    {class = 401, level = 10, type = 0, entry = 19431, name = "Lethal Shots"},
+    {class = 401, level = 10, type = 0, entry = 19490, name = "Mortal Shots"},
+    {class = 401, level = 10, type = 0, entry = 55531, name = "Mechano-Hog"},
+    {class = 401, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
+    {class = 401, level = 10, type = 0, entry = 8806,  name = "Poisoned Shot"},
+    {class = 401, level = 10, type = 0, entry = 19506, name = "Trueshot Aura"},
+    {class = 401, level = 10, type = 3, entry = 45,    name = "Challenger"},
+    -- Level 20
+    {class = 401, level = 20, type = 0, entry = 19434, name = "Aimed Shot (1)"},
+    -- Level 30
+    {class = 401, level = 30, type = 0, entry = 20900, name = "Aimed Shot (2)"},
+    {class = 401, level = 30, type = 0, entry = 61508, name = "Disengage"},
+    {class = 401, level = 30, type = 0, entry = 79187, name = "Multi-Shadow Shot"},
+    {class = 401, level = 30, type = 0, entry = 19883, name = "Track Humanoids"},
+    -- Level 40
+    {class = 401, level = 40, type = 0, entry = 20901, name = "Aimed Shot (3)"},
+    {class = 401, level = 40, type = 0, entry = 53301, name = "Explosive Shot (1)"},
+    {class = 401, level = 40, type = 3, entry = 44,    name = "Rival"},
+    -- Level 50
+    {class = 401, level = 50, type = 0, entry = 20902, name = "Aimed Shot (4)"},
+    {class = 401, level = 50, type = 0, entry = 60051, name = "Explosive Shot (2)"},
+    -- Level 60
+    {class = 401, level = 60, type = 0, entry = 20903, name = "Aimed Shot (5)"},
+    {class = 401, level = 60, type = 0, entry = 60052, name = "Explosive Shot (3)"},
+    {class = 401, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
+    -- Level 70
+    {class = 401, level = 70, type = 0, entry = 20904, name = "Aimed Shot (6)"},
+    {class = 401, level = 70, type = 0, entry = 60053, name = "Explosive Shot (4)"},
+    -- Leel 80
+    {class = 401, level = 80, type = 0, entry = 27065, name = "Aimed Shot (7)"},
+    {class = 401, level = 80, type = 3, entry = 27,    name = "Warlord"},
+
+    -- Shadow Warrior
+    -- Level 10
+    {class = 101, level = 10, type = 0, entry = 674,   name = "Dual Wield"},
+    {class = 101, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
+    {class = 101, level = 10, type = 0, entry = 23246, name = "Purple Skeletal Warhorse"},
+    {class = 101, level = 10, type = 0, entry = 60449, name = "Shadowform"},
+    {class = 101, level = 10, type = 0, entry = 36563, name = "Shadowstep"},
+    {class = 101, level = 10, type = 0, entry = 36517, name = "Shadowsurge"},
+    {class = 101, level = 10, type = 3, entry = 45,    name = "Challenger"},
+    -- Level 20
+    {class = 101, level = 20, type = 0, entry = 69492, name = "Shadow Cleave"},
+    {class = 101, level = 20, type = 0, entry = 37500, name = "Shadow Spiral"},
+    -- Level 30
+    -- Level 40
+    {class = 101, level = 40, type = 3, entry = 44,    name = "Rival"},
+    -- Level 50
+    -- Level 60
+    {class = 101, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
+    -- Level 70
+    -- Level 80
+    {class = 101, level = 80, type = 3, entry = 27,    name = "Warlord"},
+
 }
 
 local function checkSpells(player, hybridClass)
@@ -220,6 +249,12 @@ function GrantHybridClass(player, hybridClass)
             return false
         end
     end
+    if hybridClass == SHADOWWARRIOR then
+        if player:GetClass() ~= 1 then
+            player:SendBroadcastMessage("Only a Warrior can become a Shadow Warrior.")
+            return false
+        end
+    end
     local result = dbInsertHybridClass(player, hybridClass)
     if result then
         UnlearnClassSpells(player, START_LEVEL+1, 80)
@@ -228,7 +263,9 @@ function GrantHybridClass(player, hybridClass)
             player:SetLevel(START_LEVEL)
         end
         checkSpells(player, hybridClass)
-        setEquipment(player, hybridClass)
+        if hybridClass ~= SHADOWWARRIOR then
+            setEquipment(player, hybridClass)
+        end
         print("["..MODULE_NAME.."]: "..player:GetName().." has been granted Hybrid status.")
         player:PlayDirectSound(8960, player)
         player:SendAddonMessage("HybridClassHelper", "Grant "..tostring(hybridClass), 7, player)
@@ -250,6 +287,15 @@ function HybridSetTransmog(player, hybridClass)
         player:SendUnitSay("#transmog 06 7949", 0)
         player:SendUnitSay("#transmog 07 18424", 0)
         player:SendUnitSay("#transmog 09 1944", 0)
+    elseif hybridClass == SHADOWWARRIOR then
+        player:SendUnitSay("#transmog nude", 0)
+        player:SendUnitSay("#transmog 03 3427", 0)        
+        player:SendUnitSay("#transmog 04 30258", 0)
+        player:SendUnitSay("#transmog 06 25580", 0)
+        player:SendUnitSay("#transmog 07 25610", 0)
+        player:SendUnitSay("#transmog 09 25478", 0)
+        player:SendUnitSay("#transmog 15 30278", 0)
+        player:SendUnitSay("#transmog 16 30278", 0)
     end
 end
 
@@ -263,6 +309,12 @@ local function onChatMessage(event, player, msg, _, lang)
     if (msg:find("#grant highwayman") == 1) and player:GetGMRank() > 0 then
         if GrantHybridClass(player, HIGHWAYMAN) then
             player:SendBroadcastMessage("You are now a Highwayman!")
+        end
+        return false
+    end
+    if (msg:find("#grant shadowwarrior") == 1) and player:GetGMRank() > 0 then
+        if GrantHybridClass(player, SHADOWWARRIOR) then
+            player:SendBroadcastMessage("You are now a Shadow Warrior!")
         end
         return false
     end
@@ -312,6 +364,9 @@ local function onLogout(event, player)
     -- Check for Dual Wield, delete from table to avoid SQL error on logout
     if GetHybridClass(player) == 801 then
         CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 118")
+    end
+    if GetHybridClass(player) == 101 then
+        CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 674")
     end
 end
 
