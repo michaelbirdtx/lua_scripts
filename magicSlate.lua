@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna magicSlate"
-local MODULE_VERSION = '1.0.1'
+local MODULE_VERSION = '1.0.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -7,18 +7,16 @@ print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
 SLATE_ENTRY = 25750
 
 local Songs = {
-    [1]  = 11812,
-    [2]  = 11811,
-    [3]  = 12135,
-    [4]  = 12319,
-    [5]  = 12325,
-    [6]  = 12828,
-    [7]  = 15925,
-    [8]  = 17280,
-    [9]  = 17487,
-    [10] = 17346,
-    [11] = 11729,
-    [12] = 15885,
+    [1]  = 11812, -- Event_BrewfestDwarf02
+    [2]  = 11811, -- Event_BrewFestGoblin01
+    [3]  = 12135, -- Event_ZulamanCelebration
+    [4]  = 12325, -- Event-MidsummerFireFestival_H
+    [5]  = 15925, -- Event_DotD_Undead_Dance
+    [6]  = 17280, -- Event-Bronjahm
+    [7]  = 17487, -- Event-GnomereganEventComplete
+    [8]  = 17346, -- Event-Gunships (One-Shot)
+    [9]  = 11729, -- Event_BT_ArrivalWalkHero01
+    [10] = 15885, -- UR_HallsofIronHeroEvent
 }
 
 local function randomSong()
