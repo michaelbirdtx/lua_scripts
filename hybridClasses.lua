@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hybridClasses"
-local MODULE_VERSION = '1.3.0'
+local MODULE_VERSION = '1.3.1'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -61,9 +61,21 @@ local gear = {
     {class = 401, entry = 44097, pos = EQUIPMENT_SLOT_TRINKET2},  -- Inherited Insignia of the Horde
 
     -- Shadow Warrior (101)
-    {class = 101, entry =  3427, pos = EQUIPMENT_SLOT_BODY},  -- Stylish Black Shirt
+    {class = 101, entry =  3427, pos = EQUIPMENT_SLOT_BODY},      -- Stylish Black Shirt
+    {class = 101, entry = 42949, pos = EQUIPMENT_SLOT_SHOULDERS}, -- Polished Spaulders of Valor
+    {class = 101, entry = 48685, pos = EQUIPMENT_SLOT_CHEST},     -- Polished Breastplate of Valor
+    {class = 101, entry =  2978, pos = EQUIPMENT_SLOT_LEGS},      -- Veteran Leggings
+    {class = 101, entry = 15492, pos = EQUIPMENT_SLOT_WAIST},     -- Bloodspattered Sash
+    {class = 101, entry =  2980, pos = EQUIPMENT_SLOT_HANDS},     -- Veteran Gloves
+    {class = 101, entry =  3302, pos = EQUIPMENT_SLOT_FEET},      -- Brackwater Boots
+    {class = 101, entry =  6550, pos = EQUIPMENT_SLOT_WRISTS},    -- Soldier's Wristguards
+    {class = 101, entry = 15309, pos = EQUIPMENT_SLOT_BACK},      -- Feral Cloak
     {class = 101, entry = 42945, pos = EQUIPMENT_SLOT_MAINHAND},  -- Venerable Dal'Rend's Sacred Charge
     {class = 101, entry = 44096, pos = EQUIPMENT_SLOT_OFFHAND},   -- Battleworn Thrash Blade
+    {class = 101, entry = 50255, pos = EQUIPMENT_SLOT_FINGER1},   -- Dread Pirate Ring
+    {class = 101, entry = 42991, pos = EQUIPMENT_SLOT_TRINKET1},  -- Swift Hand of Justice
+    {class = 101, entry = 44098, pos = EQUIPMENT_SLOT_TRINKET2},  -- Inherited Insignia of the Alliance
+    {class = 101, entry = 44097, pos = EQUIPMENT_SLOT_TRINKET2},  -- Inherited Insignia of the Horde
 }
 
 local spells = {
@@ -78,7 +90,6 @@ local spells = {
     {class = 801, level = 10, type = 0, entry = 674,   name = "Dual Wield"},
     {class = 801, level = 10, type = 0, entry = 13852, name = "Dual Wield Specialization (Damage)"},
     {class = 801, level = 10, type = 0, entry = 30819, name = "Dual Wield Specialization (Hit Rating)"},
-    {class = 801, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
     {class = 801, level = 10, type = 0, entry = 16542, name = "One-Handed Weapon Specialization"},        
     {class = 801, level = 10, type = 0, entry = 29592, name = "Precision"},
     {class = 801, level = 10, type = 0, entry = 31994, name = "Shoulder Charge"},
@@ -112,7 +123,6 @@ local spells = {
     {class = 401, level = 10, type = 0, entry = 19431, name = "Lethal Shots"},
     {class = 401, level = 10, type = 0, entry = 19490, name = "Mortal Shots"},
     {class = 401, level = 10, type = 0, entry = 55531, name = "Mechano-Hog"},
-    {class = 401, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
     {class = 401, level = 10, type = 0, entry = 8806,  name = "Poisoned Shot"},
     {class = 401, level = 10, type = 0, entry = 19506, name = "Trueshot Aura"},
     {class = 401, level = 10, type = 3, entry = 45,    name = "Challenger"},
@@ -144,8 +154,8 @@ local spells = {
     -- Shadow Warrior
     -- Level 10
     {class = 101, level = 10, type = 0, entry = 674,   name = "Dual Wield"},
-    {class = 101, level = 10, type = 0, entry = 27879, name = "Mount Speed+"},
     {class = 101, level = 10, type = 0, entry = 23246, name = "Purple Skeletal Warhorse"},
+    {class = 101, level = 10, type = 0, entry = 30479, name = "Resist Shadow"},
     {class = 101, level = 10, type = 0, entry = 60449, name = "Shadowform"},
     {class = 101, level = 10, type = 0, entry = 36563, name = "Shadowstep"},
     {class = 101, level = 10, type = 0, entry = 36517, name = "Shadowsurge"},
@@ -154,9 +164,12 @@ local spells = {
     {class = 101, level = 20, type = 0, entry = 69492, name = "Shadow Cleave"},
     {class = 101, level = 20, type = 0, entry = 37500, name = "Shadow Spiral"},
     -- Level 30
+    {class = 101, level = 30, type = 0, entry = 31224, name = "Cloak of Shadows"},
     -- Level 40
+    {class = 101, level = 40, type = 0, entry = 38226, name = "Black Cleave"},
     {class = 101, level = 40, type = 3, entry = 44,    name = "Rival"},
     -- Level 50
+
     -- Level 60
     {class = 101, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
     -- Level 70
@@ -263,9 +276,7 @@ function GrantHybridClass(player, hybridClass)
             player:SetLevel(START_LEVEL)
         end
         checkSpells(player, hybridClass)
-        if hybridClass ~= SHADOWWARRIOR then
-            setEquipment(player, hybridClass)
-        end
+        setEquipment(player, hybridClass)
         print("["..MODULE_NAME.."]: "..player:GetName().." has been granted Hybrid status.")
         player:PlayDirectSound(8960, player)
         player:SendAddonMessage("HybridClassHelper", "Grant "..tostring(hybridClass), 7, player)
