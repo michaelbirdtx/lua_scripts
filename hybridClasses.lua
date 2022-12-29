@@ -165,11 +165,12 @@ local spells = {
     {class = 101, level = 20, type = 0, entry = 37500, name = "Shadow Spiral"},
     -- Level 30
     {class = 101, level = 30, type = 0, entry = 31224, name = "Cloak of Shadows"},
+    {class = 101, level = 30, type = 0, entry = 32943, name = "Phasing Invisibility"},
     -- Level 40
     {class = 101, level = 40, type = 0, entry = 38226, name = "Black Cleave"},
     {class = 101, level = 40, type = 3, entry = 44,    name = "Rival"},
     -- Level 50
-
+    {class = 101, level = 50, type = 0, entry = 15734, name = "Summon"},
     -- Level 60
     {class = 101, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
     -- Level 70
