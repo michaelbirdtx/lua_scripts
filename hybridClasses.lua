@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hybridClasses"
-local MODULE_VERSION = '1.3.1'
+local MODULE_VERSION = '1.3.2'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -102,18 +102,23 @@ local spells = {
     {class = 801, level = 10, type = 0, entry = 29144, name = "Vitality"},        
     {class = 801, level = 10, type = 3, entry = 45,    name = "Challenger"},
     -- Level 20
+    {class = 801, level = 20, type = 0, entry = 46227, name = "Medallion of Immunity"},
+    {class = 801, level = 20, type = 0, entry = 15734, name = "Summon"},
     {class = 801, level = 20, type = 0, entry = 8078,  name = "Thunderclap"},
     -- Level 30
-    {class = 801, level = 30, type = 0, entry = 16170, name = "Bloodlust"},
+    {class = 801, level = 30, type = 0, entry = 55706, name = "Sinister Shield"},
     -- Level 40
     {class = 801, level = 40, type = 0, entry = 55866, name = "Thunderblade"},
     {class = 801, level = 40, type = 3, entry = 44,    name = "Rival"},
     -- Level 50
-    {class = 801, level = 50, type = 0, entry = 65947, name = "Bladestorm"},
+    {class = 801, level = 50, type = 0, entry = 16170, name = "Bloodlust"},
     -- Level 60
+    {class = 801, level = 60, type = 0, entry = 35265, name = "Fire Shield"},
     {class = 801, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
     -- Level 70
+    {class = 801, level = 70, type = 0, entry = 56715, name = "Plunder Health"},
     -- Level 80
+    {class = 801, level = 80, type = 0, entry = 70306, name = "Frostblade"},
     {class = 801, level = 80, type = 3, entry = 27,    name = "Warlord"},
 
     -- Highwayman
@@ -167,10 +172,9 @@ local spells = {
     {class = 101, level = 30, type = 0, entry = 31224, name = "Cloak of Shadows"},
     {class = 101, level = 30, type = 0, entry = 32943, name = "Phasing Invisibility"},
     -- Level 40
-    {class = 101, level = 40, type = 0, entry = 38226, name = "Black Cleave"},
     {class = 101, level = 40, type = 3, entry = 44,    name = "Rival"},
     -- Level 50
-    {class = 101, level = 50, type = 0, entry = 15734, name = "Summon"},
+    {class = 101, level = 50, type = 0, entry = 38226, name = "Black Cleave"},
     -- Level 60
     {class = 101, level = 60, type = 3, entry = 163,   name = "Vanquisher"},
     -- Level 70
