@@ -1,5 +1,5 @@
 local MODULE_NAME = "Eluna hybridClasses"
-local MODULE_VERSION = '1.3.2'
+local MODULE_VERSION = '1.3.3'
 local MODULE_AUTHOR = "Mpromptu Gaming"
 
 print("["..MODULE_NAME.."]: Loaded, Version "..MODULE_VERSION.." Active")
@@ -237,6 +237,15 @@ local function setEquipment(player, hybridClass)
     end
 end
 
+function fixDbDupes(player, hybridClass)
+    if hybridClass == 801 then
+        CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 118")
+    end
+    if hybridClass == 101 then
+        CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 674")
+    end
+end
+
 function GetHybridClass(player)
     local Query = CharDBQuery("SELECT class FROM eluna_hybrid_classes WHERE guid = "..tostring(player:GetGUID()).." LIMIT 1;")
     if Query then
@@ -286,6 +295,7 @@ function GrantHybridClass(player, hybridClass)
         player:PlayDirectSound(8960, player)
         player:SendAddonMessage("HybridClassHelper", "Grant "..tostring(hybridClass), 7, player)
         HybridSetTransmog(player, hybridClass)
+        fixDbDupes(player, hybridClass)
     end
 end
 
@@ -378,12 +388,13 @@ end
 
 local function onLogout(event, player)
     -- Check for Dual Wield, delete from table to avoid SQL error on logout
-    if GetHybridClass(player) == 801 then
-        CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 118")
-    end
-    if GetHybridClass(player) == 101 then
-        CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 674")
-    end
+    fixDbDupes(player, GetHybridClass(player))
+    -- if GetHybridClass(player) == 801 then
+    --     CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 118")
+    -- end
+    -- if GetHybridClass(player) == 101 then
+    --     CharDBExecute("DELETE FROM character_skills WHERE guid = "..tostring(player:GetGUID()).." and skill = 674")
+    -- end
 end
 
 local function onDelete(event, guid)
